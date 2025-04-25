@@ -1,0 +1,32 @@
+<!-- historial-compras.component.html -->
+
+<div class="overview-status-card">
+  <h3>Historial de compras</h3>
+  <table class="overview-table">
+    <thead>
+      <tr>
+        <th>Dirección de Envío</th>
+        <th>Estado</th>
+        <th>Fecha del Pedido</th>
+        <th>Título del Libro</th>
+        <th>Cantidad</th>
+        <th>Precio Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detalle of detallesPedidos">
+        <td>{{ detalle.direccion_envio }}</td>
+        <td>{{ detalle.estado_pedido }}</td>
+        <td>{{ detalle.fecha_pedido }}</td>
+        <td>{{ detalle.titulo_libro }}</td>
+        <td>{{ detalle.cantidad }}</td>
+        <td>{{ detalle.precio_total }}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="6"></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

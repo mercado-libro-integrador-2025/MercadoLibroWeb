@@ -1,0 +1,50 @@
+<div class="order-status-card">
+  <h3>Modificar Datos Personales</h3>
+  <div class="formulario">
+    <form [formGroup]="direccion">
+      <div class="form-group">
+        <input placeholder="Nombre" id="nombre" name="nombre" type="text" class="form-control"
+          formControlName="nombre" />
+        <div *ngIf="direccion.get('nombre')?.hasError('required')" class="text-danger">
+          El nombre es obligatorio.
+        </div>
+      </div>
+      <div class="form-group">
+        <input placeholder="Email" id="email" name="email" type="email" class="form-control" formControlName="email" />
+        <div *ngIf="direccion.get('email')?.hasError('email')" class="text-danger">
+          Introduce un email válido.
+        </div>
+      </div>
+      <div class="form-group">
+        <input placeholder="Dirección" id="direccion" name="direccion" type="text" class="form-control"
+          formControlName="direccion" />
+        <div *ngIf="direccion.get('direccion')?.hasError('required')" class="text-danger">
+          La dirección es obligatoria.
+        </div>
+      </div>
+      <div class="form-group">
+        <input placeholder="Ciudad" id="ciudad" name="ciudad" type="text" class="form-control"
+          formControlName="ciudad" />
+        <div *ngIf="direccion.get('ciudad')?.hasError('required')" class="text-danger">
+          La ciudad es obligatoria.
+        </div>
+      </div>
+      <div class="form-group">
+        <input placeholder="Provincia" id="provincia" name="provincia" type="text" class="form-control"
+          formControlName="provincia" />
+        <div *ngIf="direccion.get('provincia')?.hasError('required')" class="text-danger">
+          La provincia es obligatoria.
+        </div>
+      </div>
+      <div class="form-group">
+        <input placeholder="Código Postal" id="codigo_postal" name="codigo_postal" type="text" class="form-control"
+          formControlName="codigo_postal" />
+        <div *ngIf="direccion.get('codigo_postal')?.hasError('required')" class="text-danger">
+          El código postal es obligatorio.
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-sm mt-3" [disabled]="!direccion.valid">Guardar cambios</button>
+    </form>
+  </div>
+</div>
