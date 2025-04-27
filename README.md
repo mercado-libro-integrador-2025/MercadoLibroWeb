@@ -17,7 +17,7 @@ Gestión de usuarios: login y registro de usuarios.
 
 Esta actividad formativa, de complejidad gradual y creciente, deberá llevarse a cabo por todos los estudiantes, mediante la supervisión de los docentes quienes orientarán la propuesta de acuerdo a las ideas innovadoras y/o de necesidades potenciales en el mundo actual.
 
-Este es el repositorio del frontend. El repositorio backend se puede encontrar en el siguiente link: [https://github.com/mercado-libro-integrador-2025/MercadoLibroWeb))
+Este es el repositorio del frontend. El repositorio backend se puede encontrar en el siguiente link: [[https://github.com/mercado-libro-integrador-2025/MercadoLibroWeb](https://github.com/mercado-libro-integrador-2025/MercadoLibroWeb/tree/main/Backend)))
 
 # Estado del proyecto
 
