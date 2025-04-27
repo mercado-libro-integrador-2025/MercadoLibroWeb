@@ -6,8 +6,8 @@
 
 # Descripción del proyecto
 
-Mercado Libro es un proyecto en desarrollo, para el módulo el tercer año módulo Práctica Profesionalizante, de la carrera Técnico en Desarrollo Web y Aplicaciones Digitales, del Instituto Superior Politécnico de Córdoba.
-El objetivo de este proyecto es continuar el desarrollo e integrar los conocimiento de años anteiriores, de la tienda de productos o servicios mejorada utilizando el marco de trabajo Scrum. La tienda actualmente muestra las siguientes páginas web:
+Mercado Libro es un proyecto en desarrollo, para el módulo del tercer año, módulo Práctica Profesionalizante, de la carrera Técnico en Desarrollo Web y Aplicaciones Digitales, del Instituto Superior Politécnico de Córdoba.
+El objetivo de este proyecto es continuar el desarrollo e integrar los conocimiento de años anteriores, de la tienda de productos o servicios mejorada utilizando el marco de trabajo Scrum. La tienda actualmente muestra las siguientes páginas web:
 Landing page (página de aterrizaje).
 Panel de Control (dashboard cliente por el momento)
 Quienes somos.
