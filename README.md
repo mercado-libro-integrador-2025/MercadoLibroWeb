@@ -32,7 +32,7 @@ Funcionalidad 3: desde el backend, el usuario administrador puede modificar la b
 
 # Acceso al proyecto
 
-🛠️ Si bien no está finalizado, se puede visitar el siguiente sitio online: https://sharkcoders.github.io/FinalProject2023/ hasta que se despliegue el proyecto definitivo.
+🛠️ Proximamente publicaremos la URL del proyecto. 
 
 # 📁 Tecnologías
 
