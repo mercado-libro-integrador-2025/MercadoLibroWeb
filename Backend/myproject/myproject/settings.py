@@ -1,5 +1,9 @@
 from pathlib import Path
 import os 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from datetime import timedelta  
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,8 +18,8 @@ SECRET_KEY = 'django-insecure-u2cy_*yur-^)a-069jr*k^ap0lz!07%iqlm_sc*+3mcwf8-)iw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['192.168.0.244', 'localhost', '127.0.0.1', '.onrender.com']
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -30,6 +34,8 @@ INSTALLED_APPS = [
     'ecommerce',
     'corsheaders',
     'rest_framework',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 AUTH_USER_MODEL = 'ecommerce.CustomUser'
@@ -38,19 +44,14 @@ AUTH_USER_MODEL = 'ecommerce.CustomUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST= ['http://localhost:4200']
-CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:4200', 
-]
 
 ROOT_URLCONF = 'myproject.urls'
 
@@ -79,21 +80,54 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+#DATABASES = {
+
+#        'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'mercadolibro',
+#        'USER': 'root',
+#        'PASSWORD': '',
+#        'HOST': 'localhost',
+#        'PORT': '3306',
+#        'OPTIONS': {
+#            'sql_mode': 'traditional',
+#        }
+#    }
+#}
+
 DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bvtg6iunh4mr860neeyz', 
+        'USER': 'uvo9ixg777tut6cu',       
+        'PASSWORD': '6EdVRlTKW8Dzi8QvpeAs',
+        'HOST': 'bvtg6iunh4mr860neeyz-mysql.services.clever-cloud.com', 
+        'PORT': '3306',                     
+    }
+}
+CLOUDINARY_URL = "cloudinary://131957877534325:dzjK2jRBeSh6dR2k_jGvVLkzN5U@dags2c12e"
 
-'default': {
-'ENGINE': 'django.db.backends.mysql',
-'NAME': 'mercadolibro_db',
-'USER': 'root',
-'PASSWORD': 'Ismael07',
-'HOST': 'localhost',
-'PORT': '3307',
-'OPTIONS': {
-'sql_mode': 'traditional',
-}
-}
+CLOUDINARY_STORAGE  = {
+    'cloud_name': 'dags2c12e',
+    'api_key': '131957877534325',
+    'api_secret': 'dzjK2jRBeSh6dR2k_jGvVLkzN5U',
 }
 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# JWT Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Duración del token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,  
+    'BLACKLIST_AFTER_ROTATION': True, 
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -135,8 +169,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-DEBUG = True
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

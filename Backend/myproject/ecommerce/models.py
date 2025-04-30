@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 class CustomUser(AbstractUser):
     email=models.EmailField(max_length=150, unique=True)
@@ -9,19 +10,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
-class Rol(models.Model):
-    id_rol = models.AutoField(primary_key=True)
-    rol = models.TextField(default='Cliente')
-    usuario = models.ForeignKey(CustomUser, related_name='roles', on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = 'rol'
-
-    def __unicode__(self):
-        return self.rol
-
-    def __str__(self):
-        return self.rol
 
 class Categoria(models.Model):
     id_categoria = models.AutoField(primary_key=True)
@@ -29,9 +17,6 @@ class Categoria(models.Model):
 
     class Meta:
         db_table = 'categoria'
-
-    def __unicode__(self):
-        return self.nombre_categoria
 
     def __str__(self):
         return self.nombre_categoria
@@ -43,133 +28,108 @@ class Autor(models.Model):
     class Meta:
         db_table = 'autor'
 
-    def __unicode__(self):
-        return self.nombre_autor
-
     def __str__(self):
         return self.nombre_autor
 
 def get_upload_path(instance, filename):
     return f'libros/{instance.titulo}/{filename}'
 
+from cloudinary.models import CloudinaryField
+
 class Libro(models.Model):
     id_libro = models.AutoField(primary_key=True)
-    titulo = models.CharField(blank= False, max_length=255)
-    precio = models.DecimalField(blank= False, max_digits=10, decimal_places=2)
-    stock = models.IntegerField(blank= False)
-    id_categoria = models.ForeignKey(Categoria, to_field='id_categoria', on_delete=models.CASCADE)
-    descripcion = models.TextField(blank= False)
-    portada = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
-    id_autor = models.ForeignKey(Autor, to_field='id_autor', on_delete=models.CASCADE)
+    titulo = models.CharField(blank=False, max_length=255)
+    precio = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
+    stock = models.IntegerField(blank=False)
+    categoria = models.ForeignKey(Categoria, to_field='id_categoria', on_delete=models.CASCADE)
+    descripcion = models.TextField(blank=False)
+    portada = CloudinaryField('image', null=True, blank=True)
+    autor = models.ForeignKey(Autor, to_field='id_autor', on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'libro'
 
-    def __unicode__(self):
-        return self.titulo
-
-    def __str__(self):
-        return self.titulo
 
 class Direccion(models.Model):
-    usuario = models.ForeignKey(CustomUser, related_name='direcciones', on_delete=models.CASCADE)
-    calle = models.CharField(max_length=255)
-    ciudad = models.CharField(max_length=100)
-    provincia = models.CharField(max_length=100,)
-    codigo_postal = models.CharField(max_length=20)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    calle = models.CharField(max_length=100)
+    numero = models.CharField(max_length=10) 
+    ciudad = models.CharField(max_length=50)
+    provincia = models.CharField(max_length=50)
 
     class Meta:
         db_table = 'direccion'
 
-    def __unicode__(self):
-        return f'{self.calle}, {self.ciudad}, {self.provincia}'
-
     def __str__(self):
-        return f'{self.calle}, {self.ciudad}, {self.provincia}'
+        return f'{self.calle} {self.numero}, {self.ciudad}, {self.provincia}'
 
-class FormaEnvio(models.Model):
-    id_forma_envio = models.AutoField(primary_key=True)
-    forma_envio = models.CharField(max_length=100)
+class ItemCarrito(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    cantidad = models.IntegerField(default=1)
+    fecha_agregado = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'forma_envio'
-    
-    def __unicode__(self):
-        return self.forma_envio
+        db_table = 'item_carrito'
+        unique_together = ('usuario', 'libro') 
 
     def __str__(self):
-        return self.forma_envio
+        libro_titulo = self.libro.titulo if self.libro else "Libro no disponible"
+        return f'{self.cantidad} de {libro_titulo}'
 
-class FormaPago(models.Model):
-    id_forma_pago = models.AutoField(primary_key=True)
-    forma_pago = models.CharField(max_length=100)
+    @property
+    def total(self):
+        return self.cantidad * self.libro.precio
+
+class MetodoPago(models.Model):
+    TARJETA_OPCIONES = [
+        ('debito', 'Tarjeta Débito'),
+        ('credito', 'Tarjeta Crédito'),
+    ]
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    numero_tarjeta = models.CharField(max_length=16)  
+    cvv = models.CharField(max_length=3)  
+    vencimiento = models.CharField(max_length=5)
+    tipo_tarjeta = models.CharField(max_length=7, choices=TARJETA_OPCIONES)
 
     class Meta:
-        db_table = 'forma_pago'
-
-    def __unicode__(self):
-        return self.forma_pago
+        db_table = 'metodo_pago'
 
     def __str__(self):
-        return self.forma_pago
+        return f'Método de pago de {self.usuario} ({self.get_tipo_tarjeta_display()})'  
 
 class Pedido(models.Model):
     id_pedido = models.AutoField(primary_key=True)
-    usuario = models.ForeignKey(CustomUser, related_name='pedidos_pedido', on_delete=models.CASCADE)
-    estado_pedido = models.CharField(max_length=50)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    direccion = models.ForeignKey(Direccion, on_delete=models.CASCADE)
+    metodo_pago = models.CharField(max_length=7, choices=MetodoPago.TARJETA_OPCIONES)  
+    estado = models.CharField(max_length=50, default='En camino')
     fecha_pedido = models.DateTimeField(auto_now_add=True)
-    direccion_envio = models.ForeignKey(Direccion, on_delete=models.SET_NULL, null=True, related_name='pedidos')
-    forma_envio = models.ForeignKey(FormaEnvio, on_delete=models.SET_NULL, null=True, related_name='pedidos')
-    forma_pago = models.ForeignKey(FormaPago, on_delete=models.SET_NULL, null=True, related_name='pedidos')
+    total = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         db_table = 'pedido'
 
     def __str__(self):
-        return f'Pedido {self.id_pedido}'
-
-class EstadoPedido(models.Model):
-    id_estado = models.AutoField(primary_key=True)
-    id_pedido = models.ForeignKey(Pedido, related_name='estados_pedido', on_delete=models.CASCADE)
-    estado_pedido = models.CharField(default='En preparación', max_length=100)
-    
-    class Meta:
-        db_table = 'estado_pedido'
-
-    def __str__(self):
-        return self.estado_pedido
-
-    def __str__(self):
-        return self.estado_pedido
-
-class HistorialPedido(models.Model):
-    id_historial = models.AutoField(primary_key=True)
-    id_pedido = models.ForeignKey(Pedido, related_name='historial', on_delete=models.CASCADE, default=1)
-    libro = models.ForeignKey(Libro, related_name='historial_pedido', on_delete=models.CASCADE, default=1)
-    precio_total = models.DecimalField(max_digits=10, decimal_places=2, default=1)
-    fecha_pedido = models.DateTimeField(auto_now_add=True)
-    estado_pedido = models.CharField(max_length=50, default=1)
-
-    class Meta:
-        db_table = 'historial_pedido'
-
-    def __str__(self):
-        return f'Historial {self.id_historial} - Pedido {self.id_pedido}'
-
+        return f'Pedido {self.id_pedido} de {self.usuario}, pagado con {self.get_metodo_pago_display()}'
 
 class Reseña(models.Model):
-    id_resena = models.AutoField(primary_key=True)
-    libro = models.ForeignKey(Libro, on_delete=models.CASCADE, related_name='resenas')
-    usuario = models.ForeignKey(CustomUser, related_name='resenas_usuario', on_delete=models.CASCADE)
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     comentario = models.TextField()
-    calificacion = models.IntegerField()
-    fecha_resena = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'resena'
+        db_table = 'reseña'
     
-    def __unicode__(self):
-        return f'Reseña {self.id_resena} - {self.calificacion}'
+    def __str__(self):
+        return f'Reseña de {self.usuario.email} para {self.libro.titulo}'
+
+class Contacto(models.Model):
+    nombre = models.CharField(max_length=100)
+    email = models.EmailField()
+    asunto = models.CharField(max_length=150)
+    mensaje = models.TextField()
 
     def __str__(self):
-        return f'Reseña {self.id_resena} - {self.calificacion}'
+        return f"{self.nombre} - {self.asunto}"
