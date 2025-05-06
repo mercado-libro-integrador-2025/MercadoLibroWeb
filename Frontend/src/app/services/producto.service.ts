@@ -7,17 +7,10 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root'
 })
 export class ProductoService {
-  //private apiUrl = 'http://127.0.0.1:8000/api/libros/';
-  //private categoriaUrl = 'http://127.0.0.1:8000/api/categorias/';
-
-  private apiUrl = 'https://backend-mercado-libro-mobile.onrender.com/api/libros/';
-  private categoriaUrl = 'https://backend-mercado-libro-mobile.onrender.com/api/categorias/';
+  private apiUrl = 'https://mercadolibroweb.onrender.com/api/libros/';
+  private categoriaUrl = 'https://mercadolibroweb.onrender.com/api/categorias/';
 
   constructor(private http: HttpClient) { }
-
-  // getLibros(): Observable<Libro[]> {
-  //   return this.http.get<Libro[]>(this.apiUrl);
-  // }
 
   getLibro(id_libro: number): Observable<Libro> {
     const url = `${this.apiUrl}${id_libro}/`;

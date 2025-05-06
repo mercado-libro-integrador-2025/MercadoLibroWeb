@@ -8,7 +8,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class LoginService {
-  private apiUrl = 'http://127.0.0.1:8000/api/auth';
+  private apiUrl = 'https://mercadolibroweb.onrender.com/api/auth';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) { }
