@@ -1,0 +1,61 @@
+#cartContainer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 18rem;
+    transition: transform 0.3s ease-out;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-left: 1px solid #ccc;
+  }
+  
+  .list-group-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+  }
+  
+  .list-group-item:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+    
+  }
+  
+  .btn-link {
+    color: #fff;
+    padding: 0 0.5rem;
+  }
+  
+  .badge {
+    background-color: #fff;
+    color: #000;
+  }
+  
+  .card-header {
+    background-color: #333;
+    border-bottom: none;
+  }
+  
+  .card-body {
+    padding: 0.5rem;
+    color: crimson;
+    text-align: center;
+  }
+  
+  .btn-light {
+    background-color: #fff;
+    color: #333;
+    border: none;
+  }
+  
+  .btn-light:hover {
+    background-color: #ddd;
+  }
+  
+  span {
+    color: crimson;
+    text-align: left;
+    font-weight: bold;
+    
+  }
+  
+  .tm {
+    color: crimson;
+  }

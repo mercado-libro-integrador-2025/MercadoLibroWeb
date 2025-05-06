@@ -1,0 +1,12 @@
+@if(libro){<div id="descriptionCard">
+  <div class="card text-bg-secondary m-1">
+    <div class="card-body">
+      <h3 class="title"><i>{{libro.titulo}}</i></h3>
+      <p><b>Autor:</b> {{ libro.autor }} </p>
+      <p><b>Sinopsis: </b>{{ libro.descripcion }} </p>
+      <p><b>Precio:</b> $ {{libro.precio }} </p>
+      <p><b>Stock Disponible:</b> {{ libro.stock }} </p>
+      <button type="button" class="btn btn-dark" (click)="goBack()">Volver</button>
+    </div>
+  </div>
+</div>}
