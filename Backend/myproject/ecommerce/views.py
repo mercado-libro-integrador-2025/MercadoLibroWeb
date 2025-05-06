@@ -104,7 +104,6 @@ class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_class = LibroFilter
     
 class DireccionViewSet(viewsets.ModelViewSet):
     queryset = Direccion.objects.all()
