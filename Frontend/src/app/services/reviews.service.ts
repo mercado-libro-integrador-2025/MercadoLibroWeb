@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { LoginService } from './login.service'; // Importa LoginService
 
-// Definimos una interfaz para la estructura de una reseña
-// Esto ayuda a tener tipado fuerte en Angular
+// Definimos una interfaz para la estructura de una reseña tal como la recibimos del GET
 export interface Resena {
-  id?: number; // El ID es opcional al crear, pero existe al obtener/actualizar
-  libro: number; // ID del libro (asumimos que la API espera el ID)
-  usuario: number; // ID del usuario (asumimos que la API espera el ID)
+  id?: number; // El ID existe al obtener/actualizar/eliminar
+  libro: number; // ID del libro (viene en el GET, se envía en el POST)
+  // La API GET devuelve el email del usuario, no el ID directo en un campo 'usuario'
+  email_usuario: string;
   comentario: string;
   fecha_creacion?: string; // La API devuelve la fecha, opcional al crear
+
+  // Propiedad para enviar el ID del usuario en el payload del POST/PUT
+  // No viene en la respuesta del GET, por eso es opcional aquí
+  usuario?: number;
+
   // calificacion?: number; // Si en el futuro el backend soporta calificación
   // Propiedad temporal para almacenar el objeto Libro asociado a la reseña
   // Esto es necesario porque la API de reseñas solo devuelve el ID del libro
@@ -26,68 +32,73 @@ export interface LibroResena {
 
 
 @Injectable({
-  providedIn: 'root' // <-- ¡Importante que esté aquí!
+  providedIn: 'root'
 })
 export class ReviewsService {
   // URL base de tu API de reseñas. Asegúrate de que sea la correcta.
-  // Basado en el endpoint que me pasaste: https://backend-mercado-libro-mobile.onrender.com/api/resenas/
-  private apiUrl = 'https://backend-mercado-libro-mobile.onrender.com/api/resenas/';
+  // Según tus últimas pruebas, esta URL funciona para GET y POST desde Angular
+  private apiUrl = 'https://mercadolibroweb.onrender.com/api/resenas/';
 
-  constructor(private http: HttpClient) { }
+  // Inyectamos LoginService para obtener el token y el email del usuario
+  constructor(private http: HttpClient, private loginService: LoginService) { }
 
-  // Método para obtener las reseñas de un usuario específico
-  // Asumimos que la API soporta filtrar por usuario, por ejemplo, con un parámetro de consulta ?usuario=<id>
-  // Si no lo soporta, tendremos que filtrar en el frontend después de obtener todas las reseñas (menos eficiente)
-  // O modificar el backend para que soporte este filtro (recomendado)
-  // Por ahora, asumimos que el backend puede filtrar por usuario ID.
-  // Si la API GET /api/resenas/ NO filtra por usuario, tendremos que cambiar este método.
-  getResenasPorUsuario(usuarioId: number): Observable<Resena[]> {
-    const url = `${this.apiUrl}?usuario=${usuarioId}`;
-    // Aquí podrías necesitar agregar headers de autenticación si la API lo requiere
-    // const headers = new HttpHeaders({ 'Authorization': 'Bearer TU_TOKEN_AQUI' });
-    // return this.http.get<Resena[]>(url, { headers: headers });
-    return this.http.get<Resena[]>(url);
+  // Método auxiliar para obtener los encabezados con el token de autenticación
+  private getAuthHeaders(): HttpHeaders {
+    const clienteLogueado = this.loginService.obtenerClienteLogueado();
+    // Asegúrate de que clienteLogueado y clienteLogueado.access existan
+    const token = clienteLogueado && clienteLogueado.access ? clienteLogueado.access : null;
+
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    if (token) {
+      // Añade el encabezado de autorización si hay un token
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return headers;
+  }
+
+  // Método para obtener las reseñas (ahora la API devuelve email_usuario)
+  // Ya no pasamos userId aquí ya que el backend no filtra por URL param
+  getResenas(): Observable<Resena[]> {
+    // Usamos getAuthHeaders para incluir el token si está disponible
+    // La URL es simplemente la base, ya que el backend no filtra por usuario en el GET
+    return this.http.get<Resena[]>(this.apiUrl, { headers: this.getAuthHeaders() });
   }
 
   // Método para crear una nueva reseña
-  // Necesita el objeto Resena (sin id y fecha_creacion, pero con libro, usuario y comentario)
-  crearResena(resena: Omit<Resena, 'id' | 'fecha_creacion' | 'libroDetalles'>): Observable<Resena> {
-    // Aquí necesitarás agregar headers de autenticación (ej: Token o JWT)
-    // const headers = new HttpHeaders({ 'Authorization': 'Bearer TU_TOKEN_AQUI', 'Content-Type': 'application/json' });
-    // return this.http.post<Resena>(this.apiUrl, resena, { headers: headers });
-     const headers = new HttpHeaders({ 'Content-Type': 'application/json' }); // Solo Content-Type por ahora
-     return this.http.post<Resena>(this.apiUrl, resena, { headers: headers });
+  // Necesita el objeto con libro, usuario (ID) y comentario
+  // Usamos Omit para excluir campos que no se envían en el POST
+  crearResena(resena: Omit<Resena, 'id' | 'fecha_creacion' | 'email_usuario' | 'libroDetalles'>): Observable<Resena> {
+    // Usamos getAuthHeaders para incluir el token
+    return this.http.post<Resena>(this.apiUrl, resena, { headers: this.getAuthHeaders() });
   }
 
   // Método para actualizar una reseña existente
-  // Necesita el ID de la reseña y el objeto Resena con los datos actualizados
-  actualizarResena(id: number, resena: Omit<Resena, 'id' | 'fecha_creacion' | 'libroDetalles'>): Observable<Resena> {
+  // Necesita el ID de la reseña y el objeto con libro (ID), usuario (ID) y comentario
+  actualizarResena(id: number, resena: Omit<Resena, 'id' | 'fecha_creacion' | 'email_usuario' | 'libroDetalles'>): Observable<Resena> {
     const url = `${this.apiUrl}${id}/`;
-    // Aquí necesitarás agregar headers de autenticación
-    // const headers = new HttpHeaders({ 'Authorization': 'Bearer TU_TOKEN_AQUI', 'Content-Type': 'application/json' });
-    // return this.http.put<Resena>(url, resena, { headers: headers });
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' }); // Solo Content-Type por ahora
-    return this.http.put<Resena>(url, resena, { headers: headers });
+    // Usamos getAuthHeaders para incluir el token
+    return this.http.put<Resena>(url, resena, { headers: this.getAuthHeaders() });
   }
 
   // Método para eliminar una reseña
   // Necesita el ID de la reseña a eliminar
   eliminarResena(id: number): Observable<any> {
     const url = `${this.apiUrl}${id}/`;
-    // Aquí necesitarás agregar headers de autenticación
-    // const headers = new HttpHeaders({ 'Authorization': 'Bearer TU_TOKEN_AQUI' });
-    // return this.http.delete<any>(url, { headers: headers });
-    return this.http.delete<any>(url);
+    // Usamos getAuthHeaders para incluir el token
+    return this.http.delete<any>(url, { headers: this.getAuthHeaders() });
   }
 
   // --- Métodos adicionales que podrías necesitar ---
 
   // Método para obtener una reseña específica por ID (útil para la edición)
+  // Incluimos el encabezado de autenticación
   getResenaPorId(id: number): Observable<Resena> {
     const url = `${this.apiUrl}${id}/`;
-     // Aquí podrías necesitar agregar headers de autenticación
-    // const headers = new HttpHeaders({ 'Authorization': 'Bearer TU_TOKEN_AQUI' });
-    // return this.http.get<Resena>(url, { headers: headers });
-    return this.http.get<Resena>(url);
+    // Usamos getAuthHeaders para incluir el token
+    return this.http.get<Resena>(url, { headers: this.getAuthHeaders() });
   }
 }

@@ -1,8 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common'; // Importa DatePipe para formatear la fecha
 import { Component, OnInit } from '@angular/core'; // Importa OnInit
 import { RouterLink } from '@angular/router';
-// Confirma que esta ruta sea correcta según la ubicación de tu archivo reviews.service.ts
-import { ReviewsService, Resena, LibroResena } from '../../../services/reviews.service'; // <-- ¡Verifica esta ruta!
+import { ReviewsService, Resena, LibroResena } from '../../../services/reviews.service';
 import { LoginService } from '../../../services/login.service'; // Importa LoginService
 import { ProductoService } from '../../../services/producto.service'; // Importa ProductoService
 import { Libro } from '../../../services/models/producto'; // Importa la interfaz Libro
@@ -56,13 +55,13 @@ export class ReviewsComponent implements OnInit { // Implementa OnInit
     this.clienteLogueado = this.loginService.obtenerClienteLogueado();
     console.log('Usuario logueado en ReviewsComponent:', this.clienteLogueado); // Mantener para verificación
 
-    // ¡CORRECCIÓN ANTERIOR MANTENIDA! Accedemos a clienteLogueado.user?.id
-    if (this.clienteLogueado && this.clienteLogueado.user && this.clienteLogueado.user.id) {
-      // 2. Cargar las reseñas (ahora se filtrarán en el frontend)
-      this.loadUserReviews(this.clienteLogueado.user.id); // Pasamos el ID para el filtro
+    // Verificamos si el usuario está logueado y tiene email
+    if (this.clienteLogueado && this.clienteLogueado.user && this.clienteLogueado.user.email) {
+      // 2. Cargar las reseñas y filtrar en frontend por email
+      this.loadUserReviews(this.clienteLogueado.user.email); // Pasamos el EMAIL para el filtro
     } else {
-      // Manejar el caso donde no hay usuario logueado (ej: mostrar un mensaje o redirigir)
-      console.warn('No hay usuario logueado o su ID no está disponible para cargar reseñas.');
+      // Manejar el caso donde no hay usuario logueado o su email no está disponible
+      console.warn('No hay usuario logueado o su email no está disponible para cargar reseñas.');
       // Podrías redirigir al login aquí si es necesario
       // this.router.navigate(['/inicio']); // Necesitarías inyectar Router
       // O simplemente no cargar las reseñas y mostrar un mensaje en la UI
@@ -72,13 +71,33 @@ export class ReviewsComponent implements OnInit { // Implementa OnInit
     this.loadBooks();
   }
 
-  // Método para cargar las reseñas (ahora filtra en el frontend)
-  loadUserReviews(userId: number): void {
-    // Llamamos al servicio para obtener TODAS las reseñas (asumiendo que el backend no filtra)
-    this.reviewsService.getResenasPorUsuario(userId).subscribe({ // Aunque pasamos userId, el backend lo ignora por ahora
+  // Método para cargar las reseñas y filtrar en el frontend por email
+  loadUserReviews(userEmail: string): void { // Ahora recibe el EMAIL
+    // Llamamos al servicio para obtener TODAS las reseñas (la API devuelve email_usuario)
+    // Usamos la URL donde el GET funciona para listar (https://mercadolibroweb.onrender.com/api/resenas/)
+    this.reviewsService.getResenas().subscribe({ // No pasamos parámetro de usuario al servicio
       next: (allResenas: Resena[]) => {
-        // Filtramos las reseñas en el frontend para mostrar solo las del usuario logueado
-        this.reviews = allResenas.filter(resena => resena.usuario === userId); // <-- ¡FILTRADO AQUÍ!
+        console.log('Reseñas recibidas de la API (antes de filtrar):', allResenas); // <-- LOG 1: Todas las reseñas
+        console.log('Email del usuario logueado (para filtrar):', userEmail); // <-- LOG 2: Email del usuario logueado
+
+        // *** REACTIVAMOS EL FILTRADO PARA MOSTRAR SOLO LAS RESEÑAS DEL USUARIO LOGUEADO POR EMAIL ***
+        // Añadir logs para inspeccionar el valor y tipo de resena.email_usuario
+        if (allResenas.length > 0) {
+            console.log('Tipo de resena.email_usuario en la primera reseña:', typeof allResenas[0].email_usuario); // <-- LOG 3: Tipo
+            console.log('Valor de resena.email_usuario en la primera reseña:', allResenas[0].email_usuario); // <-- LOG 4: Valor
+        } else {
+             console.log('No hay reseñas recibidas para inspeccionar el campo email_usuario.');
+        }
+
+
+        this.reviews = allResenas.filter(resena => {
+            // Comparamos resena.email_usuario con el email del usuario logueado
+            // console.log(`Comparando resena.email_usuario (${resena.email_usuario}, tipo: ${typeof resena.email_usuario}) con userEmail (${userEmail}, tipo: ${typeof userEmail})`);
+            return resena.email_usuario === userEmail; // <-- ¡FILTRADO AJUSTADO AQUÍ!
+        });
+
+        console.log('Reseñas después de filtrar:', this.reviews); // <-- LOG 5: Reseñas después del filtro
+
 
         // Ahora, para cada reseña filtrada, obtenemos el título del libro
         this.fetchBookTitlesForReviews(); // Llama a la función para obtener títulos de las reseñas filtradas
@@ -108,7 +127,7 @@ export class ReviewsComponent implements OnInit { // Implementa OnInit
 
     // Esperamos a que todas las promesas se resuelvan
     Promise.all(bookPromises).then(() => {
-      console.log('Títulos de libros cargados para las reseñas filtradas.');
+      console.log('Títulos de libros cargados para las reseñas.'); // Mensaje ajustado
       // Aquí podrías hacer algo después de que todos los títulos se carguen, si es necesario.
     });
   }
@@ -117,6 +136,7 @@ export class ReviewsComponent implements OnInit { // Implementa OnInit
   // Método para cargar la lista de libros para el selector
   loadBooks(): void {
     // Usamos searchLibros sin término ni categoría para obtener todos (o la primera página si la API pagina)
+    // Nota: La URL del servicio productoService.apiUrl debe estar configurada a la URL correcta de la API de libros.
     this.productoService.searchLibros('', '').subscribe({
       next: (libros: Libro[]) => {
         this.books = libros;
@@ -132,9 +152,9 @@ export class ReviewsComponent implements OnInit { // Implementa OnInit
 
   // Método para manejar el envío del formulario (crear o actualizar)
   onSubmitReviewForm(): void {
-    // ¡CORRECCIÓN ANTERIOR MANTENIDA! Accedemos a clienteLogueado.user?.id
-    if (!this.clienteLogueado || !this.clienteLogueado.user || !this.clienteLogueado.user.id) {
-      console.warn('No hay usuario logueado o su ID no está disponible para enviar la reseña.');
+    // Verificamos si el usuario está logueado y tiene email e ID
+    if (!this.clienteLogueado || !this.clienteLogueado.user || !this.clienteLogueado.user.id || !this.clienteLogueado.user.email) {
+      console.warn('No hay usuario logueado o su información (ID/email) no está disponible para enviar la reseña.');
       // Mostrar un mensaje al usuario o redirigir al login
       return;
     }
@@ -147,20 +167,22 @@ export class ReviewsComponent implements OnInit { // Implementa OnInit
     }
 
     // Crear el objeto reseña con los datos del formulario
-    const reviewData: Omit<Resena, 'id' | 'fecha_creacion' | 'libroDetalles'> = {
+    // Enviamos el ID del usuario en el campo 'usuario' para el backend
+    const reviewData: Omit<Resena, 'id' | 'fecha_creacion' | 'email_usuario' | 'libroDetalles'> = {
       libro: this.reviewForm.libroId, // Ya verificamos que no es null
-      usuario: this.clienteLogueado.user.id, // <-- ¡CORRECCIÓN ANTERIOR MANTENIDA!
+      usuario: this.clienteLogueado.user.id, // <-- Enviamos el ID del usuario
       comentario: this.reviewForm.comentario
     };
 
+    // Nota: Aquí el servicio reviewsService.apiUrl debe estar configurado a la URL donde el POST funciona.
     if (this.isEditing && this.editingReviewId !== null) {
       // Si estamos editando, llamar al servicio para actualizar
       this.reviewsService.actualizarResena(this.editingReviewId, reviewData).subscribe({
         next: (updatedReview: Resena) => {
           console.log('Reseña actualizada con éxito:', updatedReview);
           this.resetForm(); // Resetear el formulario después de actualizar
-          // ¡CORRECCIÓN ANTERIOR MANTENIDA! Recargar la lista de reseñas del usuario logueado
-          this.loadUserReviews(this.clienteLogueado.user.id);
+          // Recargar la lista de reseñas (ahora con filtro por email en frontend)
+          this.loadUserReviews(this.clienteLogueado.user.email); // Pasamos el EMAIL para el filtro
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error al actualizar la reseña:', error);
@@ -173,8 +195,8 @@ export class ReviewsComponent implements OnInit { // Implementa OnInit
         next: (newReview: Resena) => {
           console.log('Reseña creada con éxito:', newReview);
           this.resetForm(); // Resetear el formulario después de crear
-          // ¡CORRECCIÓN ANTERIOR MANTENIDA! Recargar la lista de reseñas del usuario logueado
-          this.loadUserReviews(this.clienteLogueado.user.id);
+          // Recargar la lista de reseñas (ahora con filtro por email en frontend)
+          this.loadUserReviews(this.clienteLogueado.user.email); // Pasamos el EMAIL para el filtro
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error al crear la reseña:', error);
@@ -201,11 +223,12 @@ export class ReviewsComponent implements OnInit { // Implementa OnInit
     console.log('Eliminar reseña con ID:', reviewId);
     // Confirmar con el usuario antes de eliminar
     if (confirm('¿Estás seguro de que quieres eliminar esta reseña?')) {
+      // Nota: Aquí el servicio reviewsService.apiUrl debe estar configurado a la URL donde el DELETE funciona.
       this.reviewsService.eliminarResena(reviewId).subscribe({
         next: () => {
           console.log('Reseña eliminada con éxito.');
-          // ¡CORRECCIÓN ANTERIOR MANTENIDA! Recargar la lista de reseñas del usuario logueado
-          this.loadUserReviews(this.clienteLogueado.user.id);
+          // Recargar la lista de reseñas (ahora con filtro por email en frontend)
+          this.loadUserReviews(this.clienteLogueado.user.email); // Pasamos el EMAIL para el filtro
           // Si estábamos editando la reseña eliminada, resetear el formulario
           if (this.isEditing && this.editingReviewId === reviewId) {
             this.resetForm();
