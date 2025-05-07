@@ -49,5 +49,5 @@ Funcionalidad 3: desde el backend, el usuario administrador puede modificar la b
 * Ñañez Nahir Nicolás
 * Luna Dalla Lasta Marcelo Javier
 * Nobiltá Ivette Jael
-* Facundo Cascallares
-* Romina Navarrete
+* Navarrete Romina Gabriela
+* Arnaudo Octavio
