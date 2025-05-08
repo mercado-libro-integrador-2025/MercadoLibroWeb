@@ -11,17 +11,17 @@ export class AuthGuard  {
 
   constructor(private loginService: LoginService, private router: Router) { }
 
-  canActivate(): Observable<boolean> {
-    return this.loginService.isAuthenticated().pipe(
-      map(isAuthenticated => {
-        if (isAuthenticated) {
-          return true;
-        } else {
-          //redirijo al login si no esta autenticado
-          this.router.navigate(['/inicio']);
-          return false;
-        }
-      })
-    );
+  canActivate(): boolean {
+    const cliente = this.loginService.obtenerClienteLogueado();
+    console.log('Cliente logueado en canActivate:', cliente);
+    if (cliente && cliente.access) {
+      console.log('Acceso permitido');
+      return true;
+    } else {
+      console.warn('Acceso denegado. Redirigiendo a /inicio');
+      this.router.navigate(['/inicio']);
+      return false;
+    }
   }
+  
 }

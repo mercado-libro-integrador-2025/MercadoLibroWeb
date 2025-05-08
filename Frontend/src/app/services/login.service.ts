@@ -11,8 +11,13 @@ export class LoginService {
   private apiUrl = 'https://mercadolibroweb.onrender.com/api/auth';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient) {
+    const clienteGuardado = localStorage.getItem('clienteLogueado');
+    if (clienteGuardado) {
+      this.isAuthenticatedSubject.next(true);
+    }
+  }
+  
   registrarUsuario(username: string, email: string, password: string): Observable<any> {
     const url = `${this.apiUrl}/signup/`;
     const body = { username, email, password };
@@ -49,6 +54,7 @@ export class LoginService {
 
   obtenerClienteLogueado(): any {
     const clienteLogueado = localStorage.getItem('clienteLogueado');
+    console.log('Cliente obtenido del localStorage:', clienteLogueado);
     return clienteLogueado ? JSON.parse(clienteLogueado) : null;
   }
 }
