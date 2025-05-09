@@ -1,8 +1,7 @@
 import { CommonModule, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
-import { AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,19 +17,39 @@ export class InicioComponent {
 
   constructor(private formBuilder: FormBuilder, private loginService: LoginService, private router: Router) {
     this.loginFormulario = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      email: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/)
+      ]]
     });
 
     this.registroFormulario = this.formBuilder.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      repetirPassword: ['', [Validators.required, Validators.minLength(8)]]
-    }, { validators: this.matchingPasswordsValidator('password', 'repetirPassword') });
+  username: ['', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(50),
+    Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/)
+  ]],
+  email: ['', [
+    Validators.required,
+    Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+  ]],
+  password: ['', [
+    Validators.required,
+    Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/)
+  ]],
+  repetirPassword: ['', [
+    Validators.required,
+    Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/)
+  ]]
+}, { validators: this.matchingPasswordsValidator('password', 'repetirPassword') });
+
   }
 
-  //corroborar que las contraseñas inseridas sean iguales.
   matchingPasswordsValidator(password: string, confirmPassword: string) {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const passwordControl = control.get(password);
@@ -45,7 +64,6 @@ export class InicioComponent {
     };
   }
 
-  //Login
   onEnviar(event: Event) {
     event.preventDefault();
     if (this.loginFormulario.valid) {
@@ -53,7 +71,6 @@ export class InicioComponent {
       const password = this.loginFormulario.value.password;
       this.loginService.autenticarUsuario(email, password).subscribe(
         response => {
-          // Después de la autenticación, guarda el email en SessionStorage
           sessionStorage.setItem('usuarioAutenticado', email);
           this.router.navigate(['/dashboard/dashboardlanding']);
         },
@@ -66,7 +83,6 @@ export class InicioComponent {
     }
   }
 
-  //Registro
   enviarDatosRegistro(event: Event) {
     event.preventDefault();
     if (this.registroFormulario.valid) {
