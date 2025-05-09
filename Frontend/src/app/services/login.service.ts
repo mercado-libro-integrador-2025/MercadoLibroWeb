@@ -30,7 +30,7 @@ export class LoginService {
     return this.http.post(url, body, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }).pipe(
       tap({
         next: (response) => {
-          // Si la autenticación es exitosa, cambia el estado de autenticación a true
+          // Si la autenticación es exitosa se cambia el estado de autenticación a true
           if (response) {
             this.isAuthenticatedSubject.next(true);
             localStorage.setItem('clienteLogueado', JSON.stringify(response));
@@ -54,7 +54,8 @@ export class LoginService {
 
   obtenerClienteLogueado(): any {
     const clienteLogueado = localStorage.getItem('clienteLogueado');
-    console.log('Cliente obtenido del localStorage:', clienteLogueado);
+    
+
     return clienteLogueado ? JSON.parse(clienteLogueado) : null;
   }
 }

@@ -1,11 +1,13 @@
 <div class="overview-status-card">
-  <div class="overview-field" *ngIf="clienteLogueado && clienteLogueado.username && clienteLogueado.email">
+  <div class="overview-field" *ngIf="clienteLogueado?.user?.username && clienteLogueado?.user?.email">
     <span class="overview-label">
-      <h2>Bienvenido, {{ clienteLogueado.username }}, ¿qué leemos hoy?</h2>
+      <h2>Bienvenido: {{ clienteLogueado.user.username }}, ¿qué leemos hoy?</h2>
     </span>
   </div>
-  <div class="overview-field">
+
+  <div class="overview-field" *ngIf="clienteLogueado?.user?.email">
     <span class="overview-label">
-      <p> {{ clienteLogueado.email }} </p>
+      <p>Tu usuario: {{ clienteLogueado.user.email }}</p>
     </span>
   </div>
+</div>
