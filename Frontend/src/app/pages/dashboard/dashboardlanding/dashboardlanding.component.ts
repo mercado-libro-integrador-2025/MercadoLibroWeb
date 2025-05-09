@@ -16,5 +16,6 @@ export class DashboardlandingComponent implements OnInit {
 
   ngOnInit(): void {
     this.clienteLogueado = this.loginService.obtenerClienteLogueado();
+    console.log('Nombre del cliente:', this.clienteLogueado?.user?.username);
   }
 }

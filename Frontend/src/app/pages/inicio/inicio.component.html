@@ -7,42 +7,35 @@
           formControlName="email">
         <label for="floatingInput">Email</label>
         @if (Email?.errors && Email?.touched) {
-
-        @if (Email?.hasError('required'))
-        {
-        <p class="text-danger">
-          El email es requerido.
-        </p>
-        }
-        @else if (Email?.hasError('email'))
-        {
-        <p class="text-danger">
-          El formato del email debe ser válido.
-        </p>
-        }
+          @if (Email?.hasError('required')) {
+            <p class="text-danger">El email es requerido.</p>
+          }
+          @else if (Email?.hasError('email')) {
+            <p class="text-danger">El formato del email debe ser válido.</p>
+          }
+          @else if (Email?.hasError('pattern')) {
+            <p class="text-danger">El formato del email debe ser válido.</p>
+          }
         }
       </div>
-
 
       <div class="div__login-input">
         <input type="password" class="form__input form-control" id="contrasena" required minlength="8" maxlength="16"
           placeholder="Contraseña" formControlName="password">
         <label for="floatingPassword">Contraseña</label>
 
-        @if(Password?.errors && Password?.touched)
-        {
-        @if(Password?.hasError('required'))
-        {
-        <p class="text-danger">
-          La contraseña es requerida.
-        </p>
-        }
-        @else if (Password?.hasError('minlength') )
-        {
-        <p class="text-danger">
-          La contraseña requiere como mínimo 8 caracteres.
-        </p>
-        }
+        @if(Password?.errors && Password?.touched) {
+          @if(Password?.hasError('required')) {
+            <p class="text-danger">La contraseña es requerida.</p>
+          }
+          @else if (Password?.hasError('minlength')) {
+            <p class="text-danger">La contraseña requiere como mínimo 8 caracteres.</p>
+          }
+          @else if (Password?.hasError('pattern')) {
+            <p class="text-danger">
+              La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+            </p>
+          }
         }
       </div>
 
@@ -53,18 +46,15 @@
     </form>
   </div>
 
-
   <!-- Modal de Registro -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-dark">
           <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Registro</h1>
-          <button type="button" class="btn-close text-white bg-white nav-link" data-bs-dismiss="modal"
-            aria-label="Close"></button>
+          <button type="button" class="btn-close text-white bg-white nav-link" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="needs-validation" id="registro" [formGroup]="registroFormulario"
-          (ngSubmit)="enviarDatosRegistro($event)">
+        <form class="needs-validation" id="registro" [formGroup]="registroFormulario" (ngSubmit)="enviarDatosRegistro($event)">
           <div class="modal-body">
             <div class="col">
               <label class="form-label">Username</label>
@@ -74,10 +64,14 @@
                   El usuario es requerido.
                 </p>
                 <p *ngIf="registroFormulario.get('username')?.hasError('minlength')" class="text-danger">
-                  El usuario puede contener letras y números. Mínimo 8 caracteres.
+                  El usuario debe contener al menos 3 caracteres.
+                </p>
+                <p *ngIf="registroFormulario.get('username')?.hasError('pattern')" class="text-danger">
+                  Solo se permiten letras, espacios y números.
                 </p>
               </div>
             </div><br>
+
             <div class="col">
               <label class="form-label">Email</label>
               <input class="form-control" type="email" id="emailRegistro" formControlName="email" required>
@@ -88,13 +82,15 @@
                 <p *ngIf="registroFormulario.get('email')?.hasError('email')" class="text-danger">
                   El email debe ser válido.
                 </p>
+                <p *ngIf="registroFormulario.get('email')?.hasError('pattern')" class="text-danger">
+                  El email debe ser válido.
+                </p>
               </div>
             </div><br>
 
             <div class="col">
               <label class="form-label">Contraseña</label>
-              <input type="password" class="form-control" id="passwordContrasena" formControlName="password" required
-                minlength="8">
+              <input type="password" class="form-control" id="passwordContrasena" formControlName="password" required minlength="8">
               <div *ngIf="registroFormulario.get('password')?.errors && registroFormulario.get('password')?.touched">
                 <p *ngIf="registroFormulario.get('password')?.hasError('required')" class="text-danger">
                   La contraseña es requerida.
@@ -102,30 +98,32 @@
                 <p *ngIf="registroFormulario.get('password')?.hasError('minlength')" class="text-danger">
                   La contraseña debe contener al menos 8 caracteres.
                 </p>
+                <p *ngIf="registroFormulario.get('password')?.hasError('pattern')" class="text-danger">
+                  La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+                </p>
               </div>
               <br>
 
               <label class="form-label">Repite contraseña</label>
-              <input type="password" class="form-control" id="repetirPassword" formControlName="repetirPassword"
-                required minlength="8">
-              <div
-                *ngIf="registroFormulario.get('repetirPassword')?.errors && registroFormulario.get('repetirPassword')?.touched">
+              <input type="password" class="form-control" id="repetirPassword" formControlName="repetirPassword" required minlength="8">
+              <div *ngIf="registroFormulario.get('repetirPassword')?.errors && registroFormulario.get('repetirPassword')?.touched">
                 <p *ngIf="registroFormulario.get('repetirPassword')?.hasError('required')" class="text-danger">
-                  Las contraseñas deben coincidir.
+                  repetir su contraseña de nuevo es requerido.
                 </p>
                 <p *ngIf="registroFormulario.get('repetirPassword')?.hasError('minlength')" class="text-danger">
                   La contraseña debe contener al menos 8 caracteres.
                 </p>
-                <p *ngIf="registroFormulario.get('repetirPassword')?.value !== registroFormulario.get('password')?.value"
-                  class="text-danger">
+                <p *ngIf="registroFormulario.get('repetirPassword')?.hasError('pattern')" class="text-danger">
+                  La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+                </p>
+                <p *ngIf="registroFormulario.get('repetirPassword')?.value !== registroFormulario.get('password')?.value" class="text-danger">
                   Las contraseñas deben coincidir.
                 </p>
               </div>
             </div>
           </div>
           <div class="modal-footer bg-dark">
-            <input type="submit" class="btn btn-warning fw-semibold" value="Registrarse"
-              [disabled]="!registroFormulario.valid">
+            <input type="submit" class="btn btn-warning fw-semibold" value="Registrarse" [disabled]="!registroFormulario.valid">
             <div class="alert alert-success" id="alertaOk" role="alert" style="display: none;">
               ¡Registro realizado exitosamente!
             </div>
