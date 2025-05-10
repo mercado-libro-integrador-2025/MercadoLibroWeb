@@ -1,119 +1,38 @@
-/* Estilo general del footer */
-footer {
-    min-height: 2vh;
-    background-color: #2c2c2c; /* Un tono más elegante y oscuro */
-    color: white;
-    padding: 15px;
-    text-align: center;
+html, body {
+    height: 100%;
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    align-items: center;
-    position: fixed;
+    flex-direction: column;
+}
+
+main {
+    flex: 1; /* Se expande para empujar el footer hacia abajo */
+    margin-top: 70px; /* Ajuste según el header */
+    margin-bottom: 70px;
+}
+
+  .fixed-footer {
     bottom: 0;
     width: 100%;
-    z-index: 1000;
-    box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.3); /* Sombra superior */
-    font-family: 'Poppins', sans-serif; /* Tipografía moderna */
-}
-
-/* Columnas del footer */
-.column {
-    width: calc(33.33% - 20px);
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 20px;
-    text-align: center;
-    box-sizing: border-box;
-    transition: transform 0.3s ease-in-out; /* Animación suave */
-}
-
-/* Efecto de resaltado al pasar el mouse */
-.column:hover {
-    transform: scale(1.05);
-}
-
-/* Footer versión celular */
-@media (max-width: 767px) {
-    footer {
-        flex-direction: column;
-        padding: 20px;
+    background-color: #212529; /* Fondo oscuro */
+        color: white;
         text-align: center;
-    }
+        padding: 15px;
+    font-size: 14px;
+  }
 
-    .column {
-        width: auto;
-        display: block;
-        margin-top: 10px;
-    }
+
+/* Aplicamos position: absolute solo en versiones de escritorio */
+@media (min-width: 769px) {
+  .fixed-footer {
+    position: absolute;
+  }
+
 }
 
-/* Mantener proporción de imagen */
-.column-img {
-    object-fit: contain;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    height: 32px;
-}
-
-/* Última columna sin margen */
-.column:last-child {
-    margin-right: 0;
-}
-
-/* Títulos de columna */
-.column h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
-}
-
-/* Animación de aparición */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fade-in {
-    opacity: 0;
-    animation: fadeIn 1s forwards;
-}
-
-/* Botón de menú hamburguesa para versión móvil */
-.footer-toggle {
-    display: none;
-    text-align: center;
-    background-color: #444;
-    color: white;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-.footer-toggle:hover {
-    background-color: #555;
-}
-
-@media (max-width: 767px) {
-    .footer-toggle {
-        display: block;
-    }
-}
-
-/* Menú desplegable del footer */
-.footer-menu {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.footer-toggle:active + .footer-menu {
-    display: block;
-    opacity: 1;
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .fixed-footer {
+    position: relative; /* Evita solapamiento */
+    margin-top: 52px;
+  }
 }
