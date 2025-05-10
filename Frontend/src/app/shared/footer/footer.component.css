@@ -34,5 +34,6 @@ main {
   .fixed-footer {
     position: relative; /* Evita solapamiento */
     margin-top: 52px;
+    width: 528px;
   }
 }

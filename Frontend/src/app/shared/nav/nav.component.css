@@ -81,10 +81,6 @@ nav a.active {
   transition: 0.3s ease-in-out;
 }
 
-.carrito-flotante {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
@@ -191,13 +187,4 @@ nav a.active {
   height: 50px;
   padding: 5px;
   margin-right: 8px;
-}
-
-.carrito-flotante {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 250px;
-  display: none; /* Oculto por defecto */
-  transition: opacity 0.3s ease-in-out;
 }
