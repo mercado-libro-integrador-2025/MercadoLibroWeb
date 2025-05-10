@@ -11,10 +11,10 @@ import { Pagina404Component } from './pages/pagina404/pagina404.component';
 
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/dashboard/profile/profile.component';
-import { HistorialComprasComponent } from './pages/dashboard/historial-compras/historial-compras.component';
-import { StatusComponent } from './pages/dashboard/status/status.component';
+import { CheckoutComponent } from './pages/dashboard/checkout/checkout.component';
+import { HistoryComponent } from './pages/dashboard/history/history.component';
+import { DeliveryStatus } from './pages/dashboard/delivery-status/delivery-status.component';
 import { ReviewsComponent } from './pages/dashboard/reviews/reviews.component';
-import { ResumenCompraComponent } from './pages/dashboard/finalizar-compra/finalizar-compra.component';
 import { AuthGuard } from './guard/auth.guard';
 
 
@@ -31,10 +31,10 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'profile-dashboard', pathMatch: 'full' },
             { path: 'profile-dashboard', component: ProfileComponent, title: 'Mi perfil' },
-            { path: 'historialcompras', component: HistorialComprasComponent, title: 'Mis Compras' },
-            { path: 'statusC', component: StatusComponent, title: 'Estado de mi compra' },
-            { path: 'calificacion', component: ReviewsComponent, title: 'Mis reseñas' },
-            { path: 'resumenCompra', component: ResumenCompraComponent, title: 'Finalizar compra' },
+            { path: 'checkout', component: CheckoutComponent, title: 'Finalizar compra' },
+            { path: 'delivery-status', component: DeliveryStatus, title: 'Estado de mi compra' },
+            { path: 'history', component: HistoryComponent, title: 'Mis Compras' },
+            { path: 'reviews', component: ReviewsComponent, title: 'Mis reseñas' }
         ]
     },
     { path: '**', component: Pagina404Component }

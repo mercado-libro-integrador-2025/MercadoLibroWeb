@@ -3,13 +3,13 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-status',
+  selector: 'app-delivery-status',
   standalone: true,
   imports: [RouterLink, CommonModule],
-  templateUrl: './status.component.html',
-  styleUrls: ['./status.component.css']
+  templateUrl: './delivery-status.component.html',
+  styleUrls: ['./delivery-status.component.css']
 })
-export class StatusComponent {
+export class DeliveryStatus {
   order = {
     orderId: 12345,
     fecha: "20/05/2024",

@@ -13,14 +13,15 @@ interface CarritoItem {
 }
 
 @Component({
-  selector: 'app-resumen-compra',
+  selector: 'app-checkout',
   imports: [FormsModule, ReactiveFormsModule, CommonModule, NgFor],
   standalone: true,
-  templateUrl: './finalizar-compra.component.html',
-  styleUrl: './finalizar-compra.component.css'
+  templateUrl: './checkout.component.html',
+  styleUrl: './checkout.component.css'
 
 })
-export class ResumenCompraComponent implements OnInit {
+
+export class CheckoutComponent implements OnInit {
   carrito: CarritoItem[] = [];
   total: number = 0;
 
