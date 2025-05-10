@@ -1,38 +1,31 @@
-/*PC*/
-@media (min-width: 1024px) {
+/* Dashboard Layout General */
 .dashboard {
-    display: flex;
-   
-    
-  }
-
-  .content {
-    flex: 1;
-    
-
-  
-  }
+  display: flex;
+  min-height: 100vh;
 }
-/*Tablet*/
-@media (min-width: 480px) and (max-width: 1023px) {
+
+/* Sidebar (o Navbar en Mobile) */
+.sidebar {
+  width: 250px;
+  background-color: #f8f9fa;
+  transition: width 0.3s;
+}
+
+/* Contenido Principal */
+.content {
+  flex: 1;
+  padding: 1rem;
+  overflow: auto;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
   .dashboard {
-    display: flex;
     flex-direction: column;
-    
   }
 
-
-
-
-}
-/*Mobile*/
-@media (max-width: 479px) {
-  .dashboard {
-    display: flex;
-    flex-direction: column;
-    
+  .sidebar {
+    width: 100%;
+    height: auto;
   }
-
-
 }
-  
