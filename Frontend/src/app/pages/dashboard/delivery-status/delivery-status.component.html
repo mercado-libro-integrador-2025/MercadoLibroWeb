@@ -1,20 +1,19 @@
-<div class="order-status-card">
-  <h3>Estado del Envio</h3>
-  <div class="order-info">
-    <div class="order-field">
-      <span class="order-label">Número de Pedido:</span>
-      <span class="order-value">{{ order.orderId }}</span>
+<div class="card bg-white p-4 rounded-2xl shadow-md">
+    <h3 class="text-xl font-semibold mb-4">Estado del Envío</h3>
+
+    <div class="space-y-2">
+        <div class="flex justify-between">
+            <span class="font-semibold">Número de Pedido:</span>
+            <span>{{ order.orderId }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="font-semibold">Fecha:</span>
+            <span>{{ order.fecha }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="font-semibold">Estado:</span>
+            <span>{{ order.status }}</span>
+        </div>
     </div>
-    <div class="order-field">
-      <span class="order-label">Fecha:</span>
-      <span class="order-value">{{ order.fecha }}</span>
-    </div>
-    <div class="order-field">
-      <span class="order-label">Estado:</span>
-      <span class="order-value">{{ order.status }}</span>
-    </div>
-    <img src="assets/Imagenes/motoverde.png" alt="verde">
-  </div>
-  <!-- <img src="assets//Imagenes/motoazul.png" alt="azul"> -->
 
 </div>
