@@ -1,26 +1,13 @@
-/* Normalización */
 * {
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(180deg, rgba(252, 219, 3, 1) 0%, rgba(252, 219, 3, 1) 100%);
-    color: white;
-}
-
-main {
-   
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-header {
-    min-height: 5vh;
+  margin: 0;
+  padding: 0;
+  background: #f4f4f9;
+  color: #333; 
 }
