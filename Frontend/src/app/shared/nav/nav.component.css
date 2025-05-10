@@ -1,3 +1,12 @@
+header {
+    min-height: 5vh;
+    height: 70px;
+}
+
+body {
+    padding-top: 50px; /* Mueve el contenido 50px hacia abajo */
+}
+
 .navbar {
   background-color: #746b6b;
   color: rgb(0, 0, 0);
@@ -70,10 +79,6 @@ nav a.active {
 .navbar-nav .nav-link:hover {
   color: #f8d210 !important;
   transition: 0.3s ease-in-out;
-}
-
-.carrito-flotante {
-  animation: fadeIn 0.3s ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -182,13 +187,4 @@ nav a.active {
   height: 50px;
   padding: 5px;
   margin-right: 8px;
-}
-
-.carrito-flotante {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 250px;
-  display: none; /* Oculto por defecto */
-  transition: opacity 0.3s ease-in-out;
 }
