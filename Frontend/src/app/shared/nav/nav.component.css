@@ -1,3 +1,12 @@
+header {
+    min-height: 5vh;
+    height: 70px;
+}
+
+body {
+    padding-top: 50px; /* Mueve el contenido 50px hacia abajo */
+}
+
 .navbar {
   background-color: #746b6b;
   color: rgb(0, 0, 0);

@@ -20,7 +20,3 @@ main {
     justify-content: center;
     align-items: center;
 }
-
-header {
-    min-height: 5vh;
-}
