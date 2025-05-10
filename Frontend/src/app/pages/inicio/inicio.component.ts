@@ -72,7 +72,7 @@ export class InicioComponent {
       this.loginService.autenticarUsuario(email, password).subscribe(
         response => {
           sessionStorage.setItem('usuarioAutenticado', email);
-          this.router.navigate(['/dashboard/dashboardlanding']);
+          this.router.navigate(['/dashboard/profile-dashboard']);
         },
         error => {
           alert("Credenciales incorrectas");

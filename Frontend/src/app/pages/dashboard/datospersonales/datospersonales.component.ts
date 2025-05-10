@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { LoginService } from '../../../services/login.service';
 import { CommonModule, NgIf } from '@angular/common';
-import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-datospersonales',
