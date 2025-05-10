@@ -14,7 +14,6 @@ import { DatospersonalesComponent } from './pages/dashboard/datospersonales/dato
 import { HistorialComprasComponent } from './pages/dashboard/historial-compras/historial-compras.component';
 import { DashboardlandingComponent } from './pages/dashboard/dashboardlanding/dashboardlanding.component';
 import { StatusComponent } from './pages/dashboard/status/status.component';
-import { PromocionesComponent } from './pages/dashboard/promociones/promociones.component';
 import { ReviewsComponent } from './pages/dashboard/reviews/reviews.component';
 import { ResumenCompraComponent } from './pages/dashboard/finalizar-compra/finalizar-compra.component';
 import { AuthGuard } from './guard/auth.guard';
@@ -37,7 +36,6 @@ export const routes: Routes = [
             { path: 'historialcompras', component: HistorialComprasComponent, title: 'Mis Compras' },
             { path: 'statusC', component: StatusComponent, title: 'Estado de mi compra' },
             { path: 'calificacion', component: ReviewsComponent, title: 'Mis reseñas' },
-            { path: 'promociones', component: PromocionesComponent, title: 'Descuentos y cupones' },
             { path: 'resumenCompra', component: ResumenCompraComponent, title: 'Finalizar compra' },
         ]
     },
