@@ -16,7 +16,6 @@ import { StatusComponent } from './pages/dashboard/status/status.component';
 import { ReviewsComponent } from './pages/dashboard/reviews/reviews.component';
 import { ResumenCompraComponent } from './pages/dashboard/finalizar-compra/finalizar-compra.component';
 import { AuthGuard } from './guard/auth.guard';
-import { DashboardlandingComponent } from './pages/dashboard/dashboardlanding/dashboardlanding.component';
 
 
 export const routes: Routes = [
