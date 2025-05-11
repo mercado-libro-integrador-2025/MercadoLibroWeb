@@ -143,7 +143,7 @@ eliminarCuenta(): Observable<any> {
     'Authorization': `Bearer ${cliente?.access}`
   });
 
-  return this.http.delete(`${this.apiUrl}/usuarios/${cliente.user.id}/`, { headers });
+  return this.http.delete(`https://mercadolibroweb.onrender.com/api/usuarios/${cliente.user.id}/`, { headers });
 }
 
 }
