@@ -78,3 +78,7 @@ h3 {
 .purchase-history-table td {
   border-bottom: 1px solid #ddd;
 }
+
+h5{
+  text-align: center;
+}
