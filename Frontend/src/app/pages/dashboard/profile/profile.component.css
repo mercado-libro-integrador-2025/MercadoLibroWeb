@@ -170,3 +170,29 @@ button {
 .delete-account-btn:hover {
   background-color: #c82333;
 }
+
+.datos-personales-form {
+  margin-bottom: 2rem;
+}
+
+.datos-personales-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.datos-personales-form input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.datos-personales-form input:focus {
+  border-color: #333;
+  outline: none;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
