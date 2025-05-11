@@ -1,97 +1,131 @@
-/* Asegura que el texto dentro del contenedor principal sea oscuro */
 .reviews-container {
-  color: #333; /* Un gris oscuro, puedes ajustar este color */
-  /* Agrega otros estilos para el contenedor si es necesario */
-  padding: 20px; /* Ejemplo de padding */
+    max-width: 900px;
+    margin: 2rem auto;
+    background: #f9f9f9;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para los elementos individuales de la reseña */
+h3 {
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.user-info {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    color: #555;
+}
+
+.user-reviews-list {
+    margin-bottom: 2rem;
+}
+
+.subtitle {
+    color: #888;
+    font-style: italic;
+}
+
 .review-item {
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  background-color: #f9f9f9; /* Un fondo claro para contrastar */
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .review-item h4 {
-  margin-top: 0;
-  color: #0056b3; /* Color para el título del libro */
+    color: #333;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
 }
 
 .review-item p {
-  margin-bottom: 5px;
-  line-height: 1.5;
+    margin-bottom: 0.5rem;
+    color: #666;
 }
 
-/* Estilos para los botones de Editar/Eliminar */
-.review-item button {
-  margin-right: 10px;
-  /* Puedes añadir más estilos de Bootstrap o personalizados aquí */
+.actions button {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-/* Estilos para el formulario */
+.btn-edit {
+    background-color: #0056b3;
+    color: white;
+    margin-right: 1rem;
+}
+
+.btn-edit:hover {
+    background-color: #004494;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
 form {
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  background-color: #fff;
+    margin-top: 2rem;
 }
 
 .form-group {
-  margin-bottom: 15px;
+    margin-bottom: 1.5rem;
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
 }
 
 .form-control {
-  width: 100%; /* Ajusta el ancho si es necesario */
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ddd;
+    background: #fdfdfd;
 }
 
-button[type="submit"],
-button[type="button"] {
-  /* Estilos de botón, puedes usar clases de Bootstrap como btn, btn-primary, etc. */
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.form-control:focus {
+    outline: none;
+    border-color: #0056b3;
 }
 
-button[type="submit"] {
-    background-color: #007bff; /* Azul de Bootstrap */
-    color: white;
+.form-actions {
+    display: flex;
+    gap: 1rem;
 }
 
-button[type="submit"]:hover {
+.btn-submit {
     background-color: #0056b3;
-}
-
-button[type="button"].btn-secondary {
-    background-color: #6c757d; /* Gris de Bootstrap */
     color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
 }
 
-button[type="button"].btn-secondary:hover {
+.btn-submit:hover {
+    background-color: #004494;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
     background-color: #5a6268;
 }
-
-/* Estilos para el mensaje de "Todavía no dejaste reseñas" */
-.subtitle {
-  font-style: italic;
-  color: #666;
-}
-
-/* Estilos para el selector de libro deshabilitado */
-select:disabled {
-  background-color: #e9ecef;
-  opacity: 1; /* Asegura que no se vea transparente */
-}
-

@@ -1,145 +1,46 @@
-* {
-    box-sizing: border-box;
+.purchase-history-card {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+h3 {
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
 }
 
-.overview-status-card {
-    max-width: 700px;
-    width: 100%;
-    padding: 1.5rem;
-    background-color: #d4eb56;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 1rem auto;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    overflow: hidden;
+.purchase-history-table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
 }
 
-.overview-status-card h3 {
-    color: #333333;
-    margin-bottom: 1rem;
+.purchase-history-table th,
+.purchase-history-table td {
+  padding: 1rem;
+  font-size: 1rem;
+  color: #333;
 }
 
-.overview-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    background-color: #ffffff;
-    border-radius: 5px;
+.purchase-history-table th {
+  background-color: #333;
+  color: #fff;
+  font-weight: 600;
 }
 
-.overview-table th,
-.overview-table td {
-    border: 1px solid #b9d807;
-    padding: 8px;
+.purchase-history-table tr:nth-child(even) {
+  background-color: #f8f8f8;
 }
 
-.overview-table th {
-    background-color: #b9d807;
-    color: #333333;
-    text-align: left;
+.purchase-history-table tr:hover {
+  background-color: #f1f1f1;
 }
 
-.overview-table td {
-    color: #555555;
-    text-align: left;
-}
-
-.overview-table tfoot td {
-    font-weight: bold;
-}
-
-.formulario {
-    margin-top: 1.5rem;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.form-group label,
-p {
-    color: #555555;
-    font-weight: bold;
-}
-
-.form-group a {
-    color: #181515;
-}
-
-.form-control,
-.select-control {
-    flex: 1;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.select-control:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.btn {
-    display: inline-block;
-    font-weight: 400;
-    color: #212529;
-    text-align: center;
-    vertical-align: middle;
-    user-select: none;
-    background-color: #ffc107;
-    border: 1px solid transparent;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: 0.25rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-        box-shadow 0.15s ease-in-out;
-}
-
-.btn:hover {
-    color: #212529;
-    text-decoration: none;
-    background-color: #e0a800;
-    border-color: #d39e00;
-}
-
-.btn-dark {
-    background-color: #343a40;
-    border-color: #343a40;
-    color: #fff;
-}
-
-.btn-dark:hover {
-    background-color: #23272b;
-    border-color: #1d2124;
-}
-
-@media (max-width: 600px) {
-    .overview-status-card {
-        padding: 1rem;
-    }
-
-    .overview-table th,
-    .overview-table td {
-        padding: 4px;
-    }
-
-    .form-group {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+.purchase-history-table td {
+  border-bottom: 1px solid #ddd;
 }

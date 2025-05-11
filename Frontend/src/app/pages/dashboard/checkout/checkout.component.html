@@ -1,8 +1,8 @@
-<div class="overview-status-card">
+<div class="card-container">
     <h3>Finalizar compra</h3>
 
-    <table class="overview-table">
-        <thead>
+    <table class="table-container">
+        <thead class="table-header">
             <tr>
                 <th>Libro</th>
                 <th>Cantidad</th>
@@ -10,13 +10,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of carrito">
+            <tr *ngFor="let item of carrito" class="table-row">
                 <td>{{ item.titulo }}</td>
                 <td>{{ item.cantidad }}</td>
                 <td>${{ item.precio }}</td>
             </tr>
         </tbody>
-        <tfoot>
+        <tfoot class="table-footer">
             <tr>
                 <td colspan="2">Precio Total:</td>
                 <td>${{ total }}</td>
@@ -24,46 +24,35 @@
         </tfoot>
     </table>
 
+    <div class="form-container">
+        <p>Si aún no registraste una dirección:
+            <a routerLink="/dashboard/profile-dashboard">mis direcciones</a>
+        </p>
 
-    <div class="formulario">
-        <form>
-            <div class="form-group">
-                <p> Si aún no registraste una dirección:
-                    <a routerLink="/dashboard/editarDatosPersonales">mis direcciones</a>
-                </p>
-            </div>
-            <div class="form-group">
-                <label for="direccion_envio">Elige una dirección:</label>
-                <select id="direccion_envio" name="direccion_envio" [(ngModel)]="direccionSeleccionada">
-                    <option value="">-------</option>
-                    <option *ngFor="let direccionEnvio of direccionesEnvio" [value]="direccionEnvio">{{ direccionEnvio
-                        }}</option>
-                </select>
-            </div>
+        <div class="form-group">
+            <label>Elige una dirección:</label>
+            <select class="form-select" [(ngModel)]="direccionSeleccionada">
+                <option value="">-------</option>
+                <option *ngFor="let direccion of direccionesEnvio">{{ direccion }}</option>
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="forma_envio">Elige una forma de envío:</label>
-                <select id="forma_envio" name="forma_envio" [(ngModel)]="formaEnvioSeleccionada">
-                    <option value="">-------</option>
-                    <option *ngFor="let formasEnvio of formasEnvio" [value]="formasEnvio">{{ formasEnvio }}</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="forma_pago">Elige una forma de pago:</label>
-                <select id="forma_pago" name="forma_pago" [(ngModel)]="formaPagoSeleccionada">
-                    <option value="">-------</option>
-                    <option *ngFor="let formasPago of formasPago" [value]="formasPago">{{ formasPago }}</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="cupones"> Si tenés algún <a
-                        routerLink="/dashboard/editarDatosPersonales">CUPÓN/DESCUENTO</a> agregalo
-                    acá:
-                </label>
-                <input type="text">
-            </div>
-        </form>
+        <div class="form-group">
+            <label>Elige una forma de envío:</label>
+            <select class="form-select" [(ngModel)]="formaEnvioSeleccionada">
+                <option value="">-------</option>
+                <option *ngFor="let envio of formasEnvio">{{ envio }}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Elige una forma de pago:</label>
+            <select class="form-select" [(ngModel)]="formaPagoSeleccionada">
+                <option value="">-------</option>
+                <option *ngFor="let pago of formasPago">{{ pago }}</option>
+            </select>
+        </div>
     </div>
-    <button  class="btn btn-dark"  (click)="createPreferenceAndRedirect()">Pagar</button>
 
+    <button class="pay-button" (click)="createPreferenceAndRedirect()">Pagar</button>
 </div>

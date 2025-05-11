@@ -1,37 +1,109 @@
 .profile-container {
-  max-width: 600px;
-  margin: 0 auto;
-  background: #fdfdfd;
+  max-width: 700px;
+  margin: 2rem auto;
+  background: #f9f9f9;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
+h2, h3 {
   color: #333;
-  margin-bottom: 1rem;
+  font-family: 'Arial', sans-serif;
 }
 
-.datos p {
+.direcciones-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.direcciones-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1rem;
   margin: 0.5rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.direccion-text {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
 }
 
 button {
-  margin-top: 1rem;
-  margin-right: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
   border: none;
-  background-color: #0056b3;
-  color: white;
   border-radius: 5px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #004494;
+.edit-btn {
+  background-color: #007bff;
+  color: white;
 }
 
-.formulario label {
-  display: block;
-  margin-top: 1rem;
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.direccion-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.direccion-form input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.direccion-form input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.submit-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #ffc107;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+}
+
+.cancel-btn:hover {
+  background-color: #e0a800;
 }
