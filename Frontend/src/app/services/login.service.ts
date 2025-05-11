@@ -93,5 +93,48 @@ export class LoginService {
     }
   }
 
+obtenerDirecciones(): Observable<any[]> {
+  const cliente = this.obtenerClienteLogueado();
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${cliente?.access}`
+  });
+
+  return this.http.get<any[]>('https://mercadolibroweb.onrender.com/api/direcciones/', { headers });
+}
+
+crearDireccion(direccion: any): Observable<any> {
+  const cliente = this.obtenerClienteLogueado();
+  if (!cliente?.access) {
+    throw new Error('Token de acceso no disponible.');
+  }
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${cliente.access}`,
+    'Content-Type': 'application/json'
+  });
+
+  const url = 'https://mercadolibroweb.onrender.com/api/direcciones/'; 
+
+  return this.http.post(url, direccion, { headers });
+}
+
+
+editarDireccion(id: number, direccion: any): Observable<any> {
+  const cliente = this.obtenerClienteLogueado();
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${cliente?.access}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.put(`https://mercadolibroweb.onrender.com/api/direcciones/${id}/`, direccion, { headers });
+}
+
+eliminarDireccion(id: number): Observable<any> {
+  const cliente = this.obtenerClienteLogueado();
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${cliente?.access}`
+  });
+
+  return this.http.delete(`https://mercadolibroweb.onrender.com/api/direcciones/${id}/`, { headers });
+}
 
 }

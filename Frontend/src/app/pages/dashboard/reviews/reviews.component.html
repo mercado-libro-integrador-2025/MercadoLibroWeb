@@ -1,41 +1,50 @@
 <div class="reviews-container">
-  <h3>Mis reseñas</h3>
+    <h3>Mis Reseñas</h3>
 
-  <div *ngIf="clienteLogueado && clienteLogueado.user" class="user-info">
-    <p><strong>Usuario Logueado:</strong> {{ clienteLogueado.user.username }} (ID: {{ clienteLogueado.user.id }})</p>
-  </div>
-  <div class="user-reviews-list">
-    <p class="subtitle" *ngIf="!reviews || reviews.length === 0">Todavía no dejaste reseñas.</p>
-
-    <div *ngFor="let review of reviews" class="review-item">
-        <h4>Libro: {{ review.libroDetalles?.titulo }}</h4>
-        <p>Comentario: {{ review.comentario }}</p>
-        <p>Fecha: {{ review.fecha_creacion | date:'short' }}</p>
-
-        <button class="btn btn-sm btn-secondary" (click)="editReview(review)">Editar</button>
-        <button class="btn btn-sm btn-danger" (click)="deleteReview(review.id!)">Eliminar</button> </div>
-  </div>
-
-  <hr> <h4>{{ isEditing ? 'Editar reseña' : 'Dejar una nueva reseña' }}</h4>
-
-  <form (ngSubmit)="onSubmitReviewForm()">
-    <div class="form-group">
-      <label for="bookSelector">Selecciona el Libro:</label>
-      <select id="bookSelector" name="bookSelector" class="form-control"
-              [(ngModel)]="reviewForm.libroId" required [disabled]="isEditing">
-        <option [value]="null" disabled>-- Selecciona un libro --</option>
-        <option *ngFor="let book of books" [ngValue]="book.id_libro">{{ book.titulo }}</option>
-      </select>
+    <div *ngIf="clienteLogueado && clienteLogueado.user" class="user-info">
+        <p><strong>Usuario Logueado:</strong> {{ clienteLogueado.user.username }}</p>
     </div>
 
-    <div class="form-group">
-      <label for="comment">Tu Opinión:</label>
-      <textarea id="comment" name="comment" rows="3" class="form-control"
-                [(ngModel)]="reviewForm.comentario" required></textarea>
+    <div class="user-reviews-list">
+        <p class="subtitle" *ngIf="!reviews || reviews.length === 0">Todavía no dejaste reseñas.</p>
+
+        <div *ngFor="let review of reviews" class="review-item">
+            <h4>Libro: {{ review.libroDetalles?.titulo }}</h4>
+            <p>Comentario: {{ review.comentario }}</p>
+            <p>Fecha: {{ review.fecha_creacion | date:'short' }}</p>
+
+            <div class="actions mt-2">
+                <button class="btn-edit" (click)="editReview(review)">Editar</button>
+                <button class="btn-delete" (click)="deleteReview(review.id!)">Eliminar</button>
+            </div>
+        </div>
     </div>
 
-    <button type="submit" class="btn btn-dark">{{ isEditing ? 'Actualizar Reseña' : 'Enviar Opinión' }}</button>
+    <hr class="my-4">
+    <h4>{{ isEditing ? 'Editar Reseña' : 'Dejar una Nueva Reseña' }}</h4>
 
-    <button type="button" class="btn btn-secondary ml-2" *ngIf="isEditing" (click)="cancelEditing()">Cancelar</button>
-  </form>
+    <form (ngSubmit)="onSubmitReviewForm()">
+        <div class="form-group mb-3">
+            <label for="bookSelector">Selecciona el Libro:</label>
+            <select id="bookSelector" name="bookSelector" class="form-control"
+                    [(ngModel)]="reviewForm.libroId" required [disabled]="isEditing">
+                <option [value]="null" disabled>-- Selecciona un libro --</option>
+                <option *ngFor="let book of books" [ngValue]="book.id_libro">{{ book.titulo }}</option>
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="comment">Tu Opinión:</label>
+            <textarea id="comment" name="comment" rows="3" class="form-control"
+                      [(ngModel)]="reviewForm.comentario" required></textarea>
+        </div>
+
+        <div class="form-actions flex gap-3">
+            <button type="submit" class="btn-submit">
+                {{ isEditing ? 'Actualizar Reseña' : 'Enviar Opinión' }}
+            </button>
+
+            <button type="button" class="btn-cancel" *ngIf="isEditing" (click)="cancelEditing()">Cancelar</button>
+        </div>
+    </form>
 </div>

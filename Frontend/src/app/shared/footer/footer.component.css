@@ -5,19 +5,30 @@
 } */
 
 main {
-    /* flex: 1; Se expande para empujar el footer hacia abajo */
-    /* margin-top: 75px; Ajuste según el header */
-    /* margin-bottom: 75px; */
+    flex: 1; /* Se expande para empujar el footer hacia abajo */
+    margin-top: 75px; /* Ajuste según el header */
+    margin-bottom: 75px;
 }
 
 .fixed-footer {
-    /* bottom: 0; */
-    /* color: white; */
-    /* text-align: center; */
-    /* font-size: 14px; */
-    /* height: 75px; */
-    /* width: 100%; */
-    /* background-color: #212529; Fondo oscuro */
+    bottom: 0;
+        color: white;
+        text-align: center;
+    font-size: 14px;
+    height: 75px;
+    width: 100%;
+    background-color: #212529; /* Fondo oscuro */
+}
+
+footer div {
+    background-color: #212529; /* Fondo oscuro */
+}
+p {
+margin-bottom: 0px;
+}
+
+.img {
+  height:75px;
 }
 
 footer div {
@@ -42,10 +53,10 @@ p {
 /* Ajustes para pantallas pequeñas */
 @media (max-width: 768px) {
   .fixed-footer {
-    /* position: relative; Evita solapamiento */
-    /* margin-top: 52px; */
-    /* width: 528px; */
-    /* font-size: 14px; */
-    /* height: 75px; */
-  }
+    position: relative; /* Evita solapamiento */
+    margin-top: 52px;
+    width: 528px;
+    font-size: 14px;
+    height: 75px;
+}
 }
