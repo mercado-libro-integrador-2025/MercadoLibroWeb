@@ -93,6 +93,8 @@ export class LoginService {
     }
   }
 
+//Servicios para el perfil del cliente en el dashboard
+
 obtenerDirecciones(): Observable<any[]> {
   const cliente = this.obtenerClienteLogueado();
   const headers = new HttpHeaders({
