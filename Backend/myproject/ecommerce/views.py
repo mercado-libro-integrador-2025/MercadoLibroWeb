@@ -16,6 +16,7 @@ from .models import (
     Libro,
     ItemCarrito,
     Pedido,
+    ProductoPedido,
     Direccion,
     MetodoPago,
     Reseña,
@@ -33,6 +34,46 @@ from .serializers import (
     ReseñaSerializer,
     ContactoSerializer
 )
+from rest_framework.decorators import api_view, permission_classes
+from django.shortcuts import get_object_or_404
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def confirmar_pedido(request):
+    usuario = request.user
+    direccion_id = request.data.get('direccion_id')
+    metodo_pago = request.data.get('metodo_pago')
+    productos = request.data.get('productos')
+    total = request.data.get('total')
+
+    if not direccion_id or not metodo_pago or not productos:
+        return Response({'error': 'Faltan datos para confirmar el pedido.'}, status=400)
+
+    direccion = get_object_or_404(Direccion, id=direccion_id, usuario=usuario)
+    pedido = Pedido.objects.create(
+        usuario=usuario,
+        direccion=direccion,
+        metodo_pago=metodo_pago,
+        total=total
+    )
+
+    for producto in productos:
+        libro = get_object_or_404(Libro, id=producto['id'])
+        ProductoPedido.objects.create(
+            pedido=pedido,
+            libro=libro,
+            cantidad=producto['cantidad'],
+            precio_unitario=producto['precio']
+        )
+
+        # Reducir el stock del libro
+        libro.stock -= producto['cantidad']
+        libro.save()
+
+    # Limpiar el carrito del usuario
+    ItemCarrito.objects.filter(usuario=usuario).delete()
+
+    return Response({'message': 'Pedido registrado exitosamente.'}, status=201)
 
 
 class SignupView(generics.CreateAPIView):
@@ -159,13 +200,8 @@ class PedidoViewSet(viewsets.ModelViewSet):
         return Pedido.objects.filter(usuario=self.request.user)  
 
     def perform_create(self, serializer):
-        carrito_items = ItemCarrito.objects.filter(usuario=self.request.user)
-        if carrito_items.exists():
-            total = sum(item.libro.precio * item.cantidad for item in carrito_items)
-            pedido = serializer.save(usuario=self.request.user, total=total)
-            carrito_items.delete()  
-            return pedido
-        raise serializers.ValidationError("El carrito está vacío.")
+        raise serializers.ValidationError("El pedido debe ser confirmado a través del endpoint 'confirmar-pedido'.")
+
 
 class ReseñaViewSet(viewsets.ModelViewSet):
     queryset = Reseña.objects.all()

@@ -6,6 +6,7 @@ from .models import (
     Autor,
     Libro,
     Pedido,
+    ProductoPedido,
     ItemCarrito,
     Direccion,
     MetodoPago,
@@ -136,18 +137,21 @@ class ItemCarritoSerializer(serializers.ModelSerializer):
     def get_total(self, obj):
         return obj.total
 
+class ProductoPedidoSerializer(serializers.ModelSerializer):
+    titulo_libro = serializers.CharField(source='libro.titulo', read_only=True)
+
+    class Meta:
+        model = ProductoPedido
+        fields = ['titulo_libro', 'cantidad', 'precio_unitario']
+
 class PedidoSerializer(serializers.ModelSerializer):
+    productos = ProductoPedidoSerializer(many=True, read_only=True)
     direccion = DireccionSerializer()
 
     class Meta:
         model = Pedido
-        fields = ['id_pedido', 'usuario', 'direccion', 'metodo_pago', 'estado', 'fecha_pedido', 'total']
+        fields = ['id_pedido', 'usuario', 'direccion', 'metodo_pago', 'estado', 'fecha_pedido', 'total', 'productos']
 
-    def create(self, validated_data):
-        direccion_data = validated_data.pop('direccion')
-        direccion = DireccionSerializer.create(DireccionSerializer(), validated_data=direccion_data)
-        pedido = Pedido.objects.create(direccion=direccion, **validated_data)
-        return pedido
 
 class ReseñaSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
