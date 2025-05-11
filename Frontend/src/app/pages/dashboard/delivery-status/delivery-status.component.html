@@ -1,19 +1,18 @@
-<div class="card bg-white p-4 rounded-2xl shadow-md">
-    <h3 class="text-xl font-semibold mb-4">Estado del Envío</h3>
+<div class="order-status-card">
+    <h3>Estado del Envío</h3>
 
-    <div class="space-y-2">
-        <div class="flex justify-between">
-            <span class="font-semibold">Número de Pedido:</span>
+    <div class="order-details">
+        <div class="order-detail">
+            <span class="label">Número de Pedido:</span>
             <span>{{ order.orderId }}</span>
         </div>
-        <div class="flex justify-between">
-            <span class="font-semibold">Fecha:</span>
+        <div class="order-detail">
+            <span class="label">Fecha:</span>
             <span>{{ order.fecha }}</span>
         </div>
-        <div class="flex justify-between">
-            <span class="font-semibold">Estado:</span>
+        <div class="order-detail">
+            <span class="label">Estado:</span>
             <span>{{ order.status }}</span>
         </div>
     </div>
-
 </div>

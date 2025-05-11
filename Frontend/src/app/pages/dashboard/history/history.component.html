@@ -1,25 +1,25 @@
-<div class="card bg-white p-4 rounded-2xl shadow-md">
-    <h3 class="text-xl font-semibold mb-4">Historial de Compras</h3>
+<div class="purchase-history-card">
+    <h3>Historial de Compras</h3>
 
-    <table class="w-full text-left border-separate border-spacing-2">
-        <thead class="bg-primary text-white">
+    <table class="purchase-history-table">
+        <thead>
             <tr>
-                <th class="p-2">Dirección de Envío</th>
-                <th class="p-2">Estado</th>
-                <th class="p-2">Fecha del Pedido</th>
-                <th class="p-2">Título del Libro</th>
-                <th class="p-2">Cantidad</th>
-                <th class="p-2">Precio Total</th>
+                <th>Dirección de Envío</th>
+                <th>Estado</th>
+                <th>Fecha del Pedido</th>
+                <th>Título del Libro</th>
+                <th>Cantidad</th>
+                <th>Precio Total</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let detalle of detallesPedidos" class="border-b">
-                <td class="p-2">{{ detalle.direccion_envio }}</td>
-                <td class="p-2">{{ detalle.estado_pedido }}</td>
-                <td class="p-2">{{ detalle.fecha_pedido }}</td>
-                <td class="p-2">{{ detalle.titulo_libro }}</td>
-                <td class="p-2">{{ detalle.cantidad }}</td>
-                <td class="p-2">${{ detalle.precio_total }}</td>
+            <tr *ngFor="let detalle of detallesPedidos">
+                <td>{{ detalle.direccion_envio }}</td>
+                <td>{{ detalle.estado_pedido }}</td>
+                <td>{{ detalle.fecha_pedido }}</td>
+                <td>{{ detalle.titulo_libro }}</td>
+                <td>{{ detalle.cantidad }}</td>
+                <td>${{ detalle.precio_total }}</td>
             </tr>
         </tbody>
     </table>

@@ -1,0 +1,36 @@
+.order-status-card {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+  color: #333;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-detail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.label {
+  font-weight: bold;
+  color: #555;
+}
+
+.order-detail span {
+  color: #333;
+}

@@ -1,58 +1,58 @@
-<div class="card bg-white p-4 rounded-2xl shadow-md">
-    <h3 class="text-xl font-semibold mb-4">Finalizar compra</h3>
+<div class="card-container">
+    <h3>Finalizar compra</h3>
 
-    <table class="w-full text-left border-separate border-spacing-2">
-        <thead class="bg-primary text-white">
+    <table class="table-container">
+        <thead class="table-header">
             <tr>
-                <th class="p-2">Libro</th>
-                <th class="p-2">Cantidad</th>
-                <th class="p-2">Precio Unitario</th>
+                <th>Libro</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of carrito" class="border-b">
-                <td class="p-2">{{ item.titulo }}</td>
-                <td class="p-2">{{ item.cantidad }}</td>
-                <td class="p-2">${{ item.precio }}</td>
+            <tr *ngFor="let item of carrito" class="table-row">
+                <td>{{ item.titulo }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.precio }}</td>
             </tr>
         </tbody>
-        <tfoot class="bg-secondary text-white">
+        <tfoot class="table-footer">
             <tr>
-                <td colspan="2" class="p-2">Precio Total:</td>
-                <td class="p-2">${{ total }}</td>
+                <td colspan="2">Precio Total:</td>
+                <td>${{ total }}</td>
             </tr>
         </tfoot>
     </table>
 
-    <div class="mt-4 space-y-4">
+    <div class="form-container">
         <p>Si aún no registraste una dirección:
             <a routerLink="/dashboard/profile-dashboard">mis direcciones</a>
         </p>
 
-        <div class="space-y-2">
+        <div class="form-group">
             <label>Elige una dirección:</label>
-            <select class="form-select w-full" [(ngModel)]="direccionSeleccionada">
+            <select class="form-select" [(ngModel)]="direccionSeleccionada">
                 <option value="">-------</option>
                 <option *ngFor="let direccion of direccionesEnvio">{{ direccion }}</option>
             </select>
         </div>
 
-        <div class="space-y-2">
+        <div class="form-group">
             <label>Elige una forma de envío:</label>
-            <select class="form-select w-full" [(ngModel)]="formaEnvioSeleccionada">
+            <select class="form-select" [(ngModel)]="formaEnvioSeleccionada">
                 <option value="">-------</option>
                 <option *ngFor="let envio of formasEnvio">{{ envio }}</option>
             </select>
         </div>
 
-        <div class="space-y-2">
+        <div class="form-group">
             <label>Elige una forma de pago:</label>
-            <select class="form-select w-full" [(ngModel)]="formaPagoSeleccionada">
+            <select class="form-select" [(ngModel)]="formaPagoSeleccionada">
                 <option value="">-------</option>
                 <option *ngFor="let pago of formasPago">{{ pago }}</option>
             </select>
         </div>
     </div>
 
-    <button class="mt-4 w-full bg-dark text-white py-2 rounded-lg hover:bg-dark/90 transition" (click)="createPreferenceAndRedirect()">Pagar</button>
+    <button class="pay-button" (click)="createPreferenceAndRedirect()">Pagar</button>
 </div>

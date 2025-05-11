@@ -1,0 +1,46 @@
+.purchase-history-card {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.purchase-history-table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+.purchase-history-table th,
+.purchase-history-table td {
+  padding: 1rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.purchase-history-table th {
+  background-color: #333;
+  color: #fff;
+  font-weight: 600;
+}
+
+.purchase-history-table tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+.purchase-history-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.purchase-history-table td {
+  border-bottom: 1px solid #ddd;
+}
