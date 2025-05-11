@@ -3,13 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 class CustomUser(AbstractUser):
-    email=models.EmailField(max_length=150, unique=True)
+    email = models.EmailField(max_length=150, unique=True)
+    is_active = models.BooleanField(default=True)  
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.email
-
 
 class Categoria(models.Model):
     id_categoria = models.AutoField(primary_key=True)

@@ -79,4 +79,18 @@ export class ProfileComponent implements OnInit {
     };
     this.editandoId = null;
   }
+
+  eliminarCuenta(): void {
+  if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+    this.loginService.eliminarCuenta().subscribe({
+      next: () => {
+        alert('Tu cuenta ha sido eliminada. ¡Esperamos verte pronto!');
+        this.loginService.logout();
+        window.location.href = '/'; // Redirige al usuario a la página de inicio
+      },
+      error: (err) => console.error('Error al eliminar la cuenta:', err)
+    });
+  }
+}
+
 }
