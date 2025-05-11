@@ -56,6 +56,9 @@ class LoginView(APIView):
         user = authenticate(email=email, password=password)
 
         if user:
+            if not user.is_active:
+                return Response({'error': 'Tu cuenta ha sido desactivada. Contacta al soporte.'}, status=status.HTTP_403_FORBIDDEN)
+            
             login(request, user)
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -63,7 +66,7 @@ class LoginView(APIView):
                 'access': str(refresh.access_token),
                 'user': UserSerializer(user).data
             }, status=status.HTTP_200_OK)
-        return Response({'error': 'Invalid Credentials'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Credenciales inválidas'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class LogoutView(APIView):
@@ -76,20 +79,14 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
-    # Método personalizado para eliminar un usuario
     def destroy(self, request, *args, **kwargs):
         user = self.get_object()
         if user == request.user or request.user.is_staff: 
-            user.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            user.is_active = False  
+            user.save()
+            return Response({'message': 'Cuenta desactivada exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'error': 'No tienes permiso para eliminar esta cuenta'}, status=status.HTTP_403_FORBIDDEN)
-    
-    # Acción personalizada para obtener el usuario autenticado
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
-    def me(self, request):
-        serializer = self.get_serializer(request.user)
-        return Response(serializer.data)
 
 
 class CategoriaViewSet(viewsets.ModelViewSet):

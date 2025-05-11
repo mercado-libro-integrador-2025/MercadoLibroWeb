@@ -1,17 +1,35 @@
-.card-container {
-  max-width: 800px;
+.dashboard-card {
+  max-width: 900px;
+  min-height: 400px; 
   margin: 2rem auto;
   background: #f9f9f9;
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-h3 {
+.dashboard-card h3 {
   color: #333;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.table-container,
+.purchase-history-table {
+  width: 100%;
+  flex-grow: 1;
+}
+
+.table-footer {
+  background-color: #555;
+  color: white;
+  font-weight: bold;
+  text-align: right;
+  padding: 1rem;
 }
 
 .table-container {
@@ -40,11 +58,6 @@ h3 {
 .table-row td {
   padding: 1rem;
   color: #555;
-}
-
-.table-footer {
-  background-color: #0056b3;
-  color: white;
 }
 
 .table-footer td {
@@ -77,7 +90,7 @@ h3 {
 }
 
 .form-select:focus {
-  border-color: #007bff;
+  border-color: #333;
   outline: none;
 }
 
@@ -85,7 +98,7 @@ h3 {
   width: 100%;
   padding: 1rem;
   font-size: 1.2rem;
-  background-color: #28a745;
+  background-color: #555;
   color: white;
   border: none;
   border-radius: 5px;
@@ -94,5 +107,5 @@ h3 {
 }
 
 .pay-button:hover {
-  background-color: #218838;
+  background-color: #555;
 }

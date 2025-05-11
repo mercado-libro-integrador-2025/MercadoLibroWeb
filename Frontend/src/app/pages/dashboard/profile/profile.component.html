@@ -1,10 +1,9 @@
-<div class="profile-container">
+<div class="dashboard-card">
   <h2>¡Hola, {{ clienteLogueado.user.username }}!</h2>
-  <p>¿Qué vamos a leer hoy?</p>
-  <p>YA SÉ QUE NO ANDA. ESTOY TRABAJANDO EN ELLO</p>
-</div>
+  <p class="subtitle">¿Qué vamos a leer hoy?</p>
 
-<div class="profile-container">
+  <hr>
+
   <h3>Direcciones registradas</h3>
   <ul class="direcciones-list">
     <li *ngFor="let direccion of direcciones">
@@ -17,9 +16,9 @@
       </div>
     </li>
   </ul>
-</div>
 
-<div class="profile-container">
+  <hr>
+
   <h3>{{ editandoId ? 'Editar' : 'Agregar' }} dirección</h3>
   <form (ngSubmit)="guardarDireccion()" #direccionFormRef="ngForm" class="direccion-form">
     <div class="form-group">
@@ -39,4 +38,9 @@
       <button type="button" (click)="resetFormulario()" *ngIf="editandoId" class="cancel-btn">Cancelar</button>
     </div>
   </form>
+
+  <div class="delete-account-section">
+    <button (click)="eliminarCuenta()" class="delete-account-btn">Eliminar Cuenta</button>
+  </div>
+  
 </div>

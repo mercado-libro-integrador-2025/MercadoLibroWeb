@@ -1,8 +1,7 @@
-<div class="reviews-container">
+<div class="dashboard-card">
     <h3>Mis Reseñas</h3>
 
     <div *ngIf="clienteLogueado && clienteLogueado.user" class="user-info">
-        <p><strong>Usuario Logueado:</strong> {{ clienteLogueado.user.username }}</p>
     </div>
 
     <div class="user-reviews-list">
@@ -21,7 +20,7 @@
     </div>
 
     <hr class="my-4">
-    <h4>{{ isEditing ? 'Editar Reseña' : 'Dejar una Nueva Reseña' }}</h4>
+    <h4>{{ isEditing ? 'Editar Reseña' : 'Redactar reseña' }}</h4>
 
     <form (ngSubmit)="onSubmitReviewForm()">
         <div class="form-group mb-3">

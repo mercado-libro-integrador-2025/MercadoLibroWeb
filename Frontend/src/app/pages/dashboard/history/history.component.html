@@ -1,26 +1,30 @@
-<div class="purchase-history-card">
+<div class="dashboard-card">
     <h3>Historial de Compras</h3>
-
-    <table class="purchase-history-table">
-        <thead>
-            <tr>
-                <th>Dirección de Envío</th>
-                <th>Estado</th>
-                <th>Fecha del Pedido</th>
-                <th>Título del Libro</th>
-                <th>Cantidad</th>
-                <th>Precio Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let detalle of detallesPedidos">
-                <td>{{ detalle.direccion_envio }}</td>
-                <td>{{ detalle.estado_pedido }}</td>
-                <td>{{ detalle.fecha_pedido }}</td>
-                <td>{{ detalle.titulo_libro }}</td>
-                <td>{{ detalle.cantidad }}</td>
-                <td>${{ detalle.precio_total }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div *ngIf="detallesPedidos.length > 0; else emptyHistory">
+        <table class="purchase-history-table">
+            <thead>
+                <tr>
+                    <th>Dirección de Envío</th>
+                    <th>Estado</th>
+                    <th>Fecha del Pedido</th>
+                    <th>Título del Libro</th>
+                    <th>Cantidad</th>
+                    <th>Precio Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let detalle of detallesPedidos">
+                    <td>{{ detalle.direccion_envio }}</td>
+                    <td>{{ detalle.estado_pedido }}</td>
+                    <td>{{ detalle.fecha_pedido }}</td>
+                    <td>{{ detalle.titulo_libro }}</td>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td>${{ detalle.precio_total }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ng-template #emptyHistory>
+        <p style="text-align: center; color: #555;">No hay compras registradas.</p>
+    </ng-template>
 </div>
