@@ -1,0 +1,111 @@
+.dashboard-card {
+  max-width: 900px;
+  min-height: 400px; 
+  margin: 2rem auto;
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dashboard-card h3 {
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.table-container,
+.purchase-history-table {
+  width: 100%;
+  flex-grow: 1;
+}
+
+.table-footer {
+  background-color: #555;
+  color: white;
+  font-weight: bold;
+  text-align: right;
+  padding: 1rem;
+}
+
+.table-container {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
+.table-header {
+  background-color: #333;
+  color: white;
+}
+
+.table-header th {
+  padding: 1rem;
+  text-align: left;
+}
+
+.table-row {
+  background-color: #fff;
+  border-bottom: 1px solid #f1f1f1;
+  text-align: left;
+}
+
+.table-row td {
+  padding: 1rem;
+  color: #555;
+}
+
+.table-footer td {
+  padding: 1rem;
+  font-weight: bold;
+}
+
+.form-container {
+  margin-top: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+.form-select:focus {
+  border-color: #333;
+  outline: none;
+}
+
+.pay-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pay-button:hover {
+  background-color: #555;
+}

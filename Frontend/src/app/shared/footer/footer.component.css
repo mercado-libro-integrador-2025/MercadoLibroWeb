@@ -1,54 +1,62 @@
-footer {
-    min-height: 2vh;
-    background-color: #746b6b;
-    color: white;
-    padding: 10px;
-    text-align: center;
+/* html, body {
+    height: 100%;
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    align-items: center;
-   
+    flex-direction: column;
+} */
+
+main {
+    flex: 1; /* Se expande para empujar el footer hacia abajo */
+    margin-top: 75px; /* Ajuste según el header */
+    margin-bottom: 75px;
+}
+
+.fixed-footer {
+    bottom: 0;
+        color: white;
+        text-align: center;
+    font-size: 14px;
+    height: 75px;
+    width: 100%;
+    background-color: #212529; /* Fondo oscuro */
+}
+
+footer div {
+    background-color: #212529; /* Fondo oscuro */
+}
+p {
+margin-bottom: 0px;
+}
+
+.img {
+  height:75px;
+}
+
+footer div {
+    /* background-color: #212529; Fondo oscuro */
+}
+
+p {
+    /* margin-bottom: 0px; */
+}
+
+.img {
+    /* height: 75px; */
+}
+
+/* Aplicamos position: absolute solo en versiones de escritorio */
+@media (min-width: 769px) {
+  .fixed-footer {
+    /* position: absolute; */
   }
-/* Columnas del footer */
-.column {
-    width: calc(33.33% - 20px);
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 20px;
-    text-align: center;
-    box-sizing: border-box;
-  }
-  
-  /*Footer  version celular*/
-  @media (max-width: 479px) {
-    footer{
-      flex-direction: column;
-    }
-  .column {
-    width: auto;
-    display: inline-block;
-    vertical-align: top;
-    text-align: center;
-    box-sizing: border-box;
-    margin-top: 5px;
-    margin-right: 0px;
-  }
-  }
-  /*mantener proporcion de imagen */
-  .column-img{
-   object-fit: contain;
-   margin-top: 5px;
-   margin-bottom: 5px;
-   height: 32px;
-  }
-  
-  .column:last-child {
-    margin-right: 0;
-  }
-  
-  
-  .column h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }  
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .fixed-footer {
+    position: relative; /* Evita solapamiento */
+    margin-top: 52px;
+    width: 528px;
+    font-size: 14px;
+    height: 75px;
+}
+}

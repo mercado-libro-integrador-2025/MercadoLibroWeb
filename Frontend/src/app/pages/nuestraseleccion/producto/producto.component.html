@@ -1,30 +1,59 @@
 <app-categoria (buscar)="buscarLibros($event)"></app-categoria>
-@for (libro of libros; track libro ){
-<div id="cardContainer">
-    <div class="card text-bg-secondary mb-1" style="max-width: 700px;">
-        <div class="d-flex align-items-center">
-            <div class="col-4">
-                <img [src]="libro.portada" alt="" class="card-img-top">
-            </div>
-            <div class="col-8">
-                <div class="card-body">
-                    <p id="title"><b>Título:</b> {{ libro.titulo }}</p>
-                    <p><b>Autor:</b> {{ libro.autor }}</p>
-                    <p><b>Categoría:</b> {{ libro.categoria }}</p>
-                    <p><b>Precio:</b> $ {{ libro.precio }} </p>
-                    <p class="stock"><b>Stock:</b> {{ libro.stock }} </p>
-                    <button class="btn btn-dark m-3" (click)="anadirAlCarrito(libro)">COMPRAR</button>
-                    <button [routerLink]="['/descripcion', libro.id_libro]" class="btn btn-light">SINOPSIS</button>
+
+@for (libro of libros; track libro.id_libro) {
+    <div id="cardContainer">
+        <div class="card text-bg-secondary mb-1" style="max-width: 700px;">
+            <div class="d-flex align-items-center">
+                <div class="col-4">
+                    <img [src]="getCorrectImageUrl(libro.portada)" alt="Portada del libro {{ libro.titulo }}" class="card-img-top">
+                </div>
+                <div class="col-8">
+                    <div class="card-body">
+                        <p id="title"><b>Título:</b> {{ libro.titulo }}</p>
+                        <p><b>Autor:</b> {{ libro.autor?.nombre_autor }}</p>
+                        <p><b>Categoría:</b> {{ libro.categoria?.nombre_categoria }}</p>
+                        <p><b>Precio:</b> $ {{ libro.precio }} </p>
+                        <p class="stock"><b>Stock:</b> {{ libro.stock }} </p>
+                        <button class="btn btn-dark m-3" (click)="anadirAlCarrito(libro)">COMPRAR</button>
+                        <button [routerLink]="['/descripcion', libro.id_libro]" class="btn btn-light">SINOPSIS</button>
+                        <button class="btn btn-info m-3" (click)="viewReviews(libro)">Reseñas de Usuarios</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>}
+
+        </div>
+}
 
 @empty {
-<div class="card text-bg-secondary mb-3">
-    <div class="card-body text-center">
-        No se encontraron resultados. Prueba otra vez.
+    <div class="card text-bg-secondary mb-3">
+        <div class="card-body text-center">
+            No se encontraron resultados. Prueba otra vez.
+        </div>
+    </div>
+}
+
+<div *ngIf="showReviewsModal" class="modal-overlay">
+    <div class="modal-content">
+        <h5>Reseñas para "{{ selectedBook?.titulo }}"</h5>
+
+        <div class="modal-body">
+            <div *ngIf="selectedBookReviews && selectedBookReviews.length > 0">
+                <div *ngFor="let review of selectedBookReviews" class="review-item-small border-bottom pb-2 mb-2">
+                    <p><b>Usuario:</b> {{ review.email_usuario }}</p>
+                    <p><b>Comentario:</b> {{ review.comentario }}</p>
+                    <p><small>Fecha: {{ review.fecha_creacion | date:'short' }}</small></p>
+                </div>
+            </div>
+            <div *ngIf="!selectedBookReviews || selectedBookReviews.length === 0">
+                <p>Este libro aún no tiene reseñas.</p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeReviewsModal()">Cerrar</button>
+        </div>
     </div>
 </div>
-}
+
+
