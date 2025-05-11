@@ -146,4 +146,17 @@ eliminarCuenta(): Observable<any> {
   return this.http.delete(`https://mercadolibroweb.onrender.com/api/usuarios/${cliente.user.id}/`, { headers });
 }
 
+actualizarDatosPersonales(username: string, email: string, password: string): Observable<any> {
+  const cliente = this.obtenerClienteLogueado();
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${cliente?.access}`,
+    'Content-Type': 'application/json'
+  });
+
+  const url = `https://mercadolibroweb.onrender.com/api/usuarios/${cliente.user.id}/`;
+  const body = { username, email, password };
+
+  return this.http.put(url, body, { headers });
+}
+
 }

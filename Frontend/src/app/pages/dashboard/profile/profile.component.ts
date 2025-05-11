@@ -13,6 +13,13 @@ import { FormsModule } from '@angular/forms';
 
 export class ProfileComponent implements OnInit {
   clienteLogueado: any;
+
+  datosPersonalesForm: any = {
+    username: '',
+    email: '',
+    password: ''
+  };
+
   direcciones: any[] = [];
   direccionForm: any = {
     calle: '',
@@ -27,6 +34,8 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.clienteLogueado = this.loginService.obtenerClienteLogueado();
     this.obtenerDireccionesCliente();
+    this.datosPersonalesForm.username = this.clienteLogueado.user.username;
+    this.datosPersonalesForm.email = this.clienteLogueado.user.email;
   }
 
   obtenerDireccionesCliente(): void {
@@ -93,4 +102,24 @@ export class ProfileComponent implements OnInit {
   }
 }
 
+actualizarDatosPersonales(): void {
+    const { username, email, password } = this.datosPersonalesForm;
+    if (!password) {
+      alert('Debes ingresar tu contraseña actual para confirmar los cambios.');
+      return;
+    }
+
+    this.loginService.actualizarDatosPersonales(username, email, password).subscribe({
+      next: () => {
+        alert('Datos actualizados correctamente.');
+        this.clienteLogueado.user.username = username;
+        this.clienteLogueado.user.email = email;
+        localStorage.setItem('clienteLogueado', JSON.stringify(this.clienteLogueado));
+      },
+      error: (err) => {
+        console.error('Error al actualizar datos personales:', err);
+        alert('Hubo un problema al actualizar los datos. Verifica tu contraseña.');
+      }
+    });
+  }
 }
