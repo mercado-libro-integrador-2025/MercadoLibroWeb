@@ -1,8 +1,8 @@
-html, body {
+/* html, body {
     height: 100%;
     display: flex;
     flex-direction: column;
-}
+} */
 
 main {
     flex: 1; /* Se expande para empujar el footer hacia abajo */
@@ -31,13 +31,23 @@ margin-bottom: 0px;
   height:75px;
 }
 
+footer div {
+    /* background-color: #212529; Fondo oscuro */
+}
+
+p {
+    /* margin-bottom: 0px; */
+}
+
+.img {
+    /* height: 75px; */
+}
 
 /* Aplicamos position: absolute solo en versiones de escritorio */
 @media (min-width: 769px) {
   .fixed-footer {
-    position: absolute;
+    /* position: absolute; */
   }
-
 }
 
 /* Ajustes para pantallas pequeñas */
@@ -48,4 +58,5 @@ margin-bottom: 0px;
     width: 528px;
     font-size: 14px;
     height: 75px;
+}
 }

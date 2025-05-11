@@ -27,7 +27,8 @@ export const routes: Routes = [
     { path: 'contacto', title: 'Contacto', component: ContactoComponent },
     { path: 'inicio', title: 'Login', component: InicioComponent },
     {
-        path: 'dashboard', title: 'Mi perfil', component: DashboardComponent,
+        path: 'dashboard', title: 'Mi perfil', component: DashboardComponent, canActivate: [AuthGuard],
+        
         children: [
             { path: '', redirectTo: 'profile-dashboard', pathMatch: 'full' },
             { path: 'profile-dashboard', component: ProfileComponent, title: 'Mi perfil' },

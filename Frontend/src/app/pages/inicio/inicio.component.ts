@@ -14,8 +14,11 @@ import { Router } from '@angular/router';
 export class InicioComponent {
   loginFormulario: FormGroup;
   registroFormulario: FormGroup;
+  registroExitoso: boolean = false; 
+  usuarioRegistrado: boolean = false; 
 
   constructor(private formBuilder: FormBuilder, private loginService: LoginService, private router: Router) {
+    // Formularios de login y registro
     this.loginFormulario = this.formBuilder.group({
       email: ['', [
         Validators.required,
@@ -28,28 +31,29 @@ export class InicioComponent {
     });
 
     this.registroFormulario = this.formBuilder.group({
-  username: ['', [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(50),
-    Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/)
-  ]],
-  email: ['', [
-    Validators.required,
-    Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-  ]],
-  password: ['', [
-    Validators.required,
-    Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/)
-  ]],
-  repetirPassword: ['', [
-    Validators.required,
-    Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/)
-  ]]
-}, { validators: this.matchingPasswordsValidator('password', 'repetirPassword') });
+      username: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$/)
 
+      ]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/)
+      ]],
+      repetirPassword: ['', [
+        Validators.required,
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/)
+      ]]
+    }, { validators: this.matchingPasswordsValidator('password', 'repetirPassword') });
   }
 
+  // Validador para coincidir las contraseñas
   matchingPasswordsValidator(password: string, confirmPassword: string) {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const passwordControl = control.get(password);
@@ -64,6 +68,35 @@ export class InicioComponent {
     };
   }
 
+  // Enviar datos de registro
+  enviarDatosRegistro(event: Event) {
+    event.preventDefault();
+    if (this.registroFormulario.valid) {
+      const username = this.registroFormulario.value.username;
+      const email = this.registroFormulario.value.email;
+      const password = this.registroFormulario.value.password;
+      this.loginService.registrarUsuario(username, email, password).subscribe(
+        response => {
+          this.registroExitoso = true;
+          this.usuarioRegistrado = false;
+          setTimeout(() => {
+            this.registroExitoso = false;
+          }, 5000);
+        },
+        error => {
+          this.usuarioRegistrado = true;
+          this.registroExitoso = false;
+          setTimeout(() => {
+            this.usuarioRegistrado = false;
+          }, 5000);
+        }
+      );
+    } else {
+      this.registroFormulario.markAllAsTouched();
+    }
+  }
+
+  // Enviar datos de login
   onEnviar(event: Event) {
     event.preventDefault();
     if (this.loginFormulario.valid) {
@@ -83,25 +116,7 @@ export class InicioComponent {
     }
   }
 
-  enviarDatosRegistro(event: Event) {
-    event.preventDefault();
-    if (this.registroFormulario.valid) {
-      const username = this.registroFormulario.value.username;
-      const email = this.registroFormulario.value.email;
-      const password = this.registroFormulario.value.password;
-      this.loginService.registrarUsuario(username, email, password).subscribe(
-        response => {
-          alert("Registro exitoso");
-        },
-        error => {
-          alert("El usuario ya está registrado");
-        }
-      );
-    } else {
-      this.registroFormulario.markAllAsTouched();
-    }
-  }
-
+  // Getters para acceder a los controles
   get Email() {
     return this.loginFormulario.get('email');
   }
