@@ -266,16 +266,15 @@ class ItemCarritoViewSet(viewsets.ModelViewSet):
             serializer.save(usuario=usuario)
 
 class PedidoViewSet(viewsets.ModelViewSet):
-    serializer_class = PedidoSerializer
     queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return Pedido.objects.filter(usuario=self.request.user)  
-
-    def perform_create(self, serializer):
-        raise serializers.ValidationError("El pedido debe ser confirmado a través del endpoint 'confirmar-pedido'.")
-
+    @action(detail=False, methods=['get'], url_path='usuario/(?P<usuario_id>[^/.]+)')
+    def pedidos_por_usuario(self, request, usuario_id=None):
+        pedidos = Pedido.objects.filter(usuario__id=usuario_id)
+        serializer = self.get_serializer(pedidos, many=True)
+        return Response(serializer.data)
 
 class ReseñaViewSet(viewsets.ModelViewSet):
     queryset = Reseña.objects.all()
