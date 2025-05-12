@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginService } from './login.service';
+import { lastValueFrom } from 'rxjs';
+
+// Declarar MercadoPago para que TypeScript no genere errores
+declare const MercadoPago: any;
 
 export interface CarritoItem {
   titulo: string;
@@ -12,18 +16,22 @@ export interface CarritoItem {
 @Injectable({
   providedIn: 'root'
 })
-
 export class CheckoutService {
   private _carrito = new BehaviorSubject<CarritoItem[]>([]);
   private _cantidadProductos = new BehaviorSubject<number>(0);
   carrito = this._carrito.asObservable();
   cantidadProductos = this._cantidadProductos.asObservable();
 
+  // URL de la API de tu backend (sin usar environment)
   private apiUrl = 'https://mercadolibroweb.onrender.com/api';
   private direccionSeleccionada: string = '';
 
+  // Clave pública de MercadoPago (Sandbox)
+  private mercadoPagoPublicKey = 'TEST-826ea554-1909-4e44-8169-70fa973537ba';
+
   constructor(private http: HttpClient, private loginService: LoginService) {}
 
+  // Gestión del carrito
   agregarProducto(nuevoItem: CarritoItem): void {
     nuevoItem.precio = parseFloat(nuevoItem.precio.toString());
     const carritoActual = this._carrito.getValue();
@@ -54,6 +62,7 @@ export class CheckoutService {
     this.actualizarCantidadProductos();
   }
 
+  // Gestión de autenticación
   private getAuthHeaders(): HttpHeaders {
     const cliente = this.loginService.obtenerClienteLogueado();
     return new HttpHeaders({
@@ -61,6 +70,7 @@ export class CheckoutService {
     });
   }
 
+  // Gestión de direcciones
   getDireccionesEnvio(): Observable<string[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<any[]>(`${this.apiUrl}/direcciones/`, { headers }).pipe(
@@ -76,47 +86,36 @@ export class CheckoutService {
     return this.direccionSeleccionada;
   }
 
-  async confirmarCompra(): Promise<void> {
-    if (!this.direccionSeleccionada) {
-      alert('Debes seleccionar una dirección de envío.');
-      return;
-    }
-
-    const carrito = this.obtenerCarrito();
-    if (carrito.length === 0) {
-      alert('El carrito está vacío.');
-      return;
-    }
-
-    const preferenceData = {
-      items: carrito.map((item) => ({
-        title: item.titulo,
-        unit_price: Number(item.precio),
-        quantity: item.cantidad,
-      })),
-      payer: {
-        address: {
-          street_name: this.direccionSeleccionada,
-        }
-      }
-    };
-
+  // Confirmar compra y redirigir a MercadoPago
+  async confirmarCompra() {
     try {
-      const response = await this.http
-        .post<any>(
-          'https://api.mercadopago.com/checkout/preferences?access_token=TEST-6771469815948587-060715-3d53e33eb7fe31e220ad7f572e68ae8f-1846522961',
-          preferenceData
-        )
-        .toPromise();
+      // Paso 1: Solicitar preferencia al backend
+      const headers = this.getAuthHeaders();
+      const preference = await lastValueFrom(
+        this.http.post<any>(`${this.apiUrl}/checkout/crear-preferencia/`, {}, { headers })
+      );
+      const preferenceId = preference.id;
 
-      if (response && response.init_point) {
-        window.location.href = response.init_point;
-      } else {
-        console.error('Error: No se recibió preferenceId');
+      // Paso 2: Verificar que el SDK esté cargado
+      if (typeof MercadoPago === 'undefined') {
+        throw new Error('El SDK de MercadoPago no está cargado.');
       }
+
+      // Paso 3: Inicializar MercadoPago
+      const mp = new MercadoPago(this.mercadoPagoPublicKey, {
+        locale: 'es-AR'
+      });
+
+      // Paso 4: Redirigir al usuario al Checkout
+      mp.checkout({
+        preference: {
+          id: preferenceId
+        },
+        autoOpen: true, 
+      });
     } catch (error) {
-      console.error('Error al crear preferencia de pago:', error);
-      alert('Ocurrió un error al procesar el pago. Intenta nuevamente.');
+      console.error('Error al iniciar el proceso de pago:', error);
+      alert('Hubo un problema al iniciar el pago. Por favor, inténtalo de nuevo.');
     }
   }
 }
