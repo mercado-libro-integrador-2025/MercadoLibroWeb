@@ -86,13 +86,13 @@ def crear_preferencia(request):
         return Response({'error': f'Error al crear la preferencia: {str(e)}'}, status=500)
 
 def pago_success(request):
-    return render(request, 'pago/success.html')  # o HttpResponse("Pago aprobado")
+    return redirect("http://localhost:4200/dashboard/profile-dashboard")  
 
 def pago_pending(request):
-    return render(request, 'pago/pending.html')  # o HttpResponse("Pago pendiente")
+    return redirect("http://localhost:4200/dashboard/profile-dashboard")
 
 def pago_failure(request):
-    return render(request, 'pago/failure.html')  # o HttpResponse("Pago fallido")
+    return redirect("http://localhost:4200/dashboard/profile-dashboard")
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
