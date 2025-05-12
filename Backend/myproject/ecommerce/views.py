@@ -44,10 +44,10 @@ from django.shortcuts import get_object_or_404
 def crear_preferencia(request):
     usuario = request.user
     productos = request.data.get('productos', [])
-    
+
     if not productos:
         return Response({'error': 'No hay productos en el carrito.'}, status=400)
-    
+
     # Configurar MercadoPago con el Access Token
     sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
 
@@ -57,32 +57,31 @@ def crear_preferencia(request):
         items.append({
             "title": producto.get('titulo'),
             "quantity": int(producto.get('cantidad')),
-            "unit_price": float(producto.get('precio'))
+            "unit_price": float(producto.get('precio')),
+            "currency_id": "ARS"
         })
 
     # Crear la preferencia
     preference_data = {
         "items": items,
         "payer": {
-            "name": usuario.username,
             "email": usuario.email
         },
         "back_urls": {
-            "success": "https://tusitio.com/checkout/success",
-            "failure": "https://tusitio.com/checkout/failure",
-            "pending": "https://tusitio.com/checkout/pending"
+            "success": "https://mercadolibroweb.onrender.com/pago/success",
+            "failure": "https://mercadolibroweb.onrender.com/pago/failure",
+            "pending": "https://mercadolibroweb.onrender.com/pago/pending"
         },
         "auto_return": "approved"
     }
 
-    preference_response = sdk.preference().create(preference_data)
-    preference = preference_response.get("response")
+    try:
+        preference_response = sdk.preference().create(preference_data)
+        preference_id = preference_response["response"]["id"]
+        return Response({"id": preference_id})
+    except Exception as e:
+        return Response({'error': f'Error al crear la preferencia: {str(e)}'}, status=500)
 
-    return Response({
-        "id": preference.get("id"),
-        "init_point": preference.get("init_point"),
-        "sandbox_init_point": preference.get("sandbox_init_point")
-    })
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
