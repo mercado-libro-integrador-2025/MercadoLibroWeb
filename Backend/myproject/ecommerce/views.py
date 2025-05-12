@@ -72,9 +72,9 @@ def crear_preferencia(request):
             "email": usuario.email
         },
         "back_urls": {
-            "success": "https://mercadolibroweb.onrender.com/pago/success",
-            "failure": "https://mercadolibroweb.onrender.com/pago/failure",
-            "pending": "https://mercadolibroweb.onrender.com/pago/pending"
+            "success": "https://mercadolibroweb.onrender.com/api/pago/success",
+            "failure": "https://mercadolibroweb.onrender.com/api/pago/failure",
+            "pending": "https://mercadolibroweb.onrender.com/api/pago/pending"
         },
         "auto_return": "approved"
     }
