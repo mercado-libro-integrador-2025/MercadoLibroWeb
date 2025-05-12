@@ -93,6 +93,8 @@ export class LoginService {
     }
   }
 
+//Servicios para el perfil del cliente en el dashboard
+
 obtenerDirecciones(): Observable<any[]> {
   const cliente = this.obtenerClienteLogueado();
   const headers = new HttpHeaders({
@@ -137,4 +139,30 @@ eliminarDireccion(id: number): Observable<any> {
   return this.http.delete(`https://mercadolibroweb.onrender.com/api/direcciones/${id}/`, { headers });
 }
 
+<<<<<<< HEAD
 }
+=======
+eliminarCuenta(): Observable<any> {
+  const cliente = this.obtenerClienteLogueado();
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${cliente?.access}`
+  });
+
+  return this.http.delete(`https://mercadolibroweb.onrender.com/api/usuarios/${cliente.user.id}/`, { headers });
+}
+
+actualizarDatosPersonales(username: string, email: string, password: string): Observable<any> {
+  const cliente = this.obtenerClienteLogueado();
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${cliente?.access}`,
+    'Content-Type': 'application/json'
+  });
+
+  const url = `https://mercadolibroweb.onrender.com/api/usuarios/${cliente.user.id}/`;
+  const body = { username, email, password };
+
+  return this.http.put(url, body, { headers });
+}
+
+}
+>>>>>>> c7a6bd7c471230c40495d840e21ffedf041411ff

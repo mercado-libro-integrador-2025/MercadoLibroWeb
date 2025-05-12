@@ -1,18 +1,22 @@
-<div class="order-status-card">
-    <h3>Estado del Envío</h3>
-
+<div class="dashboard-card">
+  <h3>¿Dónde está mi pedido?</h3>
+  <div *ngIf="order; else emptyStatus">
     <div class="order-details">
-        <div class="order-detail">
-            <span class="label">Número de Pedido:</span>
-            <span>{{ order.orderId }}</span>
-        </div>
-        <div class="order-detail">
-            <span class="label">Fecha:</span>
-            <span>{{ order.fecha }}</span>
-        </div>
-        <div class="order-detail">
-            <span class="label">Estado:</span>
-            <span>{{ order.status }}</span>
-        </div>
+      <div class="order-detail">
+        <span class="label">Número de Pedido:</span>
+        <span>{{ order.id }}</span>
+      </div>
+      <div class="order-detail">
+        <span class="label">Fecha:</span>
+        <span>{{ order.fecha_pedido | date }}</span>
+      </div>
+      <div class="order-detail">
+        <span class="label">Estado:</span>
+        <span>{{ order.estado }}</span>
+      </div>
     </div>
+  </div>
+  <ng-template #emptyStatus>
+    <p style="text-align: center; color: #555;">No hay información de envíos disponible.</p>
+  </ng-template>
 </div>

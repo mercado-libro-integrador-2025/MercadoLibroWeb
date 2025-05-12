@@ -1,3 +1,5 @@
+import mercadopago
+from django.conf import settings
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from django.contrib.auth import authenticate, login, logout
@@ -16,6 +18,7 @@ from .models import (
     Libro,
     ItemCarrito,
     Pedido,
+    ProductoPedido,
     Direccion,
     MetodoPago,
     Reseña,
@@ -33,7 +36,119 @@ from .serializers import (
     ReseñaSerializer,
     ContactoSerializer
 )
+from rest_framework.decorators import api_view, permission_classes
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.http import HttpResponse
+from decimal import Decimal
+from django.shortcuts import redirect
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def crear_preferencia(request):
+    usuario = request.user
+    productos = request.data.get('productos', [])
+
+    if not productos:
+        return Response({'error': 'No hay productos en el carrito.'}, status=400)
+
+    # Configurar MercadoPago con el Access Token
+    sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
+
+    # Construir los items para la preferencia
+    items = []
+    for producto in productos:
+        items.append({
+            "title": producto.get('titulo'),
+            "quantity": int(producto.get('cantidad')),
+            "unit_price": float(producto.get('precio')),
+            "currency_id": "ARS"
+        })
+
+    # Crear la preferencia
+    preference_data = {
+        "items": items,
+        "payer": {
+            "email": usuario.email
+        },
+        "back_urls": {
+            "success": "https://mercadolibroweb.onrender.com/api/pago/success",
+            "failure": "https://mercadolibroweb.onrender.com/api/pago/failure",
+            "pending": "https://mercadolibroweb.onrender.com/api/pago/pending"
+        },
+        "auto_return": "approved"
+    }
+
+    try:
+        preference_response = sdk.preference().create(preference_data)
+        preference_id = preference_response["response"]["id"]
+        return Response({"id": preference_id})
+    except Exception as e:
+        return Response({'error': f'Error al crear la preferencia: {str(e)}'}, status=500)
+
+def pago_success(request):
+    return redirect("http://localhost:4200/dashboard/profile-dashboard")  
+
+def pago_pending(request):
+    return redirect("http://localhost:4200/dashboard/profile-dashboard")
+
+def pago_failure(request):
+    return redirect("http://localhost:4200/dashboard/profile-dashboard")
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def confirmar_pedido(request):
+    usuario = request.user
+
+    # Obtener productos en el carrito del usuario
+    items_carrito = ItemCarrito.objects.filter(usuario=usuario)
+    if not items_carrito:
+        return Response({"error": "El carrito está vacío."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Validar dirección de envío
+    direccion = get_object_or_404(Direccion, usuario=usuario)
+    if not direccion:
+        return Response({"error": "No tienes una dirección registrada."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Validar método de pago
+    metodo_pago = get_object_or_404(MetodoPago, usuario=usuario)
+    if not metodo_pago:
+        return Response({"error": "No tienes un método de pago registrado."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Calcular el total del pedido
+    total_pedido = Decimal(0)
+    for item in items_carrito:
+        total_pedido += item.total
+
+    # Crear el pedido
+    pedido = Pedido.objects.create(
+        usuario=usuario,
+        direccion=direccion,
+        metodo_pago=metodo_pago.tipo_tarjeta,
+        total=total_pedido
+    )
+
+    # Crear los productos del pedido
+    for item in items_carrito:
+        ProductoPedido.objects.create(
+            pedido=pedido,
+            libro=item.libro,
+            cantidad=item.cantidad,
+            precio_unitario=item.libro.precio
+        )
+
+        # Actualizar el stock del libro
+        item.libro.stock -= item.cantidad
+        item.libro.save()
+
+        # Eliminar el item del carrito
+        item.delete()
+
+    return Response({
+        "message": "Pedido confirmado exitosamente.",
+        "pedido_id": pedido.id_pedido,
+        "total": total_pedido
+    }, status=status.HTTP_201_CREATED)
 
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -56,6 +171,9 @@ class LoginView(APIView):
         user = authenticate(email=email, password=password)
 
         if user:
+            if not user.is_active:
+                return Response({'error': 'Tu cuenta ha sido desactivada. Contacta al soporte.'}, status=status.HTTP_403_FORBIDDEN)
+            
             login(request, user)
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -63,7 +181,7 @@ class LoginView(APIView):
                 'access': str(refresh.access_token),
                 'user': UserSerializer(user).data
             }, status=status.HTTP_200_OK)
-        return Response({'error': 'Invalid Credentials'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Credenciales inválidas'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class LogoutView(APIView):
@@ -76,20 +194,14 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
-    # Método personalizado para eliminar un usuario
     def destroy(self, request, *args, **kwargs):
         user = self.get_object()
         if user == request.user or request.user.is_staff: 
-            user.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            user.is_active = False  
+            user.save()
+            return Response({'message': 'Cuenta desactivada exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'error': 'No tienes permiso para eliminar esta cuenta'}, status=status.HTTP_403_FORBIDDEN)
-    
-    # Acción personalizada para obtener el usuario autenticado
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
-    def me(self, request):
-        serializer = self.get_serializer(request.user)
-        return Response(serializer.data)
 
 
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -154,21 +266,15 @@ class ItemCarritoViewSet(viewsets.ModelViewSet):
             serializer.save(usuario=usuario)
 
 class PedidoViewSet(viewsets.ModelViewSet):
-    serializer_class = PedidoSerializer
     queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return Pedido.objects.filter(usuario=self.request.user)  
-
-    def perform_create(self, serializer):
-        carrito_items = ItemCarrito.objects.filter(usuario=self.request.user)
-        if carrito_items.exists():
-            total = sum(item.libro.precio * item.cantidad for item in carrito_items)
-            pedido = serializer.save(usuario=self.request.user, total=total)
-            carrito_items.delete()  
-            return pedido
-        raise serializers.ValidationError("El carrito está vacío.")
+    @action(detail=False, methods=['get'], url_path='usuario/(?P<usuario_id>[^/.]+)')
+    def pedidos_por_usuario(self, request, usuario_id=None):
+        pedidos = Pedido.objects.filter(usuario__id=usuario_id)
+        serializer = self.get_serializer(pedidos, many=True)
+        return Response(serializer.data)
 
 class ReseñaViewSet(viewsets.ModelViewSet):
     queryset = Reseña.objects.all()

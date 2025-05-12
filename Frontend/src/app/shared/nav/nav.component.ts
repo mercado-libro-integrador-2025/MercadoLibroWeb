@@ -1,4 +1,4 @@
-import { CarritoService } from '../../services/carrito.service';
+import { CheckoutService } from '../../services/checkout.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -19,7 +19,7 @@ export class NavComponent implements OnInit {
   mostrarCarrito = false;
 
   constructor(
-    private carritoService: CarritoService,
+    private checkoutService: CheckoutService,
     private loginService: LoginService,
     private router: Router
   ) {
@@ -27,7 +27,7 @@ export class NavComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.carritoService.cantidadProductos.subscribe(cantidad => {
+    this.checkoutService.cantidadProductos.subscribe(cantidad => {
       this.cantidadProductosCarrito = cantidad;
     });
   }

@@ -1,26 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { CarritoService } from '../../../services/carrito.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule, NgFor } from '@angular/common';
+import { Component } from '@angular/core';
+import { CheckoutResumenComponent } from './checkout-resumen/checkout-resumen.component';
+import { CheckoutDireccionComponent } from './checkout-direccion/checkout-direccion.component';
+import { CheckoutBotonComponent } from './checkout-boton/checkout-boton.component';
+import { CommonModule } from '@angular/common';
 
-
-interface CarritoItem {
-  titulo: string;
-  precio: number;
-  cantidad: number;
-}
 
 @Component({
   selector: 'app-checkout',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, NgFor],
   standalone: true,
+  imports: [
+    CheckoutResumenComponent, 
+    CheckoutDireccionComponent, 
+    CheckoutBotonComponent,
+    CommonModule
+  ],
   templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.css'
-
+  styleUrls: ['./checkout.component.css']
 })
+export class CheckoutComponent{
 
+<<<<<<< HEAD
 export class CheckoutComponent implements OnInit {
   carrito: CarritoItem[] = [];
   total: number = 0;
@@ -137,4 +136,6 @@ export class CheckoutComponent implements OnInit {
       console.error('No se pudo redirigir porque preferenceId no está definido.');
     }
   }
+=======
+>>>>>>> c7a6bd7c471230c40495d840e21ffedf041411ff
 }

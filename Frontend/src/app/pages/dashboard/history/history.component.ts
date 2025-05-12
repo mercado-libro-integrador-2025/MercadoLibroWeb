@@ -1,43 +1,47 @@
 import { Component, OnInit } from '@angular/core';
-import { PedidosPorClienteService } from '../../../services/pedidos-por-cliente.service.ts.service';
-import { LoginService } from '../../../services/login.service';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
-    selector: 'app-history',
-    standalone: true,
-    imports: [CommonModule],
-    templateUrl: './history.component.html',
-    styleUrls: ['./history.component.css']
+  selector: 'app-history',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './history.component.html',
+  styleUrls: ['./history.component.css']
 })
 export class HistoryComponent implements OnInit {
-    detallesPedidos: any[] = [];
+  detallesPedidos: any[] = [];
 
-    constructor(
-        private pedidosPorClienteService: PedidosPorClienteService,
-        private loginService: LoginService
-    ) { }
+  constructor(private loginService: LoginService, private http: HttpClient) {}
 
-    ngOnInit(): void {
-        // const clienteLogueado = this.loginService.obtenerClienteLogueado();
-        // if (clienteLogueado && clienteLogueado.id_cliente) {
-        //     const clienteId = clienteLogueado.id_cliente;
-        //     this.pedidosPorClienteService.obtenerDetallePedido(clienteId).subscribe(
-        //         (data: any) => {
-        //             console.log(data); // Imprime la respuesta del servicio en la consola
-        //             if (data && data.detalles_pedidos && data.detalles_pedidos.length > 0) {
-        //                 this.detallesPedidos = data.detalles_pedidos;
-        //             } else {
-        //                 console.log('El cliente no tiene pedidos.');
-        //                 this.detallesPedidos = [];
-        //             }
-        //         },
-        //         (error: any) => {
-        //             console.error('Error al obtener el detalle del pedido:', error);
-        //         }
-        //     );
-        // } else {
-        //     console.error('Cliente no logueado o ID de cliente no disponible');
-        // }
+  ngOnInit(): void {
+    const cliente = this.loginService.obtenerClienteLogueado();
+    if (cliente) {
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${cliente.access}`
+      });
+
+      const url = `https://mercadolibroweb.onrender.com/api/pedidos/usuario/${cliente.user.id}`;
+
+      this.http.get<any[]>(url, { headers }).subscribe({
+        next: (response) => {
+          // Mapeamos cada item si es necesario
+          this.detallesPedidos = response.flatMap((pedido: any) =>
+            pedido.items.map((item: any) => ({
+              direccion_envio: pedido.direccion_envio,
+              estado_pedido: pedido.estado,
+              fecha_pedido: pedido.fecha_pedido,
+              titulo_libro: item.libro?.nombre || 'Desconocido',
+              cantidad: item.cantidad,
+              precio_total: item.precio_total
+            }))
+          );
+        },
+        error: (err) => {
+          console.error('Error al obtener historial de pedidos:', err);
+        }
+      });
     }
+  }
 }

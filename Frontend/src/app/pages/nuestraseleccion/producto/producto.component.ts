@@ -1,14 +1,13 @@
 import { Component, OnInit } from "@angular/core";
-// Importa CommonModule
 import { CommonModule } from '@angular/common';
-import { Libro, Autor, Categoria } from "../../../services/models/producto"; // Importa Autor y Categoria también
+import { Libro } from "../../../services/models/producto"; 
 import { ProductoService } from "../../../services/producto.service";
 import { RouterLink } from "@angular/router";
 import { CategoriaComponent } from "../categoria/categoria.component";
 import { DescripcionComponent } from "../descripcion/descripcion.component";
-import { CarritoService, CarritoItem } from "../../../services/carrito.service";
-import { HttpErrorResponse } from "@angular/common/http"; // Importa HttpErrorResponse
-import { ReviewsService, Resena } from "../../../services/reviews.service"; // Importa ReviewsService y Resena
+import { CheckoutService, CarritoItem } from "../../../services/checkout.service";
+import { HttpErrorResponse } from "@angular/common/http"; 
+import { ReviewsService, Resena } from "../../../services/reviews.service"; 
 
 
 @Component({
@@ -16,7 +15,6 @@ import { ReviewsService, Resena } from "../../../services/reviews.service"; // I
     standalone: true,
     templateUrl: './producto.component.html',
     styleUrls: ['./producto.component.css'],
-    // Añade CommonModule a los imports
     imports: [RouterLink, CategoriaComponent, DescripcionComponent, CommonModule]
 })
 export class ProductoComponent implements OnInit {
@@ -31,26 +29,20 @@ export class ProductoComponent implements OnInit {
 
     constructor(
         private productoService: ProductoService,
-        private carritoService: CarritoService,
+        private carritoService: CheckoutService,
         private reviewsService: ReviewsService // Inyecta ReviewsService
     ) { }
 
     ngOnInit(): void {
-        // El método buscarLibros se llama desde el componente CategoriaComponent
-        // cuando se inicializa o se realiza una búsqueda.
-        // Si quieres cargar todos los libros al iniciar la página, puedes descomentar y usar esto:
-        // this.loadAllBooks();
-        // O asegúrate de que CategoriaComponent emite el evento 'buscar' al iniciar.
     }
 
-    // Método opcional para cargar todos los libros al inicio
     loadAllBooks(): void {
         this.productoService.searchLibros('', '').subscribe({
             next: (libros: Libro[]) => {
                 this.libros = libros;
-                console.log('Libros cargados al iniciar:', this.libros); // Log al cargar todos
+                console.log('Libros cargados al iniciar:', this.libros); 
                 if (this.libros.length > 0) {
-                    console.log('Valor de portada del primer libro:', this.libros[0].portada); // <-- LOG para portada
+                    console.log('Valor de portada del primer libro:', this.libros[0].portada); 
                 }
             },
             error: (error: HttpErrorResponse) => {

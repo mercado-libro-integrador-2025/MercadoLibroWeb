@@ -1,0 +1,24 @@
+.checkout-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.checkout-table th,
+.checkout-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.checkout-table th {
+  background-color: #333;
+  color: #fff;
+}
+
+.checkout-table td {
+  color: #555;
+}
+
+.total-row td {
+  font-weight: bold;
+}
