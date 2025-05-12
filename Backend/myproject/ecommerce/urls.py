@@ -24,7 +24,7 @@ urlpatterns = [
     path('auth/signup/', SignupView.as_view(), name='auth_signup'),
     path('checkout/crear-preferencia/', crear_preferencia, name='crear_preferencia'),
     path('api/confirmar-pedido/', confirmar_pedido, name='confirmar_pedido'),
-    path('api/pago/success', views.pago_success, name='pago_success'),
-    path('api/pago/pending', views.pago_pending, name='pago_pending'),
-    path('api/pago/failure', views.pago_failure, name='pago_failure'),
+    path('pago/success', views.pago_success, name='pago_success'),
+    path('pago/pending', views.pago_pending, name='pago_pending'),
+    path('pago/failure', views.pago_failure, name='pago_failure'),
 ]
