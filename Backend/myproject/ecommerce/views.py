@@ -38,6 +38,9 @@ from .serializers import (
 )
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.http import HttpResponse
+from decimal import Decimal
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -82,11 +85,69 @@ def crear_preferencia(request):
     except Exception as e:
         return Response({'error': f'Error al crear la preferencia: {str(e)}'}, status=500)
 
+def pago_success(request):
+    return render(request, 'pago/success.html')  # o HttpResponse("Pago aprobado")
+
+def pago_pending(request):
+    return render(request, 'pago/pending.html')  # o HttpResponse("Pago pendiente")
+
+def pago_failure(request):
+    return render(request, 'pago/failure.html')  # o HttpResponse("Pago fallido")
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def confirmar_pedido(request):
-    return Response({"message": "Pedido confirmado"})
+    usuario = request.user
+
+    # Obtener productos en el carrito del usuario
+    items_carrito = ItemCarrito.objects.filter(usuario=usuario)
+    if not items_carrito:
+        return Response({"error": "El carrito está vacío."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Validar dirección de envío
+    direccion = get_object_or_404(Direccion, usuario=usuario)
+    if not direccion:
+        return Response({"error": "No tienes una dirección registrada."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Validar método de pago
+    metodo_pago = get_object_or_404(MetodoPago, usuario=usuario)
+    if not metodo_pago:
+        return Response({"error": "No tienes un método de pago registrado."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Calcular el total del pedido
+    total_pedido = Decimal(0)
+    for item in items_carrito:
+        total_pedido += item.total
+
+    # Crear el pedido
+    pedido = Pedido.objects.create(
+        usuario=usuario,
+        direccion=direccion,
+        metodo_pago=metodo_pago.tipo_tarjeta,
+        total=total_pedido
+    )
+
+    # Crear los productos del pedido
+    for item in items_carrito:
+        ProductoPedido.objects.create(
+            pedido=pedido,
+            libro=item.libro,
+            cantidad=item.cantidad,
+            precio_unitario=item.libro.precio
+        )
+
+        # Actualizar el stock del libro
+        item.libro.stock -= item.cantidad
+        item.libro.save()
+
+        # Eliminar el item del carrito
+        item.delete()
+
+    return Response({
+        "message": "Pedido confirmado exitosamente.",
+        "pedido_id": pedido.id_pedido,
+        "total": total_pedido
+    }, status=status.HTTP_201_CREATED)
 
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
