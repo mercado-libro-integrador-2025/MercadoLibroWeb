@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ContactoService } from '../../services/contacto.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-contacto',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ ReactiveFormsModule],
   templateUrl: './contacto.component.html',
   styleUrls: ['./contacto.component.css']
 })
@@ -15,6 +16,16 @@ export class ContactoComponent {
   datosContacto: any;
   form!: FormGroup;
 
+  textoContacto: string = `
+Estamos acá para vos. Si tenés alguna pregunta, comentario o simplemente
+deseás hablar sobre tu libro favorito, no dudes en ponerte en contacto con nosotros.
+
+Estamos emocionados por compartir este viaje literario con vos.
+
+Gracias por elegir a MercadoLibro como tu destino literario.
+Juntos, exploraremos las páginas de historias inolvidables y crearemos recuerdos literarios que
+perdurarán para siempre.
+  `;
   constructor(private formBuilder: FormBuilder, private ContactoService: ContactoService) {
 
     this.datosContacto = ContactoService.getDatosContacto();

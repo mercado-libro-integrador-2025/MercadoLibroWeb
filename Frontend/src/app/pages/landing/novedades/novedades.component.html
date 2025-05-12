@@ -1,0 +1,18 @@
+<h2 class="text-center mt-4">Novedades</h2>
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-3 mb-4" *ngFor="let libro of novedades">
+      <div class="card h-100">
+        <img [src]="libro.portada" class="card-img-top img-ajustada" [alt]="libro.titulo">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ libro.titulo }}</h5>
+          <p class="card-text fw-bold">$ {{ libro.precio }}</p>
+          <div class="mt-auto">
+            <a [routerLink]="['/detalle', libro.id]" class="btn btn-vermas btn-sm me-2">Ver más</a>
+            <button class="btn btn-comprar btn-sm">Comprar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
