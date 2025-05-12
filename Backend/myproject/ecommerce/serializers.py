@@ -45,7 +45,12 @@ class LibroSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Libro
-        fields = ('id_libro', 'titulo', 'precio', 'stock', 'descripcion', 'portada', 'autor', 'categoria') 
+        fields = ('id_libro', 'titulo', 'precio', 'stock', 'descripcion', 'portada', 'autor', 'categoria')
+
+class LibroCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Libro
+        fields = '__all__' 
 
 class DireccionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -142,16 +147,15 @@ class ProductoPedidoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductoPedido
-        fields = ['titulo_libro', 'cantidad', 'precio_unitario']
+        fields = ['id', 'pedido', 'libro', 'titulo_libro', 'cantidad', 'precio_unitario']
 
 class PedidoSerializer(serializers.ModelSerializer):
     productos = ProductoPedidoSerializer(many=True, read_only=True)
-    direccion = DireccionSerializer()
+    direccion = DireccionSerializer(read_only=True)
 
     class Meta:
         model = Pedido
         fields = ['id_pedido', 'usuario', 'direccion', 'metodo_pago', 'estado', 'fecha_pedido', 'total', 'productos']
-
 
 class ReseñaSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
