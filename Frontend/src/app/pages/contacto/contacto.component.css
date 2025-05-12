@@ -1,6 +1,7 @@
 * {
-    font-family: sans-serif;
-    color: #746b6b;
+  font-family: 'Roboto', sans-serif;
+  color: #000000;
+  box-sizing: border-box;
 }
 
 .container-form {
@@ -10,7 +11,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 50px;
-    margin-top: 65px;
+    margin-top: 10px;
 }
 
 .container-form form .campo,
@@ -19,10 +20,10 @@
     width: 100%;
     padding: 15px 10px;
     font-size: 14px;
-    border: 1px solid #746b6b;
+    border: 1px solid rgb(85, 85, 85);
     margin-bottom: 10px;
     border-radius: 3px;
-    color: #746b6b;
+    color: #494949;
 }
 
 .container-form form textarea {
@@ -37,7 +38,7 @@
     font-size: 16px;
     border: none;
     outline: 0px;
-    background: #746b6b;
+    background: #0c0c0c;
     color: white;
     border-radius: 3px;
     cursor: pointer;
@@ -111,4 +112,8 @@ main {
     .container-form form {
         margin-left: 50px;
     }
+
+    .texto-contacto {
+  white-space: pre-line;
+}
 }

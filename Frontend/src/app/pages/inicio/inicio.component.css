@@ -35,7 +35,6 @@ main {
   align-items: center;
   padding: 20px;
   background: rgba(130, 128, 134, 0.74);
-  box-shadow: 0 15px 25px rgba(250, 237, 39, 0.7);
   border-radius: 10px;
   max-width: 400px;
   margin: 0 auto;
@@ -83,12 +82,12 @@ main {
 .buton {
   display: inline-block;
   padding: 10px 15px;
-  color: #000;
+  color: #ffffff;
   font-size: 16px;
   text-decoration: none;
   text-transform: uppercase;
   border-radius: 10px;
-  background: #faed27;
+  background: #18181f;
   border: none;
   margin-top: 20px;
   letter-spacing: 3px;
@@ -107,15 +106,13 @@ main {
   display: inline-block;
   padding: 10px 15px;
   border-radius: 10px;
-  color: #000;
-  /* Cambiar el color del texto a negro */
+  color: #000000;
   text-transform: uppercase;
   letter-spacing: 3px;
   font-size: 16px;
-  background: #faed27;
+   border: 2px solid  #000000; 
   cursor: pointer;
   margin-left: 2px;
-
 }
 
 .registarse:hover {

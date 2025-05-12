@@ -1,0 +1,111 @@
+.navbar {
+  background-color: #746b6b;
+  color: rgb(0, 0, 0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 20;
+}
+
+.logo img {
+  width: 100px;
+  height: auto;
+}
+
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none;
+}
+
+.nav-list li {
+  margin-right: 20px;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: rgba(232, 227, 245, 0.74);
+  transition: color 0.5s;
+}
+
+.nav-list a:hover {
+  color: rgba(252, 219, 3, 1);
+}
+
+nav a.active {
+  background-color: rgb(59, 59, 59);
+  border-radius: 3px;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+
+.menu-icon {
+  color: white;
+  font-size: 35px;
+  cursor: pointer;
+  margin-right: 5%;
+}
+
+.menu-toggle:checked+.menu-icon+.nav-list {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 105px;
+  right: 0;
+  background-color: #746b6b;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  z-index: 3;
+}
+
+
+.menu-toggle:checked+.menu-icon+.nav-list li {
+  margin: 10px 0;
+  animation: fadeIn 1s ease-in-out;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+/* Mostrar la lista de navegación en dispositivos más grandes */
+@media (min-width: 768px) {
+  .menu-toggle {
+    display: none;
+  }
+
+  .nav-list {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+
+  .nav-list li {
+    margin-right: 20px;
+  }
+
+
+  .nav-list a {
+    font-size: 18px;
+  }
+
+
+  .menu-icon {
+    display: none;
+  }
+}

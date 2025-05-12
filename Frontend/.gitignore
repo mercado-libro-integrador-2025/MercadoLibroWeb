@@ -1,4 +1,5 @@
 # Compiled output
+dist/
 /dist
 /tmp
 /out-tsc
@@ -8,6 +9,10 @@
 /node_modules
 npm-debug.log
 yarn-error.log
+
+# Angular CLI
+.angular/cache/
+.angular/config.json
 
 
 # IDEs and editors
@@ -20,6 +25,7 @@ yarn-error.log
 *.sublime-workspace
 
 # Visual Studio Code
+.vscode/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json

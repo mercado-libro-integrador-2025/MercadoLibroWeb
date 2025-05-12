@@ -1,14 +1,16 @@
-header {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+.header {
     min-height: 5vh;
     height: 70px;
 }
 
-body {
+.body {
     padding-top: 50px; /* Mueve el contenido 50px hacia abajo */
 }
 
 .navbar {
-  background-color: #746b6b;
+  background-color: #18181f;
   color: rgb(0, 0, 0);
   display: flex;
   justify-content: space-between;
@@ -41,7 +43,7 @@ body {
 }
 
 .nav-list a:hover {
-  color: rgba(252, 219, 3, 1);
+  color: #ff6600;
 }
 
 nav a.active {
@@ -74,10 +76,8 @@ nav a.active {
   z-index: 3;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
-
 .navbar-nav .nav-link:hover {
-  color: #f8d210 !important;
+  color: #ff6600 !important;
   transition: 0.3s ease-in-out;
 }
 
@@ -129,10 +129,6 @@ nav a.active {
   }
 }
 
-.navbar{
-    background-color: #18181f !important;
-  }
- 
   .nav-item a{
     opacity: 0.9;
     margin-right: 1.5vw;
