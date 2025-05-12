@@ -86,36 +86,51 @@ export class CheckoutService {
     return this.direccionSeleccionada;
   }
 
-  // Confirmar compra y redirigir a MercadoPago
   async confirmarCompra() {
-    try {
-      // Paso 1: Solicitar preferencia al backend
-      const headers = this.getAuthHeaders();
-      const preference = await lastValueFrom(
-        this.http.post<any>(`${this.apiUrl}/checkout/crear-preferencia/`, {}, { headers })
-      );
-      const preferenceId = preference.id;
+  try {
+    const headers = this.getAuthHeaders();
+    const productos = this.obtenerCarrito().map(item => ({
+      titulo: item.titulo,
+      cantidad: item.cantidad,
+      precio: item.precio
+    }));
 
-      // Paso 2: Verificar que el SDK esté cargado
-      if (typeof MercadoPago === 'undefined') {
-        throw new Error('El SDK de MercadoPago no está cargado.');
-      }
-
-      // Paso 3: Inicializar MercadoPago
-      const mp = new MercadoPago(this.mercadoPagoPublicKey, {
-        locale: 'es-AR'
-      });
-
-      // Paso 4: Redirigir al usuario al Checkout
-      mp.checkout({
-        preference: {
-          id: preferenceId
-        },
-        autoOpen: true, 
-      });
-    } catch (error) {
-      console.error('Error al iniciar el proceso de pago:', error);
-      alert('Hubo un problema al iniciar el pago. Por favor, inténtalo de nuevo.');
+    if (productos.length === 0) {
+      alert('El carrito está vacío.');
+      return;
     }
+
+    // Paso 1: Solicitar preferencia al backend
+    const preference = await lastValueFrom(
+      this.http.post<any>(
+        `${this.apiUrl}/checkout/crear-preferencia/`,
+        { productos },
+        { headers }
+      )
+    );
+    const preferenceId = preference.id;
+
+    // Paso 2: Verificar que el SDK esté cargado
+    if (typeof MercadoPago === 'undefined') {
+      throw new Error('El SDK de MercadoPago no está cargado.');
+    }
+
+    // Paso 3: Inicializar MercadoPago
+    const mp = new MercadoPago(this.mercadoPagoPublicKey, {
+      locale: 'es-AR'
+    });
+
+    // Paso 4: Redirigir al usuario al Checkout
+    mp.checkout({
+      preference: {
+        id: preferenceId
+      },
+      autoOpen: true,
+    });
+  } catch (error) {
+    console.error('Error al iniciar el proceso de pago:', error);
+    alert('Hubo un problema al iniciar el pago. Por favor, inténtalo de nuevo.');
   }
+}
+
 }

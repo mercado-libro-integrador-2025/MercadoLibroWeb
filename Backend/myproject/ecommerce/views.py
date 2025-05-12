@@ -1,3 +1,5 @@
+import mercadopago
+from django.conf import settings
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from django.contrib.auth import authenticate, login, logout
@@ -39,42 +41,48 @@ from django.shortcuts import get_object_or_404
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def confirmar_pedido(request):
+def crear_preferencia(request):
     usuario = request.user
-    direccion_id = request.data.get('direccion_id')
-    metodo_pago = request.data.get('metodo_pago')
-    productos = request.data.get('productos')
-    total = request.data.get('total')
+    productos = request.data.get('productos', [])
+    
+    if not productos:
+        return Response({'error': 'No hay productos en el carrito.'}, status=400)
+    
+    # Configurar MercadoPago con el Access Token
+    sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
 
-    if not direccion_id or not metodo_pago or not productos:
-        return Response({'error': 'Faltan datos para confirmar el pedido.'}, status=400)
-
-    direccion = get_object_or_404(Direccion, id=direccion_id, usuario=usuario)
-    pedido = Pedido.objects.create(
-        usuario=usuario,
-        direccion=direccion,
-        metodo_pago=metodo_pago,
-        total=total
-    )
-
+    # Construir los items para la preferencia
+    items = []
     for producto in productos:
-        libro = get_object_or_404(Libro, id=producto['id'])
-        ProductoPedido.objects.create(
-            pedido=pedido,
-            libro=libro,
-            cantidad=producto['cantidad'],
-            precio_unitario=producto['precio']
-        )
+        items.append({
+            "title": producto.get('titulo'),
+            "quantity": int(producto.get('cantidad')),
+            "unit_price": float(producto.get('precio'))
+        })
 
-        # Reducir el stock del libro
-        libro.stock -= producto['cantidad']
-        libro.save()
+    # Crear la preferencia
+    preference_data = {
+        "items": items,
+        "payer": {
+            "name": usuario.username,
+            "email": usuario.email
+        },
+        "back_urls": {
+            "success": "https://tusitio.com/checkout/success",
+            "failure": "https://tusitio.com/checkout/failure",
+            "pending": "https://tusitio.com/checkout/pending"
+        },
+        "auto_return": "approved"
+    }
 
-    # Limpiar el carrito del usuario
-    ItemCarrito.objects.filter(usuario=usuario).delete()
+    preference_response = sdk.preference().create(preference_data)
+    preference = preference_response.get("response")
 
-    return Response({'message': 'Pedido registrado exitosamente.'}, status=201)
-
+    return Response({
+        "id": preference.get("id"),
+        "init_point": preference.get("init_point"),
+        "sandbox_init_point": preference.get("sandbox_init_point")
+    })
 
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer

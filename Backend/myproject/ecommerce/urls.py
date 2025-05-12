@@ -1,7 +1,8 @@
 from django.urls import path, include
 from rest_framework import routers
 from .views import LoginView, LogoutView, SignupView, UserViewSet, CategoriaViewSet, AutorViewSet, LibroViewSet, \
-ItemCarritoViewSet, PedidoViewSet, DireccionViewSet, MetodoPagoViewSet, ReseñaViewSet, ContactoViewSet, confirmar_pedido
+ItemCarritoViewSet, PedidoViewSet, DireccionViewSet, MetodoPagoViewSet, ReseñaViewSet, ContactoViewSet, confirmar_pedido, crear_preferencia
+
 
 router = routers.DefaultRouter()
 router.register(r'usuarios', UserViewSet)
@@ -21,5 +22,6 @@ urlpatterns = [
     path('auth/login/', LoginView.as_view(), name='auth_login'),
     path('auth/logout/', LogoutView.as_view(), name='auth_logout'),
     path('auth/signup/', SignupView.as_view(), name='auth_signup'),
+    path('checkout/crear-preferencia/', crear_preferencia, name='crear_preferencia'),
     path('confirmar-pedido/', confirmar_pedido, name='confirmar_pedido'),
 ]

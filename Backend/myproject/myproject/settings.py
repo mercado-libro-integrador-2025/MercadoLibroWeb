@@ -149,3 +149,5 @@ STATIC_ROOT = '/opt/render/project/src/staticfiles'  # O la ruta que prefieras
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MERCADOPAGO_ACCESS_TOKEN = os.getenv('MERCADOPAGO_ACCESS_TOKEN', 'TEST-8172258200747869-051120-3beb4a6a51e00538722eefca692fc36e-128356048')
