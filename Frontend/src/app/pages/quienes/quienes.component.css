@@ -1,16 +1,24 @@
+main {
+  padding-top: 70px;
+  font-family: 'Roboto', sans-serif;
+}
 
 main p {
-    color: brown;
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  }
+  color: #000;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
 
-.databindingSpan{
-  color: brown;
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+.databindingSpan {
+  font-weight: 400;
 }
 
 section h2 {
-    color: crimson;
-    font-family:Cambira, "Times New Roman", Times, serif;
-    font-weight: bold;
-  }
+  color: #000;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
