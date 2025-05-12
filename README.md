@@ -40,3 +40,10 @@ Funcionalidad 3: desde el backend, el usuario administrador puede modificar la b
 * CSS
 * HTML
 * Bootstrap
+
+# 👷‍♀️👷‍♂️ Contributors
+* Ñañez Nahir Nicolás
+* Luna Dalla Lasta Marcelo Javier
+* Nobiltá Ivette Jael
+* Navarrete Romina Gabriela
+* Arnaudo Octavio
