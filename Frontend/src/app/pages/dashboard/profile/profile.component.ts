@@ -88,9 +88,6 @@ export class ProfileComponent implements OnInit {
     };
     this.editandoId = null;
   }
-<<<<<<< HEAD
-}
-=======
 
   eliminarCuenta(): void {
   if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')) {
@@ -126,4 +123,3 @@ actualizarDatosPersonales(): void {
     });
   }
 }
->>>>>>> c7a6bd7c471230c40495d840e21ffedf041411ff

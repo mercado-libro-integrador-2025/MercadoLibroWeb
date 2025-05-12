@@ -139,9 +139,6 @@ eliminarDireccion(id: number): Observable<any> {
   return this.http.delete(`https://mercadolibroweb.onrender.com/api/direcciones/${id}/`, { headers });
 }
 
-<<<<<<< HEAD
-}
-=======
 eliminarCuenta(): Observable<any> {
   const cliente = this.obtenerClienteLogueado();
   const headers = new HttpHeaders({
@@ -165,4 +162,3 @@ actualizarDatosPersonales(username: string, email: string, password: string): Ob
 }
 
 }
->>>>>>> c7a6bd7c471230c40495d840e21ffedf041411ff
