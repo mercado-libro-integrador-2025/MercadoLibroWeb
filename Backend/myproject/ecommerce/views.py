@@ -84,6 +84,11 @@ def crear_preferencia(request):
         "sandbox_init_point": preference.get("sandbox_init_point")
     })
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def confirmar_pedido(request):
+    return Response({"message": "Pedido confirmado"})
+
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
