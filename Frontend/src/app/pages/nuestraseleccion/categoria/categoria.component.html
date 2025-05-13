@@ -1,0 +1,12 @@
+<div class="contenedor">
+    <label for="categoriaSelector">Elige una categoría:</label>
+    <select id="categoriaSelector" [(ngModel)]="opcionSeleccionada" (change)="buscarLibros()" name="categoria">
+        <option value="">-- Todas las categorías --</option>
+        <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
+    </select>
+
+    <form (submit)="buscarLibros(); $event.preventDefault();">
+        <input type="text" placeholder="Buscar" [(ngModel)]="terminoBusqueda" name="terminoBusqueda">
+        <button type="submit" class="btn btn-light">Buscar</button>
+    </form>
+</div>

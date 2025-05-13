@@ -1,0 +1,57 @@
+.img-ajustada {
+    height: 400px;
+    object-fit: cover;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+  
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+  
+.card-text {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.card-body .mt-auto {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn {
+  border-radius: 0.5rem;
+  padding: 6px 12px;
+
+}
+
+.btn-comprar {
+  background-color: #18181f !important;
+  color: #fff !important;
+  border-radius: 0.5rem !important;
+  padding: 6px 12px !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.btn-comprar:hover {
+  background: #646464 !important;
+  box-shadow: 0 0 8px rgba(255, 102, 0, 0.5);
+  color: #000 !important;
+}
+
+.btn-vermas {
+  background-color: #fff !important;
+  border: 2px solid #000000 !important;
+  color: #000 !important;
+  border-radius: 0.5rem !important;
+  padding: 6px 12px !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.btn-vermas:hover {
+  background: #000 !important;
+  color: #fff !important;
+}
