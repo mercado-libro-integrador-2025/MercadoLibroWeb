@@ -184,3 +184,8 @@ nav a.active {
   padding: 5px;
   margin-right: 8px;
 }
+
+.navbar-nav .nav-item a.active svg,
+.navbar-nav .nav-item a.active svg path {
+  fill: #ff6600;
+}
