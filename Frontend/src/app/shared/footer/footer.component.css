@@ -1,32 +1,53 @@
-html, body {
+/* html, body {
     height: 100%;
     display: flex;
     flex-direction: column;
-}
+} */
 
 main {
     flex: 1; /* Se expande para empujar el footer hacia abajo */
-    margin-top: 70px; /* Ajuste según el header */
-    margin-bottom: 70px;
+    margin-top: 75px; /* Ajuste según el header */
+    margin-bottom: 75px;
 }
 
-  .fixed-footer {
+.fixed-footer {
     bottom: 0;
-    width: 100%;
-    background-color: #212529; /* Fondo oscuro */
         color: white;
         text-align: center;
-        padding: 15px;
     font-size: 14px;
-  }
+    height: 75px;
+    width: 100%;
+    background-color: #212529; /* Fondo oscuro */
+}
 
+footer div {
+    background-color: #212529; /* Fondo oscuro */
+}
+p {
+margin-bottom: 0px;
+}
+
+.img {
+  height:75px;
+}
+
+footer div {
+    /* background-color: #212529; Fondo oscuro */
+}
+
+p {
+    /* margin-bottom: 0px; */
+}
+
+.img {
+    /* height: 75px; */
+}
 
 /* Aplicamos position: absolute solo en versiones de escritorio */
 @media (min-width: 769px) {
   .fixed-footer {
-    position: absolute;
+    /* position: absolute; */
   }
-
 }
 
 /* Ajustes para pantallas pequeñas */
@@ -35,5 +56,7 @@ main {
     position: relative; /* Evita solapamiento */
     margin-top: 52px;
     width: 528px;
-  }
+    font-size: 14px;
+    height: 75px;
+}
 }

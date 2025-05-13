@@ -1,9 +1,21 @@
 /* ESTILOS DE PÁGINA DE PRODUCTO */
 
 .carousel-caption {
-    background-color: #b3b0b0;
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 6px;
   }
-  
+
+  .carousel-item img {
+  height: 300px;
+  object-fit: cover;
+  width: 100%;
+}
   /* Línea de carrusel o slider */
   .linea {
     max-width: 100%;
@@ -97,13 +109,3 @@
       max-width: fit-content;
     }
   }
-  
-  
-
- 
- 
-  
-  
-  
-
-  

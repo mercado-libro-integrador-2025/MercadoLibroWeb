@@ -7,13 +7,34 @@ main {
   color: white;
 }
 
+.success-message, .error-message {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  padding: 12px 24px;
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.success-message {
+  background-color: #28a745;
+}
+
+.error-message {
+  background-color: #dc3545;
+}
+
 .div__login {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
   background: rgba(130, 128, 134, 0.74);
-  box-shadow: 0 15px 25px rgba(250, 237, 39, 0.7);
   border-radius: 10px;
   max-width: 400px;
   margin: 0 auto;
@@ -61,12 +82,12 @@ main {
 .buton {
   display: inline-block;
   padding: 10px 15px;
-  color: #000;
+  color: #ffffff;
   font-size: 16px;
   text-decoration: none;
   text-transform: uppercase;
   border-radius: 10px;
-  background: #faed27;
+  background: #18181f;
   border: none;
   margin-top: 20px;
   letter-spacing: 3px;
@@ -85,15 +106,13 @@ main {
   display: inline-block;
   padding: 10px 15px;
   border-radius: 10px;
-  color: #000;
-  /* Cambiar el color del texto a negro */
+  color: #000000;
   text-transform: uppercase;
   letter-spacing: 3px;
   font-size: 16px;
-  background: #faed27;
+   border: 2px solid  #000000; 
   cursor: pointer;
   margin-left: 2px;
-
 }
 
 .registarse:hover {

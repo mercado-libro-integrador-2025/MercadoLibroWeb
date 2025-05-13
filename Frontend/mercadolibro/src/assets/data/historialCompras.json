@@ -1,0 +1,32 @@
+{
+    "idCliente": "1",
+    "historialDeCompras": [
+        {
+            "idLibro": "1",
+            "titulo": "Cien años de soledad",
+            "fechaDeEnvio": "2023-01-15"
+        },
+        {
+            "idLibro": "2",
+            "titulo": "Don Quijote de la Mancha",
+            "fechaDeEnvio": "2023-02-20"
+        },
+        {
+            "idLibro": "3",
+            "titulo": "1984",
+            "fechaDeEnvio": "2023-03-12"
+        },
+        {
+            "idLibro": "4",
+            "titulo": "El amor en los tiempos del cólera",
+            "fechaDeEnvio": "2023-04-05"
+        },
+        {
+            "idLibro": "5",
+            "titulo": "La casa de los espíritus",
+            "fechaDeEnvio": "2023-05-22"
+        }
+    ]
+}
+
+  
