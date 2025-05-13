@@ -10,22 +10,19 @@
                 <div class="col-8">
                     <div class="card-body">
                         <p id="title"><b>Título:</b> {{ libro.titulo }}</p>
-                        <p><b>Autor:</b> {{ libro.autor?.nombre_autor }}</p>
-                        <p><b>Categoría:</b> {{ libro.categoria?.nombre_categoria }}</p>
+                        <p><b>Autor:</b> {{ libro.autor.nombre_autor }}</p>
+                        <p><b>Categoría:</b> {{ libro.categoria.nombre_categoria }}</p>
                         <p><b>Precio:</b> $ {{ libro.precio }} </p>
                         <p class="stock"><b>Stock:</b> {{ libro.stock }} </p>
-                        <button class="btn btn-dark m-3" (click)="anadirAlCarrito(libro)">COMPRAR</button>
-                        <button class="btn btn-light" (click)="verDescripcion(libro)"> VER SINOPSIS</button>
-                        <button class="btn btn-info m-3" (click)="viewReviews(libro)">VER RESEÑAS</button>
+                        <button class="btn btn-buy" (click)="anadirAlCarrito(libro)">COMPRAR</button>
+                        <button class="btn btn-sinopsis" (click)="verDescripcion(libro)">VER SINOPSIS</button>
+                        <button class="btn btn-reseñas" (click)="viewReviews(libro)">VER RESEÑAS</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        </div>
-}
-
-@empty {
+    </div>
+} @empty {
     <div class="card text-bg-secondary mb-3">
         <div class="card-body text-center">
             No se encontraron resultados. Prueba otra vez.
@@ -33,44 +30,45 @@
     </div>
 }
 
-<div *ngIf="showReviewsModal" class="modal-overlay">
-    <div class="modal-content">
-        <h5>Reseñas para "{{ selectedBook?.titulo }}"</h5>
+@if (showReviewsModal) {
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <h5>Reseñas para "{{ selectedBook?.titulo }}"</h5>
 
-        <div class="modal-body">
-            <div *ngIf="selectedBookReviews && selectedBookReviews.length > 0">
-                <div *ngFor="let review of selectedBookReviews" class="review-item-small border-bottom pb-2 mb-2">
-                    <p><b>Usuario:</b> {{ review.email_usuario }}</p>
-                    <p><b>Comentario:</b> {{ review.comentario }}</p>
-                    <p><small>Fecha: {{ review.fecha_creacion | date:'short' }}</small></p>
-                </div>
+            <div class="modal-body">
+                @if (selectedBookReviews && selectedBookReviews.length > 0) {
+                    @for (review of selectedBookReviews; track review.id) {
+                        <div class="review-item-small border-bottom pb-2 mb-2">
+                            <p><b>Usuario:</b> {{ review.email_usuario }}</p>
+                            <p><b>Comentario:</b> {{ review.comentario }}</p>
+                            <p><small>Fecha: {{ review.fecha_creacion | date:'short' }}</small></p>
+                        </div>
+                    }
+                } @else {
+                    <p>Este libro aún no tiene reseñas.</p>
+                }
             </div>
-            <div *ngIf="!selectedBookReviews || selectedBookReviews.length === 0">
-                <p>Este libro aún no tiene reseñas.</p>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" (click)="closeReviewsModal()">Cerrar</button>
             </div>
         </div>
+    </div>
+}
 
-        <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeReviewsModal()">Cerrar</button>
+@if (showDescripcionModal) {
+    <div class="modal-overlay">
+        <div class="modal-content">
+
+            <h5>Libro: {{ selectedBook?.titulo }}</h5>
+
+            <div class="modal-body">
+                <p>{{ descripcionActual }}</p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" (click)="cerrarModalDescripcion()">Cerrar</button>
+            </div>
         </div>
     </div>
-</div>
-
-<!-- MODAL DE DESCRIPCIÓN -->
-<div *ngIf="showDescripcionModal" class="modal-overlay">
-  <div class="modal-content">
-   
-    <h5>{{ selectedBook?.titulo }}</h5>
-
-
-    <div class="modal-body">
-
-      <p>{{ descripcionActual }}</p>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn btn-secondary" (click)="cerrarModalDescripcion()">Cerrar</button>
-    </div>
-  </div>
-</div>
-
+}
