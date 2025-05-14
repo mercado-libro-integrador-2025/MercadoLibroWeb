@@ -223,7 +223,15 @@ class DireccionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Direccion.objects.filter(usuario=self.request.user)  
+        return Direccion.objects.filter(usuario=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        direccion = self.get_object()
+        if direccion.usuario == request.user:
+            direccion.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error": "No tienes permiso para eliminar esta dirección."}, status=status.HTTP_403_FORBIDDEN)
 
 class MetodoPagoViewSet(viewsets.ModelViewSet):
     queryset = MetodoPago.objects.all()
