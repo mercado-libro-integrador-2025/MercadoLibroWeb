@@ -89,6 +89,91 @@
   background-color: #666;
 }
 
+/* MODAL SINOPSIS Y RESEÑA*/
+.modal-overlay {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%; 
+  background-color: rgba(0, 0, 0, 0.7); 
+  z-index: 1000; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  overflow-y: auto; 
+}
+
+
+.modal-content {
+  background-color: #1e1e1e;
+  padding: 0;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px; 
+  color: #fff;
+  overflow: hidden; 
+  border: 1px solid #444;
+  position: relative;
+  
+}
+
+/* Header */
+.modal-content h5 {
+  background-color: #2c2c2c;
+  color: #cc6a00;
+  margin: 0;
+  padding: 16px;
+  font-size: 18px;
+  border-bottom: 1px solid #444;
+}
+
+/* Body */
+.modal-body {
+  padding: 16px;
+  background-color: #1e1e1e;
+}
+
+.modal-body p {
+  color: #d3c6a8;
+  margin: 4px 0;
+}
+
+/* Etiquetas resaltadas */
+.modal-body strong {
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Reseñas separadas */
+.review-item-small {
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+/* Footer */
+.modal-footer {
+  background-color: #2c2c2c;
+  padding: 12px 16px;
+  text-align: right;
+  border-top: 1px solid #444;
+}
+
+/* Botón */
+.btn.btn-secondary {
+  background-color: #cc6a00;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn.btn-secondary:hover {
+  background-color: #e76e00;
+}
 /* Ajustes para pantallas pequeñas */
 @media (max-width: 768px) {
   .grid-container {
