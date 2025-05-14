@@ -1,6 +1,8 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import UserViewSet, CategoriaViewSet, AutorViewSet, LibroViewSet, ItemCarritoViewSet, PedidoViewSet, DireccionViewSet, MetodoPagoViewSet, ReseñaViewSet, ContactoViewSet, LoginView, LogoutView, SignupView, crear_preferencia, confirmar_pedido, pago_success, pago_pending, pago_failure
+from .views import LoginView, LogoutView, SignupView, UserViewSet, CategoriaViewSet, AutorViewSet, LibroViewSet, \
+ItemCarritoViewSet, PedidoViewSet, DireccionViewSet, MetodoPagoViewSet, ReseñaViewSet, ContactoViewSet, confirmar_pedido, crear_preferencia
+from . import views
 
 router = routers.DefaultRouter()
 router.register(r'usuarios', UserViewSet)
@@ -9,7 +11,7 @@ router.register(r'autores', AutorViewSet)
 router.register(r'libros', LibroViewSet)
 router.register(r'carrito', ItemCarritoViewSet)
 router.register(r'pedidos', PedidoViewSet)
-router.register(r'direcciones', DireccionViewSet)
+router.register(r'direcciones', DireccionViewSet, basename='direccion')
 router.register(r'metodopagos', MetodoPagoViewSet)
 router.register(r'resenas', ReseñaViewSet)
 router.register(r'contacto', ContactoViewSet)
@@ -22,8 +24,7 @@ urlpatterns = [
     path('auth/signup/', SignupView.as_view(), name='auth_signup'),
     path('checkout/crear-preferencia/', crear_preferencia, name='crear_preferencia'),
     path('api/confirmar-pedido/', confirmar_pedido, name='confirmar_pedido'),
-    path('pago/success', pago_success, name='pago_success'),
-    path('pago/pending', pago_pending, name='pago_pending'),
-    path('pago/failure', pago_failure, name='pago_failure'),
-
+    path('pago/success', views.pago_success, name='pago_success'),
+    path('pago/pending', views.pago_pending, name='pago_pending'),
+    path('pago/failure', views.pago_failure, name='pago_failure'),
 ]

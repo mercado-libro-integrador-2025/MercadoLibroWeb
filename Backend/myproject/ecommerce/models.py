@@ -49,7 +49,6 @@ class Libro(models.Model):
     class Meta:
         db_table = 'libro'
 
-
 class Direccion(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     calle = models.CharField(max_length=100)
@@ -121,6 +120,7 @@ class Pedido(models.Model):
         ('entregado', 'Entregado'),
         ('cancelado', 'Cancelado')
     ]
+    
     id_pedido = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     direccion = models.ForeignKey(Direccion, on_delete=models.CASCADE)
@@ -134,7 +134,6 @@ class Pedido(models.Model):
 
     def __str__(self):
         return f'Pedido {self.id_pedido} de {self.usuario}, {self.get_estado_display()}'
-        return f'Pedido {self.id_pedido} de {self.usuario}, pagado con {self.get_metodo_pago_display()}'
 
 class Reseña(models.Model):
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)

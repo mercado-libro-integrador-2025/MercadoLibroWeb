@@ -173,6 +173,7 @@ class LoginView(APIView):
         if user:
             if not user.is_active:
                 return Response({'error': 'Tu cuenta ha sido desactivada. Contacta al soporte.'}, status=status.HTTP_403_FORBIDDEN)
+            
             login(request, user)
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -180,7 +181,8 @@ class LoginView(APIView):
                 'access': str(refresh.access_token),
                 'user': UserSerializer(user).data
             }, status=status.HTTP_200_OK)
-        return Response({'error': 'Invalid Credentials'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Credenciales inválidas'}, status=status.HTTP_404_NOT_FOUND)
+
 
 class LogoutView(APIView):
     def post(self, request):
@@ -200,12 +202,6 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Cuenta desactivada exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'error': 'No tienes permiso para eliminar esta cuenta'}, status=status.HTTP_403_FORBIDDEN)
-    
-    # Acción personalizada para obtener el usuario autenticado
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
-    def me(self, request):
-        serializer = self.get_serializer(request.user)
-        return Response(serializer.data)
 
 
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -220,12 +216,6 @@ class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = {
-        'titulo': ['icontains'],
-        'categoria__nombre_categoria': ['exact'],
-        'precio': ['lte', 'gte'],
-        'stock': ['lte', 'gte'],
-    }
     
 class DireccionViewSet(viewsets.ModelViewSet):
     queryset = Direccion.objects.all()
@@ -233,7 +223,15 @@ class DireccionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Direccion.objects.filter(usuario=self.request.user)  
+        return Direccion.objects.filter(usuario=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        direccion = self.get_object()
+        if direccion.usuario == request.user:
+            direccion.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error": "No tienes permiso para eliminar esta dirección."}, status=status.HTTP_403_FORBIDDEN)
 
 class MetodoPagoViewSet(viewsets.ModelViewSet):
     queryset = MetodoPago.objects.all()
@@ -276,21 +274,15 @@ class ItemCarritoViewSet(viewsets.ModelViewSet):
             serializer.save(usuario=usuario)
 
 class PedidoViewSet(viewsets.ModelViewSet):
-    serializer_class = PedidoSerializer
     queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return Pedido.objects.filter(usuario=self.request.user)  
-
-    def perform_create(self, serializer):
-        carrito_items = ItemCarrito.objects.filter(usuario=self.request.user)
-        if carrito_items.exists():
-            total = sum(item.libro.precio * item.cantidad for item in carrito_items)
-            pedido = serializer.save(usuario=self.request.user, total=total)
-            carrito_items.delete()  
-            return pedido
-        raise serializers.ValidationError("El carrito está vacío.")
+    @action(detail=False, methods=['get'], url_path='usuario/(?P<usuario_id>[^/.]+)')
+    def pedidos_por_usuario(self, request, usuario_id=None):
+        pedidos = Pedido.objects.filter(usuario__id=usuario_id)
+        serializer = self.get_serializer(pedidos, many=True)
+        return Response(serializer.data)
 
 class ReseñaViewSet(viewsets.ModelViewSet):
     queryset = Reseña.objects.all()
