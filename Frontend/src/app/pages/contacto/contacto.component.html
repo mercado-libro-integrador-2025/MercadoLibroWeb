@@ -59,23 +59,23 @@
         <div class="contact-form-container">
   <div class="card">
     <div class="card-header">
-      <h2 class="card-title">Contact Us</h2>
-      <p class="card-description">Fill out the form below to get in touch. We'd love to hear from you!</p>
+      <h2 class="card-title">Contáctanos</h2>
+      <p class="card-description">Complete el formulario a continuación para ponerte en contacto. ¡Nos encantaría saber de ti!</p>
     </div>
     <div class="card-content">
       <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <!-- Name Field -->
         <div class="form-item">
-          <label for="name" class="form-label">Name</label>
+          <label for="name" class="form-label">Nombre</label>
           <div class="input-group">
             <span class="input-icon">👤</span>
-            <input id="name" type="text" formControlName="name" placeholder="Your Name" class="form-input pl-10"
+            <input id="name" type="text" formControlName="name" placeholder="Tu Nombre" class="form-input pl-10"
                    [ngClass]="{'input-error': name?.invalid && (name?.dirty || name?.touched)}">
           </div>
           <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="form-message-error">
-            <div *ngIf="name?.errors?.['required']">Name is required.</div>
-            <div *ngIf="name?.errors?.['minlength']">Name must be at least 2 characters.</div>
-            <div *ngIf="name?.errors?.['maxlength']">Name must be at most 50 characters.</div>
+            <div *ngIf="name?.errors?.['required']">El nombre es requerido.</div>
+            <div *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
+            <div *ngIf="name?.errors?.['maxlength']">El nombre debe tener como máxmimo 50 caracteress.</div>
           </div>
         </div>
 
@@ -88,32 +88,32 @@
                    [ngClass]="{'input-error': email?.invalid && (email?.dirty || email?.touched)}">
           </div>
           <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="form-message-error">
-            <div *ngIf="email?.errors?.['required']">Email is required.</div>
-            <div *ngIf="email?.errors?.['email']">Please enter a valid email address.</div>
+            <div *ngIf="email?.errors?.['required']">El email es requerido.</div>
+            <div *ngIf="email?.errors?.['email']">Por favor, introduzca una dirección de correo electrónico válida.</div>
           </div>
         </div>
 
         <!-- Message Field -->
         <div class="form-item">
-          <label for="message" class="form-label">Message</label>
-          <textarea id="message" formControlName="message" placeholder="Type your message here..." class="form-textarea"
+          <label for="message" class="form-label">Mensaje</label>
+          <textarea id="message" formControlName="message" placeholder="Escribe tu mensaje aquí..." class="form-textarea"
                     [ngClass]="{'input-error': message?.invalid && (message?.dirty || message?.touched)}"></textarea>
           <div *ngIf="message?.invalid && (message?.dirty || message?.touched)" class="form-message-error">
-            <div *ngIf="message?.errors?.['required']">Message is required.</div>
-            <div *ngIf="message?.errors?.['minlength']">Message must be at least 10 characters.</div>
-            <div *ngIf="message?.errors?.['maxlength']">Message must be at most 1000 characters.</div>
+            <div *ngIf="message?.errors?.['required']">Se requiere un mensaje.</div>
+            <div *ngIf="message?.errors?.['minlength']">El mensaje debe tener al menos 10 caracteres.</div>
+            <div *ngIf="message?.errors?.['maxlength']">El mensaje debe tener como máximo 1000 caracteres.</div>
           </div>
         </div>
 
         <!-- Improvement Description Field -->
         <div class="form-item">
-          <label for="improvementDescription" class="form-label">How can we improve your message? (Optional)</label>
+          <label for="improvementDescription" class="form-label">¿Cómo podemos mejorar su mensaje? (Opcional)</label>
           <textarea id="improvementDescription" formControlName="improvementDescription" class="form-textarea"
-                    placeholder="e.g., make it more formal, add a bit of humor, check for grammar mistakes..."
+                    placeholder="por ejemplo, hacerlo más formal, añadir un poco de humor, revisar errores gramaticales..."
                     [ngClass]="{'input-error': improvementDescription?.invalid && (improvementDescription?.dirty || improvementDescription?.touched)}"></textarea>
-          <p class="form-description">Describe how you'd like AI to refine your message above.</p>
+          <p class="form-description">Describe cómo te gustaría que la IA afinara tu mensaje anterior.</p>
           <div *ngIf="improvementDescription?.invalid && (improvementDescription?.dirty || improvementDescription?.touched)" class="form-message-error">
-            <div *ngIf="improvementDescription?.errors?.['maxlength']">Description must be at most 500 characters.</div>
+            <div *ngIf="improvementDescription?.errors?.['maxlength']">La descripción debe tener un máximo de 500 caracteres.</div>
           </div>
         </div>
 
@@ -121,18 +121,18 @@
                 [disabled]="isImproving || !improvementDescription?.value || !message?.value">
           <span *ngIf="isImproving" class="spinner"></span>
           <span *ngIf="!isImproving">✨</span>
-          Improve Message with AI
+          Mejorar Mensaje con IA
         </button>
 
         <!-- CAPTCHA Placeholder -->
         <div class="form-item checkbox-item">
           <input id="isNotRobot" type="checkbox" formControlName="isNotRobot" class="form-checkbox">
           <label for="isNotRobot" class="form-label-checkbox">
-            I am not a robot
-            <span class="form-description">Please confirm to help us prevent spam.</span>
+            Yo no soy un robot
+            <span class="form-description">Ayúdanos a prevenir el spam.</span>
           </label>
            <div *ngIf="isNotRobot?.invalid && (isNotRobot?.dirty || isNotRobot?.touched)" class="form-message-error">
-            <div *ngIf="isNotRobot?.errors?.['required']">Please confirm you are not a robot.</div>
+            <div *ngIf="isNotRobot?.errors?.['required']">Por favor, confirme que no es un robot.</div>
           </div>
         </div>
         
@@ -140,7 +140,7 @@
         <button type="submit" class="button button-primary full-width large-button" [disabled]="isLoading || isImproving || contactForm.invalid">
           <span *ngIf="isLoading" class="spinner"></span>
           <span *ngIf="!isLoading">✉️</span>
-          Send Message
+          Enviar Mensaje
         </button>
 
         <!-- Submission Messages -->
