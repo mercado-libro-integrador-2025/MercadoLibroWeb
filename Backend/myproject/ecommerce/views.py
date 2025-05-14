@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 import mercadopago
 from django.conf import settings
-=======
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from django.contrib.auth import authenticate, login, logout
@@ -21,10 +18,7 @@ from .models import (
     Libro,
     ItemCarrito,
     Pedido,
-<<<<<<< HEAD
     ProductoPedido,
-=======
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
     Direccion,
     MetodoPago,
     Reseña,
@@ -42,7 +36,6 @@ from .serializers import (
     ReseñaSerializer,
     ContactoSerializer
 )
-<<<<<<< HEAD
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -156,9 +149,6 @@ def confirmar_pedido(request):
         "pedido_id": pedido.id_pedido,
         "total": total_pedido
     }, status=status.HTTP_201_CREATED)
-=======
-
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -181,12 +171,9 @@ class LoginView(APIView):
         user = authenticate(email=email, password=password)
 
         if user:
-<<<<<<< HEAD
             if not user.is_active:
                 return Response({'error': 'Tu cuenta ha sido desactivada. Contacta al soporte.'}, status=status.HTTP_403_FORBIDDEN)
             
-=======
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
             login(request, user)
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -194,11 +181,7 @@ class LoginView(APIView):
                 'access': str(refresh.access_token),
                 'user': UserSerializer(user).data
             }, status=status.HTTP_200_OK)
-<<<<<<< HEAD
         return Response({'error': 'Credenciales inválidas'}, status=status.HTTP_404_NOT_FOUND)
-=======
-        return Response({'error': 'Invalid Credentials'}, status=status.HTTP_404_NOT_FOUND)
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 
 
 class LogoutView(APIView):
@@ -211,7 +194,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
-<<<<<<< HEAD
     def destroy(self, request, *args, **kwargs):
         user = self.get_object()
         if user == request.user or request.user.is_staff: 
@@ -220,22 +202,6 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Cuenta desactivada exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'error': 'No tienes permiso para eliminar esta cuenta'}, status=status.HTTP_403_FORBIDDEN)
-=======
-    # Método personalizado para eliminar un usuario
-    def destroy(self, request, *args, **kwargs):
-        user = self.get_object()
-        if user == request.user or request.user.is_staff: 
-            user.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response({'error': 'No tienes permiso para eliminar esta cuenta'}, status=status.HTTP_403_FORBIDDEN)
-    
-    # Acción personalizada para obtener el usuario autenticado
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
-    def me(self, request):
-        serializer = self.get_serializer(request.user)
-        return Response(serializer.data)
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 
 
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -250,15 +216,6 @@ class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
     filter_backends = [DjangoFilterBackend]
-<<<<<<< HEAD
-=======
-    filterset_fields = {
-        'titulo': ['icontains'],
-        'categoria__nombre_categoria': ['exact'],
-        'precio': ['lte', 'gte'],
-        'stock': ['lte', 'gte'],
-    }
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
     
 class DireccionViewSet(viewsets.ModelViewSet):
     queryset = Direccion.objects.all()
@@ -266,7 +223,15 @@ class DireccionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Direccion.objects.filter(usuario=self.request.user)  
+        return Direccion.objects.filter(usuario=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        direccion = self.get_object()
+        if direccion.usuario == request.user:
+            direccion.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error": "No tienes permiso para eliminar esta dirección."}, status=status.HTTP_403_FORBIDDEN)
 
 class MetodoPagoViewSet(viewsets.ModelViewSet):
     queryset = MetodoPago.objects.all()
@@ -309,7 +274,6 @@ class ItemCarritoViewSet(viewsets.ModelViewSet):
             serializer.save(usuario=usuario)
 
 class PedidoViewSet(viewsets.ModelViewSet):
-<<<<<<< HEAD
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
@@ -319,23 +283,6 @@ class PedidoViewSet(viewsets.ModelViewSet):
         pedidos = Pedido.objects.filter(usuario__id=usuario_id)
         serializer = self.get_serializer(pedidos, many=True)
         return Response(serializer.data)
-=======
-    serializer_class = PedidoSerializer
-    queryset = Pedido.objects.all()
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Pedido.objects.filter(usuario=self.request.user)  
-
-    def perform_create(self, serializer):
-        carrito_items = ItemCarrito.objects.filter(usuario=self.request.user)
-        if carrito_items.exists():
-            total = sum(item.libro.precio * item.cantidad for item in carrito_items)
-            pedido = serializer.save(usuario=self.request.user, total=total)
-            carrito_items.delete()  
-            return pedido
-        raise serializers.ValidationError("El carrito está vacío.")
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 
 class ReseñaViewSet(viewsets.ModelViewSet):
     queryset = Reseña.objects.all()
