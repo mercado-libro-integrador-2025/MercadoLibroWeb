@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit {
   obtenerDireccionesCliente(): void {
   this.loginService.obtenerDirecciones().subscribe({
     next: (data) => {
-      console.log("Direcciones obtenidas:", data); // <== VERIFICAR
+      console.log("Direcciones obtenidas:", data);
       this.direcciones = data;
     },
     error: (error) => console.error('Error al obtener direcciones:', error)
