@@ -1,0 +1,105 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\pages\\contacto\\contacto.component.html||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\pages\\contacto\\contacto.component.html||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\pages\\contacto\\contacto.component.css||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\pages\\contacto\\contacto.component.css||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\services\\contacto.service.ts||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\services\\contacto.service.ts||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\pages\\contacto\\contacto.component.ts||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\pages\\contacto\\contacto.component.ts||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\services\\models\\contacto.models.ts||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\services\\models\\contacto.models.ts||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "contacto.component.css",
+              "DocumentMoniker": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\pages\\contacto\\contacto.component.css",
+              "RelativeDocumentMoniker": "src\\app\\pages\\contacto\\contacto.component.css",
+              "ToolTip": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\pages\\contacto\\contacto.component.css",
+              "RelativeToolTip": "src\\app\\pages\\contacto\\contacto.component.css",
+              "ViewState": "AgIAANwAAAAAAAAAAAAqwAABAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-05-12T03:18:35.903Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "contacto.models.ts",
+              "DocumentMoniker": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\services\\models\\contacto.models.ts",
+              "RelativeDocumentMoniker": "src\\app\\services\\models\\contacto.models.ts",
+              "ToolTip": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\services\\models\\contacto.models.ts",
+              "RelativeToolTip": "src\\app\\services\\models\\contacto.models.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-05-12T03:13:39.856Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "contacto.service.ts",
+              "DocumentMoniker": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\services\\contacto.service.ts",
+              "RelativeDocumentMoniker": "src\\app\\services\\contacto.service.ts",
+              "ToolTip": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\services\\contacto.service.ts",
+              "RelativeToolTip": "src\\app\\services\\contacto.service.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-05-12T03:10:28.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "contacto.component.html",
+              "DocumentMoniker": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\pages\\contacto\\contacto.component.html",
+              "RelativeDocumentMoniker": "src\\app\\pages\\contacto\\contacto.component.html",
+              "ToolTip": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\pages\\contacto\\contacto.component.html",
+              "RelativeToolTip": "src\\app\\pages\\contacto\\contacto.component.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-05-12T02:49:43.377Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "contacto.component.ts",
+              "DocumentMoniker": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\pages\\contacto\\contacto.component.ts",
+              "RelativeDocumentMoniker": "src\\app\\pages\\contacto\\contacto.component.ts",
+              "ToolTip": "C:\\Users\\octav\\Saved Games\\PP\\MercadoLibroWeb\\Frontend\\src\\app\\pages\\contacto\\contacto.component.ts",
+              "RelativeToolTip": "src\\app\\pages\\contacto\\contacto.component.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-05-12T02:49:22.786Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
