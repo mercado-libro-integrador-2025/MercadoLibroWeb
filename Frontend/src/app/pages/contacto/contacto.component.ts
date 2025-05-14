@@ -1,146 +1,129 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common'; // Required for *ngIf, *ngFor, etc.
+import { Component, OnInit } from '@angular/core'; // Importa OnInit si lo necesitas
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Importa solo lo necesario
+import { CommonModule, NgIf } from '@angular/common'; // Importa CommonModule y NgIf
+import { ReactiveFormsModule } from '@angular/forms'; // Importa ReactiveFormsModule
+// Asume que tienes un servicio para enviar el contacto (ej: ContactoService)
+// import { ContactoService } from '../../services/contacto.service';
+// import { HttpClientModule } from '@angular/common/http'; // Si ContactoService usa HttpClient
 
-import type { ContactFormData } from '../../services/models/contacto.models';
-import { ContactoService } from '../../services/contacto.service';
 
 @Component({
-  selector: 'app-contacto',
+  selector: 'app-contacto', // Asegúrate de que el selector coincida con donde usas este componente
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  // Importa los módulos necesarios
+  imports: [CommonModule, ReactiveFormsModule, NgIf /*, HttpClientModule si el servicio va aquí */ ],
   templateUrl: './contacto.component.html',
-  styleUrls: ['./contacto.component.css']
+  styleUrls: ['./contacto.component.css'] // Asegúrate de que esta ruta sea correcta
 })
+export class ContactoComponent implements OnInit { // Implementa OnInit si necesitas lógica al iniciar
 
-export class ContactoComponent implements OnInit {
+  contactForm!: FormGroup; // Define el FormGroup
+  isLoading = false; // Bandera para mostrar el spinner en el botón
+  submissionMessage: string | null = null; // Mensaje de éxito del envío
+  submissionError: string | null = null; // Mensaje de error del envío
 
-  datosContacto: any;
-  contactForm!: FormGroup;
-  isLoading = false;
-  isImproving = false;
-   captchaToken: string | null = null;
-  submissionMessage: string | null = null;
-  submissionError: string | null = null;
+  // Si necesitas mostrar datos de contacto fijos, los puedes definir aquí o traerlos de un servicio
+   datosContacto = [
+     { tipo: 'telefono', telefono: '+54 9 351 XXXXXX' }, // Reemplaza XXXXXX
+     { tipo: 'ubicacion', ubicacion: 'Calle Falsa 123, Córdoba, Argentina' },
+     { tipo: 'facebook', facebook: 'https://www.facebook.com/MercadoLibro' }, // Reemplaza
+     { tipo: 'instagram', instagram: 'https://www.instagram.com/MercadoLibro' }, // Reemplaza
+     { tipo: 'twitter', twitter: 'https://twitter.com/MercadoLibro' }, // Reemplaza
+     { tipo: 'linkedin', linkedin: 'https://www.linkedin.com/company/MercadoLibro' } // Reemplaza
+   ];
 
-  constructor(private formBuilder: FormBuilder, private contactoService: ContactoService) {
 
-    this.datosContacto = contactoService.getDatosContacto();
-
-  }
-
-  private fb = inject(FormBuilder);
-  private contactService = inject(ContactoService);
-  // private toastService = inject(ToastService); // If you have a toast service
+  constructor(
+    private fb: FormBuilder, // Inyecta FormBuilder para crear el formulario
+    // private contactoService: ContactoService // Inyecta tu servicio de contacto
+    ) {}
 
   ngOnInit(): void {
+    // Inicializa el formulario en ngOnInit
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
-      message: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
-      improvementDescription: ['', [Validators.maxLength(500)]],
-      isNotRobot: [false, Validators.requiredTrue],
+      email: ['', [Validators.required, Validators.email]], // Validators.email ya verifica el formato básico
+      message: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
+      // Eliminados improvementDescription y isNotRobot
     });
-    this.loadRecaptcha();
 
+     // Opcional: Limpiar mensajes después de unos segundos
+     this.contactForm.valueChanges.subscribe(() => {
+         this.submissionMessage = null;
+         this.submissionError = null;
+     });
   }
 
-   loadRecaptcha() {
-    window.grecaptcha.ready(() => {
-      window.grecaptcha.execute('YOUR_RECAPTCHA_SITE_KEY', { action: 'submit' }).then((token: string) => {
-        this.captchaToken = token;
-      });
-    });
+  // Getters para acceder fácilmente a los controles del formulario en la plantilla
+  get name() {
+    return this.contactForm.get('name');
   }
 
-  get name() { return this.contactForm.get('name'); }
-  get email() { return this.contactForm.get('email'); }
-  get message() { return this.contactForm.get('message'); }
-  get improvementDescription() { return this.contactForm.get('improvementDescription'); }
-  get isNotRobot() { return this.contactForm.get('isNotRobot'); }
-
-
-  handleImproveMessage(): void {
-    if (!this.message?.value || !this.improvementDescription?.value) {
-      // this.toastService.error('Please enter a message and a description for improvement.');
-      alert('Please enter a message and a description for improvement.');
-      return;
-    }
-
-    this.isImproving = true;
-    this.submissionMessage = null;
-    this.submissionError = null;
-
-    this.contactService.improveMessage({
-      originalMessage: this.message.value,
-      improvementDescription: this.improvementDescription.value,
-    }).subscribe({
-      next: (response) => {
-        this.contactForm.patchValue({ message: response.improvedMessage });
-        // this.toastService.success('Message Improved!', 'Your message has been updated with AI suggestions.');
-        alert('Message Improved! Your message has been updated with AI suggestions.');
-        this.isImproving = false;
-      },
-      error: (err) => {
-        console.error('Error improving message:', err);
-        // this.toastService.error('Error Improving Message', err.message || 'Could not improve the message.');
-        alert(`Error Improving Message: ${err.message || 'Could not improve the message.'}`);
-        this.isImproving = false;
-      },
-    });
+  get email() {
+    return this.contactForm.get('email');
   }
 
-  onSubmit(): void {
-    if (this.contactForm.invalid) {
-      this.contactForm.markAllAsTouched(); // Mark all fields as touched to display errors
-      // this.toastService.error('Please correct the errors in the form.');
-      alert('Please correct the errors in the form.');
-      return;
-    }
+  get message() {
+    return this.contactForm.get('message');
+  }
 
-    this.isLoading = true;
-    this.submissionMessage = null;
-    this.submissionError = null;
-    const formData = this.contactForm.value as ContactFormData;
+  // Método que se ejecuta al enviar el formulario
+  onSubmit() {
+    // Marca todos los controles como 'touched' para mostrar los errores de validación si los hay
+    this.contactForm.markAllAsTouched();
 
-    this.contactService.submitContactForm(formData).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        if (response.success) {
-                console.log("Form submitted with CAPTCHA token:", this.captchaToken);
-          this.submissionMessage = response.message;
-          // this.toastService.success('Message Sent!', response.message);
-          alert(`Message Sent! ${response.message}`);
-                setTimeout(() => {
-        this.isLoading = false;
-        alert("Message sent successfully!");
-        this.contactForm.reset();
-        this.captchaToken = null; // Reset CAPTCHA token
-      }, 2000);
-          this.contactForm.reset({
-            name: '',
-            email: '',
-            message: '',
-            improvementDescription: '',
-            isNotRobot: false
-          });
-        } else {
-      alert("Please complete reCAPTCHA and fill out all required fields.");
-          this.submissionError = response.message || 'Failed to send message.';
-          // this.toastService.error('Submission Error', this.submissionError);
-          alert(`Submission Error: ${this.submissionError}`);
+    // Verifica si el formulario es válido
+    if (this.contactForm.valid) {
+      this.isLoading = true; // Activa el spinner
+      this.submissionMessage = null; // Limpia mensajes anteriores
+      this.submissionError = null;
+
+      // ** Aquí es donde llamarías a tu servicio para enviar los datos **
+      console.log('Formulario válido. Datos a enviar:', this.contactForm.value);
+
+      // Ejemplo de llamada a un servicio (descomenta e implementa tu ContactoService)
+      /*
+      this.contactoService.enviarMensaje(this.contactForm.value).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.submissionMessage = '¡Gracias por tu mensaje! Lo hemos recibido.';
+          this.contactForm.reset(); // Limpia el formulario después del envío exitoso
+          // Opcional: Marcar controles como 'untouched' o 'pristine' después del reset si usas esas validaciones
+          this.contactForm.markAsUntouched();
+          this.contactForm.markAsPristine();
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.submissionError = 'Hubo un error al enviar tu mensaje. Inténtalo de nuevo.';
+          console.error('Error al enviar mensaje:', error);
         }
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.submissionError = err.message || 'Something went wrong during submission.';
-        console.error('Submission error:', err);
-        // this.toastService.error('Submission Error', this.submissionError);
-        alert(`Submission Error: ${this.submissionError}`);
-      },
-    });
+      });
+      */
 
+      // Si no tienes un servicio implementado aún, puedes simular un envío exitoso:
+       setTimeout(() => {
+         this.isLoading = false;
+         this.submissionMessage = '¡Mensaje enviado! (Simulado)';
+         console.log('Envío simulado exitoso.');
+         this.contactForm.reset();
+         this.contactForm.markAsUntouched();
+         this.contactForm.markAsPristine();
+       }, 2000); // Simula un retraso de 2 segundos
+
+
+    } else {
+      // Si el formulario no es válido, simplemente los mensajes de validación se mostrarán
+      console.warn('Formulario inválido. No se envió.');
+    }
   }
 
+  // Si necesitas mantener el getter para datosContacto para mostrar la lista en el HTML
+   get datosContactoArray() {
+     return this.datosContacto;
+   }
 
+   // Si quieres mantener el getter para el estado isLoading (ya se usa en el botón)
+   get isSending() {
+       return this.isLoading;
+   }
 }

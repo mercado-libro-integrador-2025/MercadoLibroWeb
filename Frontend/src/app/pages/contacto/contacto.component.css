@@ -1,371 +1,75 @@
-:host {
-  display: block;
-  font-family: 'Helvetica Neue', sans-serif; /* Matching existing body font */
+/* Estilos específicos para el formulario dentro de una tarjeta Bootstrap */
+.container .card {
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+    color: #d3c6a8;
+    border-radius: 8px;
 }
 
-.contact-form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; /* Changed from center to start for better layout */
-  min-height: 100vh;
-  padding: 3rem 1rem; /* py-12 equivalent, adjusted px */
-  background-color: hsl(28deg 21% 94%); /* --background: Warm beige */
-  color: hsl(0 0% 3.9%); /* --foreground */
+.container .card .card-header {
+    background-color: #1e1e1e;
+    border-bottom: 1px solid #444;
+    color: #cc6a00;
+    font-weight: bold;
+    font-size: 1.25rem;
 }
 
-.card {
-  width: 100%;
-  max-width: 42rem; /* max-w-2xl */
-  background-color: hsl(0 0% 100%); /* --card */
-  border: 1px solid hsl(0 0% 89.8%); /* --border */
-  border-radius: 0.5rem; /* --radius */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
-  overflow: hidden; /* Ensures rounded corners are respected by children */
+.container .card .card-body {
+    background-color: #2c2c2c;
+    color: #d3c6a8;
 }
 
-.card-header {
-  padding: 1.5rem; /* p-6 */
-  text-align: center;
-  border-bottom: 1px solid hsl(0 0% 89.8%); /* --border */
+/* Etiquetas del formulario */
+.container .card .form-label {
+    color: #fff;
+    font-weight: 500;
 }
 
-.card-title {
-  font-size: 1.875rem; /* text-3xl */
-  font-weight: bold;
-  color: hsl(0 0% 3.9%); /* --foreground */
-  margin-bottom: 0.5rem;
+/* Campos de entrada */
+.container .card .form-control {
+    background-color: #1e1e1e;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
 }
 
-.card-description {
-  font-size: 0.875rem; /* text-sm */
-  color: hsl(0 0% 45.1%); /* --muted-foreground */
+/* Placeholder (texto guía dentro del campo) */
+.container .card .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
-.card-content {
-  padding: 1.5rem; /* p-6 */
+/* Efecto al enfocar */
+.container .card .form-control:focus {
+    background-color: #1e1e1e;
+    color: #fff;
+    border-color: #cc6a00;
+    box-shadow: 0 0 0 0.25rem rgba(204, 106, 0, 0.25);
 }
 
-.space-y-6 > *:not([hidden]) ~ *:not([hidden]) {
-  margin-top: 1.5rem; /* space-y-6 */
-}
-
-.form-item {
-  margin-bottom: 1.5rem; /* Consistent spacing */
-}
-
-.form-label {
-  display: block;
-  font-size: 0.875rem; /* text-sm */
-  font-weight: 500; /* font-medium */
-  margin-bottom: 0.5rem;
-  color: hsl(0 0% 3.9%);
-}
-
-.input-group {
-  position: relative;
-}
-
-.input-icon {
-  position: absolute;
-  left: 0.75rem; /* left-3 */
-  top: 50%;
-  transform: translateY(-50%);
-  color: hsl(0 0% 45.1%); /* text-muted-foreground */
-  pointer-events: none; /* So it doesn't interfere with input focus */
-}
-
-
-.form-input,
-.form-textarea {
-  display: block;
-  width: 100%;
-  height: 2.5rem; /* h-10 */
-  padding: 0.5rem 0.75rem; /* px-3 py-2 */
-  font-size: 1rem; /* text-base, md:text-sm might need media query */
-  line-height: 1.5;
-  color: hsl(0 0% 3.9%); /* --foreground */
-  background-color: hsl(0 0% 100%); /* --background (input specific or card) */
-  border: 1px solid hsl(0 0% 89.8%); /* --input border */
-  border-radius: 0.375rem; /* rounded-md from --radius calc */
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-.form-input.pl-10 {
-  padding-left: 2.5rem; /* pl-10 */
-}
-
-.form-textarea {
-  min-height: 7.5rem; /* min-h-[120px] */
-  resize: vertical;
-}
-
-.form-input:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: hsl(0 0% 3.9%); /* --ring color for focus */
-  box-shadow: 0 0 0 0.2rem hsla(0 0% 3.9% / 0.25); /* Simulating ring offset */
-}
-
-.input-error {
-  border-color: hsl(0 84.2% 60.2%) !important; /* --destructive */
-}
-.input-error:focus {
-   box-shadow: 0 0 0 0.2rem hsla(0 84.2% 60.2% / 0.25);
-}
-
-
-.form-description {
-  font-size: 0.75rem; /* text-xs or sm */
-  color: hsl(0 0% 45.1%); /* --muted-foreground */
-  margin-top: 0.25rem;
-}
-
-.form-message-error {
-  font-size: 0.75rem; /* text-sm */
-  font-weight: 500; /* font-medium */
-  color: hsl(0 84.2% 60.2%); /* --destructive */
-  margin-top: 0.25rem;
-}
-
-.checkbox-item {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 0.75rem; /* space-x-3 */
-  border: 1px solid hsl(0 0% 89.8%); /* border */
-  padding: 1rem; /* p-4 */
-  border-radius: 0.375rem; /* rounded-md */
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-sm */
-}
-
-.form-checkbox {
-  margin-top: 0.125rem; /* to align with label text */
-  height: 1rem; /* h-4 */
-  width: 1rem; /* w-4 */
-  border-radius: 0.125rem; /* rounded-sm */
-  border: 1px solid hsl(120deg 20% 70%); /* --primary */
-}
-.form-checkbox:checked {
-  background-color: hsl(120deg 20% 70%); /* --primary */
-}
-
-.form-label-checkbox {
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1;
-}
-.form-label-checkbox .form-description {
-  font-size: 0.75rem;
-  font-weight: normal;
-  margin-top: 0.25rem;
-}
-
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem; /* gap-2 */
-  white-space: nowrap;
-  border-radius: 0.375rem; /* rounded-md */
-  font-size: 0.875rem; /* text-sm */
-  font-weight: 500; /* font-medium */
-  padding: 0.5rem 1rem; /* h-10 px-4 py-2 default size */
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out;
-  cursor: pointer;
-  border: 1px solid transparent;
-}
-.button:disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-.button-primary {
-  background-color: hsl(120deg 20% 70%); /* --primary */
-  color: hsl(0 0% 98%); /* --primary-foreground */
-}
-.button-primary:hover:not(:disabled) {
-  background-color: hsl(120deg 20% 63%); /* primary/90 */
-}
-
-.button-outline {
-  border-color: hsl(0 0% 89.8%); /* --input border */
-  background-color: hsl(0 0% 100%); /* --background */
-  color: hsl(0 0% 3.9%); /* --foreground */
-}
-.button-outline:hover:not(:disabled) {
-  background-color: hsl(25deg 60% 50% / 0.1); /* --accent with opacity */
-  border-color: hsl(25deg 60% 50%); /* --accent */
-  color: hsl(25deg 60% 50%); /* --accent for text if needed */
-}
-
-
-.full-width {
-  width: 100%;
-}
-
-.large-button {
-  font-size: 1.125rem; /* text-lg */
-  padding-top: 1rem; /* py-6 / 2 */
-  padding-bottom: 1rem; /* py-6 / 2 */
-  height: auto; /* Adjust height for larger padding */
-}
-
-.spinner {
-  display: inline-block;
-  width: 1rem; /* h-4 w-4 or h-5 w-5 */
-  height: 1rem;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-right: 0.5rem; /* mr-2 */
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.submission-success-message,
-.submission-error-message {
-  margin-top: 1rem;
-  padding: 0.75rem 1rem;
-  border-radius: 0.375rem;
-  text-align: center;
-}
-
-.submission-success-message {
-  background-color: hsl(120deg 20% 70% / 0.2); /* Light primary */
-  color: hsl(120deg 20% 30%); /* Darker primary text */
-  border: 1px solid hsl(120deg 20% 70%);
-}
-
-.submission-error-message {
-  background-color: hsl(0 84.2% 60.2% / 0.1); /* Light destructive */
-  color: hsl(0 84.2% 60.2%); /* --destructive */
-  border: 1px solid hsl(0 84.2% 60.2%);
-}
-
-/* Mobile responsiveness for font sizes if needed via media queries */
-@media (min-width: 768px) { /* md breakpoint */
-  .form-input, .form-textarea {
-    /* font-size: 0.875rem; /* md:text-sm */
-  }
-}
-
-* {
-    font-family: sans-serif;
-    color: #746b6b;
-}
-
-.container-form {
-    margin: auto;
-    width: 100%;
-    max-width: 1100px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 50px;
-    margin-top: 65px;
-}
-
-.container-form form .campo,
-.container-form form textarea {
-    display: flex;
-    width: 100%;
-    padding: 15px 10px;
-    font-size: 14px;
-    border: 1px solid #746b6b;
-    margin-bottom: 10px;
-    border-radius: 3px;
-    color: #746b6b;
-}
-
-.container-form form textarea {
-    max-width: 530px;
-    min-width: 530px;
-    min-height: 180px;
-}
-
-.container-form .btn-enviar {
-    margin-top: 5px;
-    padding: 15px;
-    font-size: 16px;
-    border: none;
-    outline: 0px;
-    background: #746b6b;
+/* Botón de enviar */
+.container .card .btn-submit {
+    background-color: #cc6a00;
     color: white;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all 300ms ease;
+    border: none;
+    padding: 10px 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
 }
 
-.container-form .btn-enviar:hover {
-    background: white;
-    color: #746b6b;
+.container .card .btn-submit:hover {
+    background-color: #e76e00;
 }
 
-main {
-    margin: 15px;
+
+.container .card .invalid-feedback,
+.container .card .valid-feedback {
+    color: #ffa500;
 }
 
-/* Tablet  */
-@media screen and (max-width: 768px) {
-
-    #map {
-        display: none;
-    }
-
-    .container-form {
-        grid-template-columns: 1fr;
-        padding: 0 20px;
-        justify-content: center;
-    }
-
-    .container-form form {
-        margin-left: 90px;
-        margin-bottom: 10px;
-        width: 73%;
-    }
-
-    .container-form .campo,
-    .container-form textarea {
-        padding: 10px 6px;
-        font-size: 10px;
-        box-sizing: border-box;
-    }
-
-    .container-form textarea {
-        max-width: 100%;
-    }
-
-    .container-form .btn-enviar {
-        align-items: center;
-        width: 50%;
-        margin: 0 auto;
-        display: block;
-    }
-}
-
-/* Mobile */
-
-@media screen and (max-width: 576px) {
-    .container-form {
-        grid-gap: 20px;
-    }
-
-    .container-form form .campo,
-    .container-form form textarea {
-        width: 100%;
-    }
-
-    .container-form form textarea {
-        min-width: unset;
-        max-width: unset;
-    }
-
-    .container-form form {
-        margin-left: 50px;
+/* Responsive */
+@media (max-width: 576px) {
+    .container .card {
+        margin: 10px;
     }
 }
