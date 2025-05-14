@@ -3,22 +3,14 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 class CustomUser(AbstractUser):
-<<<<<<< HEAD
     email = models.EmailField(max_length=150, unique=True)
     is_active = models.BooleanField(default=True)  
-=======
-    email=models.EmailField(max_length=150, unique=True)
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.email
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 class Categoria(models.Model):
     id_categoria = models.AutoField(primary_key=True)
     nombre_categoria = models.CharField(max_length=100)
@@ -106,7 +98,6 @@ class MetodoPago(models.Model):
     def __str__(self):
         return f'Método de pago de {self.usuario} ({self.get_tipo_tarjeta_display()})'  
 
-<<<<<<< HEAD
 class ProductoPedido(models.Model):
     pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE, related_name='productos')
     libro = models.ForeignKey('Libro', on_delete=models.CASCADE)
@@ -130,19 +121,11 @@ class Pedido(models.Model):
         ('entregado', 'Entregado'),
         ('cancelado', 'Cancelado')
     ]
-    
-=======
-class Pedido(models.Model):
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
     id_pedido = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     direccion = models.ForeignKey(Direccion, on_delete=models.CASCADE)
     metodo_pago = models.CharField(max_length=7, choices=MetodoPago.TARJETA_OPCIONES)  
-<<<<<<< HEAD
     estado = models.CharField(max_length=20, choices=ESTADO_OPCIONES, default='en_proceso')
-=======
-    estado = models.CharField(max_length=50, default='En camino')
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
     fecha_pedido = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -150,11 +133,8 @@ class Pedido(models.Model):
         db_table = 'pedido'
 
     def __str__(self):
-<<<<<<< HEAD
         return f'Pedido {self.id_pedido} de {self.usuario}, {self.get_estado_display()}'
-=======
         return f'Pedido {self.id_pedido} de {self.usuario}, pagado con {self.get_metodo_pago_display()}'
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 
 class Reseña(models.Model):
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
