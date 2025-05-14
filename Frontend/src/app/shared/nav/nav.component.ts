@@ -4,11 +4,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { Observable } from 'rxjs';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [RouterLinkActive, RouterLink],
+  imports: [RouterLinkActive, RouterLink,CommonModule],
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']
 })
@@ -38,6 +38,6 @@ export class NavComponent implements OnInit {
 
   logout() {
     this.loginService.logout(); // Llamar al servicio de logout
-    this.router.navigate(['/login']); // Redirigir al login después de cerrar sesión
+    this.router.navigate(['/inicio']); // Redirigir al login después de cerrar sesión
   }
 }
