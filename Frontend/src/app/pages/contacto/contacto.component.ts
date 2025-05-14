@@ -1,94 +1,118 @@
-import { Component, OnInit } from '@angular/core'; // Importa OnInit si lo necesitas
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Importa solo lo necesario
-import { CommonModule, NgIf } from '@angular/common'; // Importa CommonModule y NgIf
-import { ReactiveFormsModule } from '@angular/forms'; // Importa ReactiveFormsModule
-// Asume que tienes un servicio para enviar el contacto (ej: ContactoService)
-// import { ContactoService } from '../../services/contacto.service';
-// import { HttpClientModule } from '@angular/common/http'; // Si ContactoService usa HttpClient
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule, NgIf } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
+// Importa tu servicio para enviar el mensaje si lo tienes implementado
+// import { ContactoService } from '../../services/contacto.service';
+// import { HttpClientModule } from '@angular/common/http';
 
 @Component({
-  selector: 'app-contacto', // Asegúrate de que el selector coincida con donde usas este componente
+  selector: 'app-contacto',
   standalone: true,
-  // Importa los módulos necesarios
-  imports: [CommonModule, ReactiveFormsModule, NgIf /*, HttpClientModule si el servicio va aquí */ ],
-  templateUrl: './contacto.component.html',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgIf,
+    // HttpClientModule
+  ],
+  templateUrl: './contacto.component.html', // Asegúrate de que esta ruta sea correcta
   styleUrls: ['./contacto.component.css'] // Asegúrate de que esta ruta sea correcta
 })
-export class ContactoComponent implements OnInit { // Implementa OnInit si necesitas lógica al iniciar
+export class ContactoComponent implements OnInit {
 
-  contactForm!: FormGroup; // Define el FormGroup
-  isLoading = false; // Bandera para mostrar el spinner en el botón
-  submissionMessage: string | null = null; // Mensaje de éxito del envío
-  submissionError: string | null = null; // Mensaje de error del envío
+  contactForm!: FormGroup;
 
-  // Si necesitas mostrar datos de contacto fijos, los puedes definir aquí o traerlos de un servicio
+  isLoading = false;
+  submissionMessage: string | null = null;
+  submissionError: string | null = null;
+
+  // Ejemplo de datos de contacto si los usas en tu HTML (como en tu original)
    datosContacto = [
-     { tipo: 'telefono', telefono: '+54 9 351 XXXXXX' }, // Reemplaza XXXXXX
+     { tipo: 'telefono', telefono: '+54 9 351 XXXXXX' },
      { tipo: 'ubicacion', ubicacion: 'Calle Falsa 123, Córdoba, Argentina' },
-     { tipo: 'facebook', facebook: 'https://www.facebook.com/MercadoLibro' }, // Reemplaza
-     { tipo: 'instagram', instagram: 'https://www.instagram.com/MercadoLibro' }, // Reemplaza
-     { tipo: 'twitter', twitter: 'https://twitter.com/MercadoLibro' }, // Reemplaza
-     { tipo: 'linkedin', linkedin: 'https://www.linkedin.com/company/MercadoLibro' } // Reemplaza
+     { tipo: 'facebook', facebook: 'https://www.facebook.com/MercadoLibro' },
+     { tipo: 'instagram', instagram: 'https://www.instagram.com/MercadoLibro' },
+     { tipo: 'twitter', twitter: 'https://twitter.com/MercadoLibro' },
+     { tipo: 'linkedin', linkedin: 'https://www.linkedin.com/company/MercadoLibro' }
    ];
 
 
   constructor(
-    private fb: FormBuilder, // Inyecta FormBuilder para crear el formulario
-    // private contactoService: ContactoService // Inyecta tu servicio de contacto
+    private fb: FormBuilder,
+    // private contactoService: ContactoService
     ) {}
 
   ngOnInit(): void {
-    // Inicializa el formulario en ngOnInit
     this.contactForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]], // Validators.email ya verifica el formato básico
-      message: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
-      // Eliminados improvementDescription y isNotRobot
+      nombre: ['', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(100)
+      ]],
+      email: ['', [
+        Validators.required,
+        Validators.email
+      ]],
+       asunto: ['', [
+         Validators.required,
+         Validators.maxLength(150)
+       ]],
+      mensaje: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(1000)
+      ]]
     });
 
-     // Opcional: Limpiar mensajes después de unos segundos
      this.contactForm.valueChanges.subscribe(() => {
          this.submissionMessage = null;
          this.submissionError = null;
      });
   }
 
-  // Getters para acceder fácilmente a los controles del formulario en la plantilla
-  get name() {
-    return this.contactForm.get('name');
+  get nombre() {
+    return this.contactForm.get('nombre');
   }
 
   get email() {
     return this.contactForm.get('email');
   }
 
-  get message() {
-    return this.contactForm.get('message');
+  get asunto() {
+    return this.contactForm.get('asunto');
   }
 
-  // Método que se ejecuta al enviar el formulario
+  get mensaje() {
+    return this.contactForm.get('mensaje');
+  }
+
+   get datosContactoArray() {
+     return this.datosContacto;
+   }
+
+   get isSending() {
+       return this.isLoading;
+   }
+
+
   onSubmit() {
-    // Marca todos los controles como 'touched' para mostrar los errores de validación si los hay
     this.contactForm.markAllAsTouched();
 
-    // Verifica si el formulario es válido
     if (this.contactForm.valid) {
-      this.isLoading = true; // Activa el spinner
-      this.submissionMessage = null; // Limpia mensajes anteriores
+      this.isLoading = true;
+      this.submissionMessage = null;
       this.submissionError = null;
 
-      // ** Aquí es donde llamarías a tu servicio para enviar los datos **
       console.log('Formulario válido. Datos a enviar:', this.contactForm.value);
 
-      // Ejemplo de llamada a un servicio (descomenta e implementa tu ContactoService)
+      // --- EJEMPLO DE LLAMADA A SERVICIO ---
       /*
       this.contactoService.enviarMensaje(this.contactForm.value).subscribe({
         next: (response) => {
           this.isLoading = false;
-          this.submissionMessage = '¡Gracias por tu mensaje! Lo hemos recibido.';
-          this.contactForm.reset(); // Limpia el formulario después del envío exitoso
-          // Opcional: Marcar controles como 'untouched' o 'pristine' después del reset si usas esas validaciones
+          this.submissionMessage = '¡Gracias por tu mensaje! Lo hemos recibido correctamente.';
+          this.contactForm.reset();
           this.contactForm.markAsUntouched();
           this.contactForm.markAsPristine();
         },
@@ -100,7 +124,7 @@ export class ContactoComponent implements OnInit { // Implementa OnInit si neces
       });
       */
 
-      // Si no tienes un servicio implementado aún, puedes simular un envío exitoso:
+      // --- EJEMPLO DE SIMULACIÓN ---
        setTimeout(() => {
          this.isLoading = false;
          this.submissionMessage = '¡Mensaje enviado! (Simulado)';
@@ -108,22 +132,11 @@ export class ContactoComponent implements OnInit { // Implementa OnInit si neces
          this.contactForm.reset();
          this.contactForm.markAsUntouched();
          this.contactForm.markAsPristine();
-       }, 2000); // Simula un retraso de 2 segundos
+       }, 2000);
 
 
     } else {
-      // Si el formulario no es válido, simplemente los mensajes de validación se mostrarán
       console.warn('Formulario inválido. No se envió.');
     }
   }
-
-  // Si necesitas mantener el getter para datosContacto para mostrar la lista en el HTML
-   get datosContactoArray() {
-     return this.datosContacto;
-   }
-
-   // Si quieres mantener el getter para el estado isLoading (ya se usa en el botón)
-   get isSending() {
-       return this.isLoading;
-   }
 }

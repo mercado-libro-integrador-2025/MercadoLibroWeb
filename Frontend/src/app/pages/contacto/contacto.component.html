@@ -1,79 +1,131 @@
 <main>
-    <div class="container my-5">
-        <div class="card p-4 shadow">
-            <div class="card-header">
-                <h2 class="card-title">Contáctanos</h2>
-                <p class="card-description text-secondary">
-                    Complete el formulario a continuación para ponerse en contacto.
-                    ¡Nos encantaría saber de ti!
-                </p>
-            </div>
-            <div class="card-body">
-                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+  <div class="container my-5">
+    <div class="card p-4 shadow">
+      <div class="card-header">
+        <h2 class="card-title">Contáctanos</h2>
+        <p class="card-description text-secondary">
+          Complete el formulario a continuación para ponerse en contacto. ¡Nos encantaría saber de ti!
+        </p>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
 
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nombre</label>
-                        <input id="name" type="text" formControlName="name" placeholder="Tu Nombre"
-                               class="form-control"
-                               [class.is-invalid]="name?.invalid && (name?.dirty || name?.touched)"
-                               [class.is-valid]="name?.valid && (name?.dirty || name?.touched)">
-                        <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="invalid-feedback">
-                            <div *ngIf="name?.errors?.['required']">El nombre es requerido.</div>
-                            <div *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
-                             <div *ngIf="name?.errors?.['maxlength']">El nombre debe tener como máximo 50 caracteres.</div>
-                        </div>
-                         <div *ngIf="name?.valid && (name?.dirty || name?.touched)" class="valid-feedback">
-                             ¡Correcto!
-                         </div>
-                    </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input id="name" type="text" formControlName="nombre" placeholder="Tu Nombre"
+              class="form-control"
+              [class.is-invalid]="nombre?.invalid && (nombre?.dirty || nombre?.touched)"
+              [class.is-valid]="nombre?.valid && (nombre?.dirty || nombre?.touched)">
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input id="email" type="email" formControlName="email" placeholder="tu.correo@ejemplo.com"
-                               class="form-control"
-                               [class.is-invalid]="email?.invalid && (email?.dirty || email?.touched)"
-                               [class.is-valid]="email?.valid && (email?.dirty || email?.touched)">
-                        <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="invalid-feedback">
-                            <div *ngIf="email?.errors?.['required']">El email es requerido.</div>
-                            <div *ngIf="email?.errors?.['email'] || email?.errors?.['pattern']">Por favor, introduzca una dirección de correo electrónico válida.</div>
-                        </div>
-                         <div *ngIf="email?.valid && (email?.dirty || email?.touched)" class="valid-feedback">
-                            ¡Correcto!
-                         </div>
-                    </div>
+            @if (nombre?.invalid && (nombre?.dirty || nombre?.touched)) {
+              <div class="invalid-feedback">
+                @if (nombre?.errors?.['required']) {
+                  <div>El nombre es requerido.</div>
+                }
+                @if (nombre?.errors?.['minlength']) {
+                  <div>Debe tener al menos 2 caracteres.</div>
+                }
+                @if (nombre?.errors?.['maxlength']) {
+                  <div>Debe tener como máximo 100 caracteres.</div>
+                }
+              </div>
+            }
 
-                    <div class="mb-3">
-                        <label for="message" class="form-label">Mensaje</label>
-                        <textarea id="message" formControlName="message" placeholder="Escribe tu mensaje aquí..."
-                                  class="form-control" rows="4"
-                                  [class.is-invalid]="message?.invalid && (message?.dirty || message?.touched)"
-                                   [class.is-valid]="message?.valid && (message?.dirty || message?.touched)"></textarea>
-                         <div *ngIf="message?.invalid && (message?.dirty || message?.touched)" class="invalid-feedback">
-                            <div *ngIf="message?.errors?.['required']">Se requiere un mensaje.</div>
-                            <div *ngIf="message?.errors?.['minlength']">El mensaje debe tener al menos 10 caracteres.</div>
-                             <div *ngIf="message?.errors?.['maxlength']">El mensaje debe tener como máximo 1000 caracteres.</div>
-                        </div>
-                         <div *ngIf="message?.valid && (message?.dirty || message?.touched)" class="valid-feedback">
-                            ¡Correcto!
-                         </div>
-                    </div>
+            @if (nombre?.valid && (nombre?.dirty || nombre?.touched)) {
+              <div class="valid-feedback">¡Correcto!</div>
+            }
+          </div>
 
-                    <div *ngIf="submissionMessage" class="alert alert-success mt-3" role="alert">
-                       {{ submissionMessage }}
-                    </div>
-                    <div *ngIf="submissionError" class="alert alert-danger mt-3" role="alert">
-                       {{ submissionError }}
-                    </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" type="email" formControlName="email" placeholder="tu.correo@ejemplo.com"
+              class="form-control"
+              [class.is-invalid]="email?.invalid && (email?.dirty || email?.touched)"
+              [class.is-valid]="email?.valid && (email?.dirty || email?.touched)">
 
+            @if (email?.invalid && (email?.dirty || email?.touched)) {
+              <div class="invalid-feedback">
+                @if (email?.errors?.['required']) {
+                  <div>El email es requerido.</div>
+                }
+                @if (email?.errors?.['email']) {
+                  <div>Email inválido.</div>
+                }
+              </div>
+            }
 
-                    <button type="submit" class="btn btn-primary mt-3" [disabled]="isLoading || contactForm.invalid">
-                         <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                         Enviar Mensaje
-                    </button>
+            @if (email?.valid && (email?.dirty || email?.touched)) {
+              <div class="valid-feedback">¡Correcto!</div>
+            }
+          </div>
 
-                </form>
-            </div>
-        </div>
+          <div class="mb-3">
+            <label for="subject" class="form-label">Asunto</label>
+            <input id="subject" type="text" formControlName="asunto" placeholder="Asunto del mensaje"
+              class="form-control"
+              [class.is-invalid]="asunto?.invalid && (asunto?.dirty || asunto?.touched)"
+              [class.is-valid]="asunto?.valid && (asunto?.dirty || asunto?.touched)">
 
-         </div>
+            @if (asunto?.invalid && (asunto?.dirty || asunto?.touched)) {
+              <div class="invalid-feedback">
+                @if (asunto?.errors?.['required']) {
+                  <div>El asunto es requerido.</div>
+                }
+                @if (asunto?.errors?.['maxlength']) {
+                  <div>Máximo 150 caracteres.</div>
+                }
+              </div>
+            }
+
+            @if (asunto?.valid && (asunto?.dirty || asunto?.touched)) {
+              <div class="valid-feedback">¡Correcto!</div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label for="message" class="form-label">Mensaje</label>
+            <textarea id="message" formControlName="mensaje" rows="4"
+              placeholder="Escribe tu mensaje aquí..."
+              class="form-control"
+              [class.is-invalid]="mensaje?.invalid && (mensaje?.dirty || mensaje?.touched)"
+              [class.is-valid]="mensaje?.valid && (mensaje?.dirty || mensaje?.touched)">
+            </textarea>
+
+            @if (mensaje?.invalid && (mensaje?.dirty || mensaje?.touched)) {
+              <div class="invalid-feedback">
+                @if (mensaje?.errors?.['required']) {
+                  <div>Se requiere un mensaje.</div>
+                }
+                @if (mensaje?.errors?.['minlength']) {
+                  <div>Debe tener al menos 10 caracteres.</div>
+                }
+                @if (mensaje?.errors?.['maxlength']) {
+                  <div>Máximo 1000 caracteres.</div>
+                }
+              </div>
+            }
+
+            @if (mensaje?.valid && (mensaje?.dirty || mensaje?.touched)) {
+              <div class="valid-feedback">¡Correcto!</div>
+            }
+          </div>
+
+          @if (submissionMessage) {
+            <div class="alert alert-success mt-3" role="alert">{{ submissionMessage }}</div>
+          }
+          @if (submissionError) {
+            <div class="alert alert-danger mt-3" role="alert">{{ submissionError }}</div>
+          }
+
+          <button type="submit" class="btn btn-submit" class="btn btn-primary mt-3" [disabled]="isLoading || contactForm.invalid">
+            @if (isLoading) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            }
+            Enviar Mensaje
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
 </main>
