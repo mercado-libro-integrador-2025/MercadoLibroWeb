@@ -39,11 +39,15 @@ export class ProfileComponent implements OnInit {
   }
 
   obtenerDireccionesCliente(): void {
-    this.loginService.obtenerDirecciones().subscribe({
-      next: (data) => this.direcciones = data,
-      error: (error) => console.error('Error al obtener direcciones:', error)
-    });
-  }
+  this.loginService.obtenerDirecciones().subscribe({
+    next: (data) => {
+      console.log("Direcciones obtenidas:", data); // <== VERIFICAR
+      this.direcciones = data;
+    },
+    error: (error) => console.error('Error al obtener direcciones:', error)
+  });
+}
+
 
   guardarDireccion(): void {
     if (this.editandoId) {
@@ -70,14 +74,23 @@ export class ProfileComponent implements OnInit {
     this.editandoId = direccion.id;
   }
 
-  borrarDireccion(id: number): void {
-    if (confirm('¿Estás seguro de eliminar esta dirección?')) {
-      this.loginService.eliminarDireccion(id).subscribe({
-        next: () => this.obtenerDireccionesCliente(),
-        error: (err) => console.error('Error al eliminar dirección:', err)
-      });
-    }
+  borrarDireccion(id: number) {
+  console.log("Intentando eliminar dirección con ID:", id); // <== VERIFICAR
+  if (id === undefined || id === null) {
+    console.error("ID de la dirección es inválido");
+    return;
   }
+
+  this.loginService.borrarDireccion(id).subscribe({
+    next: () => {
+      console.log("Dirección eliminada correctamente");
+      this.obtenerDireccionesCliente(); 
+    },
+    error: (error) => {
+      console.error("Error al eliminar dirección:", error);
+    }
+  });
+}
 
   resetFormulario(): void {
     this.direccionForm = {

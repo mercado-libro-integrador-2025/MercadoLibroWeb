@@ -55,7 +55,7 @@ class LibroCreateSerializer(serializers.ModelSerializer):
 class DireccionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Direccion
-        fields = ['calle', 'numero', 'ciudad', 'provincia']
+        fields = ['id', 'calle', 'numero', 'ciudad', 'provincia']
 
     def create(self, validated_data):
         return Direccion.objects.create(usuario=self.context['request'].user, **validated_data)

@@ -138,14 +138,20 @@ export class LoginService {
     return this.http.put(`https://mercadolibroweb.onrender.com/api/direcciones/${id}/`, direccion, { headers });
   }
 
-  eliminarDireccion(id: number): Observable<any> {
-    const cliente = this.obtenerClienteLogueado();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${cliente?.access}`
-    });
-
-    return this.http.delete(`https://mercadolibroweb.onrender.com/api/direcciones/${id}/`, { headers });
+  borrarDireccion(id: number) {
+  const cliente = this.obtenerClienteLogueado();
+  if (!cliente?.access) {
+    throw new Error('Token de acceso no disponible.');
   }
+
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${cliente.access}`
+  });
+
+  const url = `https://mercadolibroweb.onrender.com/api/direcciones/${id}/`;
+  return this.http.delete(url, { headers });
+}
+
 
   eliminarCuenta(): Observable<any> {
     const cliente = this.obtenerClienteLogueado();
