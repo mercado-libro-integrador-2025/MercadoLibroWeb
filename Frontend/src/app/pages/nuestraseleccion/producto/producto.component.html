@@ -1,34 +1,31 @@
 <app-categoria (buscar)="buscarLibros($event)"></app-categoria>
 
-@for (libro of libros; track libro.id_libro) {
-    <div id="cardContainer">
-        <div class="card text-bg-secondary mb-1" style="max-width: 700px;">
-            <div class="d-flex align-items-center">
-                <div class="col-4">
-                    <img [src]="getCorrectImageUrl(libro.portada)" alt="Portada del libro {{ libro.titulo }}" class="card-img-top">
-                </div>
-                <div class="col-8">
-                    <div class="card-body">
-                        <p id="title"><b>Título:</b> {{ libro.titulo }}</p>
-                        <p><b>Autor:</b> {{ libro.autor.nombre_autor }}</p>
-                        <p><b>Categoría:</b> {{ libro.categoria.nombre_categoria }}</p>
-                        <p><b>Precio:</b> $ {{ libro.precio }} </p>
-                        <p class="stock"><b>Stock:</b> {{ libro.stock }} </p>
-                        <button class="btn btn-buy" (click)="anadirAlCarrito(libro)">COMPRAR</button>
-                        <button class="btn btn-sinopsis" (click)="verDescripcion(libro)">VER SINOPSIS</button>
-                        <button class="btn btn-reseñas" (click)="viewReviews(libro)">VER RESEÑAS</button>
-                    </div>
-                </div>
-            </div>
+<div class="grid-container">
+  @for (libro of libros; track libro.id_libro) {
+    <div class="card">
+      <div class="card-image">
+        <img [src]="getCorrectImageUrl(libro.portada)" alt="Portada del libro {{ libro.titulo }}" class="card-img-top">
+      </div>
+      <div class="card-body">
+        <p><b>Título:</b> {{ libro.titulo }}</p>
+        <p><b>Autor:</b> {{ libro.autor.nombre_autor }}</p>
+        <p><b>Categoría:</b> {{ libro.categoria.nombre_categoria }}</p>
+        <p><b>Precio:</b> $ {{ libro.precio }} </p>
+        <p class="stock"><b>Stock:</b> {{ libro.stock }} </p>
+        <div class="btn-group">
+          <button class="btn btn-buy" (click)="anadirAlCarrito(libro)">COMPRAR</button>
+          <button class="btn btn-sinopsis" (click)="verDescripcion(libro)">VER SINOPSIS</button>
+          <button class="btn btn-reseñas" (click)="viewReviews(libro)">VER RESEÑAS</button>
         </div>
+      </div>
     </div>
-} @empty {
-    <div class="card text-bg-secondary mb-3">
-        <div class="card-body text-center">
-            No se encontraron resultados. Prueba otra vez.
-        </div>
+  } @empty {
+    <div class="no-results">
+      No se encontraron resultados. Prueba otra vez.
     </div>
-}
+  }
+</div>
+
 
 @if (showReviewsModal) {
     <div class="modal-overlay">
