@@ -49,22 +49,18 @@ class Libro(models.Model):
     class Meta:
         db_table = 'libro'
 
-class DireccionViewSet(viewsets.ModelViewSet):
-    queryset = Direccion.objects.all()
-    serializer_class = DireccionSerializer
-    permission_classes = [IsAuthenticated]
+class Direccion(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    calle = models.CharField(max_length=100)
+    numero = models.CharField(max_length=10) 
+    ciudad = models.CharField(max_length=50)
+    provincia = models.CharField(max_length=50)
 
-    def get_queryset(self):
-        return Direccion.objects.filter(usuario=self.request.user)
+    class Meta:
+        db_table = 'direccion'
 
-    def destroy(self, request, *args, **kwargs):
-        direccion = self.get_object()
-        if direccion.usuario == request.user:
-            direccion.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response({"error": "No tienes permiso para eliminar esta dirección."}, status=status.HTTP_403_FORBIDDEN)
-
+    def __str__(self):
+        return f'{self.calle} {self.numero}, {self.ciudad}, {self.provincia}'
 
 class ItemCarrito(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
