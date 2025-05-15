@@ -97,21 +97,6 @@ class MetodoPago(models.Model):
     def __str__(self):
         return f'Método de pago de {self.usuario} ({self.get_tipo_tarjeta_display()})'  
 
-class ProductoPedido(models.Model):
-    pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE, related_name='productos')
-    libro = models.ForeignKey('Libro', on_delete=models.CASCADE)
-    cantidad = models.PositiveIntegerField()
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-
-    class Meta:
-        db_table = 'producto_pedido'
-        indexes = [
-            models.Index(fields=['pedido', 'libro'])
-        ]
-
-    def __str__(self):
-        return f'{self.cantidad}x {self.libro.titulo} en Pedido {self.pedido.id_pedido}'
-
 
 class Pedido(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

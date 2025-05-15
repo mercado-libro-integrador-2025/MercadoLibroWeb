@@ -6,7 +6,6 @@ from .models import (
     Autor,
     Libro,
     Pedido,
-    ProductoPedido,
     ItemCarrito,
     Direccion,
     MetodoPago,
@@ -142,15 +141,7 @@ class ItemCarritoSerializer(serializers.ModelSerializer):
     def get_total(self, obj):
         return obj.total
 
-class ProductoPedidoSerializer(serializers.ModelSerializer):
-    titulo_libro = serializers.CharField(source='libro.titulo', read_only=True)
-
-    class Meta:
-        model = ProductoPedido
-        fields = ['id', 'pedido', 'libro', 'titulo_libro', 'cantidad', 'precio_unitario']
-
 class PedidoSerializer(serializers.ModelSerializer):
-    productos = ProductoPedidoSerializer(many=True, read_only=True)
     direccion = DireccionSerializer(read_only=True)
 
     class Meta:

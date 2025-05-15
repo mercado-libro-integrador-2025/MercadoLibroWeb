@@ -18,7 +18,6 @@ from .models import (
     Libro,
     ItemCarrito,
     Pedido,
-    ProductoPedido,
     Direccion,
     MetodoPago,
     Reseña,
@@ -95,60 +94,6 @@ def pago_pending(request):
 def pago_failure(request):
     return redirect("http://localhost:4200/dashboard/profile-dashboard")
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def confirmar_pedido(request):
-    usuario = request.user
-
-    # Obtener productos en el carrito del usuario
-    items_carrito = ItemCarrito.objects.filter(usuario=usuario)
-    if not items_carrito:
-        return Response({"error": "El carrito está vacío."}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Validar dirección de envío
-    direccion = get_object_or_404(Direccion, usuario=usuario)
-    if not direccion:
-        return Response({"error": "No tienes una dirección registrada."}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Validar método de pago
-    metodo_pago = get_object_or_404(MetodoPago, usuario=usuario)
-    if not metodo_pago:
-        return Response({"error": "No tienes un método de pago registrado."}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Calcular el total del pedido
-    total_pedido = Decimal(0)
-    for item in items_carrito:
-        total_pedido += item.total
-
-    # Crear el pedido
-    pedido = Pedido.objects.create(
-        usuario=usuario,
-        direccion=direccion,
-        metodo_pago=metodo_pago.tipo_tarjeta,
-        total=total_pedido
-    )
-
-    # Crear los productos del pedido
-    for item in items_carrito:
-        ProductoPedido.objects.create(
-            pedido=pedido,
-            libro=item.libro,
-            cantidad=item.cantidad,
-            precio_unitario=item.libro.precio
-        )
-
-        # Actualizar el stock del libro
-        item.libro.stock -= item.cantidad
-        item.libro.save()
-
-        # Eliminar el item del carrito
-        item.delete()
-
-    return Response({
-        "message": "Pedido confirmado exitosamente.",
-        "pedido_id": pedido.id_pedido,
-        "total": total_pedido
-    }, status=status.HTTP_201_CREATED)
 
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
