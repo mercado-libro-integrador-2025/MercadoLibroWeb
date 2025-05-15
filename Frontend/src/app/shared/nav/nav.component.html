@@ -25,12 +25,18 @@
           </li>
 
           <li class="nav-item mx-3">
-            @if (isAuthenticated$ | async) {
-              <a class="nav-link text-white fw-semibold" (click)="logout()" style="cursor: pointer;" title="Cerrar sesión">Cerrar Sesión</a>
-            } @else {
-              <a class="nav-link text-white fw-semibold" routerLink="/inicio" title="Iniciar sesión" routerLinkActive="active">Iniciar Sesión</a>
+            @if (isAuthenticated$ | async) { <a class="nav-link text-white fw-semibold" (click)="logout()" style="cursor: pointer;" title="Cerrar sesión">Cerrar Sesión</a>
+            } @else { <a class="nav-link text-white fw-semibold" routerLink="/inicio" title="Iniciar sesión" routerLinkActive="active">Iniciar Sesión</a>
             }
           </li>
+
+          <li class="nav-item mx-3">
+            @if (!(isAuthenticated$ | async)) { <a class="nav-link text-white fw-semibold"
+                 routerLink="/inicio"
+                 [state]="{ openRegisterModal: true }" title="Registrarse">Registrarse</a>
+            }
+          </li>
+
 
           @if (isAuthenticated$ | async) {
             <li class="nav-item d-flex align-items-center position-relative mx-3">

@@ -33,7 +33,7 @@
 }
 
 .nav-list li {
-  margin-right: 20px;
+  margin-right: 5px;
 }
 
 .nav-list a {
@@ -148,6 +148,7 @@ nav a.active {
     text-decoration: none;
     color: #fff;
     position: relative;
+    white-space: nowrap;
     font-family: 'Roboto', sans-serif;
   }
   
