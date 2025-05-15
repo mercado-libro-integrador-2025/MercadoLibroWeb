@@ -1,159 +1,131 @@
 <main>
-    <div class="container-form">
-<div class="container my-5">
-    <div class="card p-4 shadow text-secondary">
-        <p class="text-center">
-            Estamos acá para vos. Si tienes alguna pregunta, comentario o simplemente deseas hablar sobre tu libro favorito, no dudes en ponerte en contacto con nosotros. 
-            Estamos emocionados por compartir este viaje literario contigo.
+  <div class="container my-5">
+    <div class="card p-4 shadow">
+      <div class="card-header">
+        <h2 class="card-title">Contáctanos</h2>
+        <p class="card-description text-secondary">
+          Complete el formulario a continuación para ponerse en contacto. ¡Nos encantaría saber de ti!
         </p>
-        <p class="text-center fw-bold">
-            Gracias por elegir a <b>MercadoLibro</b> como tu destino literario. Juntos, exploraremos las páginas de historias inolvidables y crearemos recuerdos literarios que perdurarán para siempre.
-        </p>
-    </div>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
 
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card p-3 shadow bg-light">
-                <h5 class="text-center fw-bold text-primary">Datos de contacto</h5>
-                <ul class="list-unstyled text-center">
-                    <li><i class="bi bi-whatsapp text-success me-2"></i> {{datosContacto[0].telefono}}</li>
-                    <li><i class="bi bi-geo text-danger me-2"></i> {{datosContacto[1].ubicacion}}</li>
-                    <li>
-                        <a href="{{datosContacto[2].facebook}}" target="_blank" class="text-decoration-none">
-                            <i class="bi bi-facebook text-primary me-2"></i> Facebook
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{datosContacto[3].instagram}}" target="_blank" class="text-decoration-none">
-                            <i class="bi bi-instagram text-danger me-2"></i> Instagram
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{datosContacto[4].twitter}}" target="_blank" class="text-decoration-none">
-                            <i class="bi bi-twitter text-info me-2"></i> Twitter
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{datosContacto[5].linkedin}}" target="_blank" class="text-decoration-none">
-                            <i class="bi bi-linkedin text-primary me-2"></i> LinkedIn
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input id="name" type="text" formControlName="nombre" placeholder="Tu Nombre"
+              class="form-control"
+              [class.is-invalid]="nombre?.invalid && (nombre?.dirty || nombre?.touched)"
+              [class.is-valid]="nombre?.valid && (nombre?.dirty || nombre?.touched)">
 
-        <div class="col-md-6 text-center">
-            <div class="card shadow bg-light">
-                <div class="card-body">
-                    <h5 class="fw-bold text-primary">Ubicación</h5>
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6810.162386358719!2d-64.188053!3d-31.411889!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94329878c0a6ed7b%3A0x8bf3fafe13a10e62!2sAv.%20Col%C3%B3n%20350%2C%20X5022%20C%C3%B3rdoba!5e0!3m2!1ses!2sar!4v1693860118832!5m2!1ses!2sar" 
-                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy">
-                    </iframe>
-                </div>
-            </div>
-        </div>
-    </div>
-        </div>
+            @if (nombre?.invalid && (nombre?.dirty || nombre?.touched)) {
+              <div class="invalid-feedback">
+                @if (nombre?.errors?.['required']) {
+                  <div>El nombre es requerido.</div>
+                }
+                @if (nombre?.errors?.['minlength']) {
+                  <div>Debe tener al menos 2 caracteres.</div>
+                }
+                @if (nombre?.errors?.['maxlength']) {
+                  <div>Debe tener como máximo 100 caracteres.</div>
+                }
+              </div>
+            }
 
-        <div class="contact-form-container">
-  <div class="card">
-    <div class="card-header">
-      <h2 class="card-title">Contáctanos</h2>
-      <p class="card-description">Complete el formulario a continuación para ponerte en contacto. ¡Nos encantaría saber de ti!</p>
-    </div>
-    <div class="card-content">
-      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <!-- Name Field -->
-        <div class="form-item">
-          <label for="name" class="form-label">Nombre</label>
-          <div class="input-group">
-            <span class="input-icon">👤</span>
-            <input id="name" type="text" formControlName="name" placeholder="Tu Nombre" class="form-input pl-10"
-                   [ngClass]="{'input-error': name?.invalid && (name?.dirty || name?.touched)}">
+            @if (nombre?.valid && (nombre?.dirty || nombre?.touched)) {
+              <div class="valid-feedback">¡Correcto!</div>
+            }
           </div>
-          <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="form-message-error">
-            <div *ngIf="name?.errors?.['required']">El nombre es requerido.</div>
-            <div *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
-            <div *ngIf="name?.errors?.['maxlength']">El nombre debe tener como máxmimo 50 caracteress.</div>
-          </div>
-        </div>
 
-        <!-- Email Field -->
-        <div class="form-item">
-          <label for="email" class="form-label">Email</label>
-           <div class="input-group">
-            <span class="input-icon">📧</span>
-            <input id="email" type="email" formControlName="email" placeholder="your.email@example.com" class="form-input pl-10"
-                   [ngClass]="{'input-error': email?.invalid && (email?.dirty || email?.touched)}">
-          </div>
-          <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="form-message-error">
-            <div *ngIf="email?.errors?.['required']">El email es requerido.</div>
-            <div *ngIf="email?.errors?.['email']">Por favor, introduzca una dirección de correo electrónico válida.</div>
-          </div>
-        </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" type="email" formControlName="email" placeholder="tu.correo@ejemplo.com"
+              class="form-control"
+              [class.is-invalid]="email?.invalid && (email?.dirty || email?.touched)"
+              [class.is-valid]="email?.valid && (email?.dirty || email?.touched)">
 
-        <!-- Message Field -->
-        <div class="form-item">
-          <label for="message" class="form-label">Mensaje</label>
-          <textarea id="message" formControlName="message" placeholder="Escribe tu mensaje aquí..." class="form-textarea"
-                    [ngClass]="{'input-error': message?.invalid && (message?.dirty || message?.touched)}"></textarea>
-          <div *ngIf="message?.invalid && (message?.dirty || message?.touched)" class="form-message-error">
-            <div *ngIf="message?.errors?.['required']">Se requiere un mensaje.</div>
-            <div *ngIf="message?.errors?.['minlength']">El mensaje debe tener al menos 10 caracteres.</div>
-            <div *ngIf="message?.errors?.['maxlength']">El mensaje debe tener como máximo 1000 caracteres.</div>
+            @if (email?.invalid && (email?.dirty || email?.touched)) {
+              <div class="invalid-feedback">
+                @if (email?.errors?.['required']) {
+                  <div>El email es requerido.</div>
+                }
+                @if (email?.errors?.['email']) {
+                  <div>Email inválido.</div>
+                }
+              </div>
+            }
+
+            @if (email?.valid && (email?.dirty || email?.touched)) {
+              <div class="valid-feedback">¡Correcto!</div>
+            }
           </div>
-        </div>
 
-        <!-- Improvement Description Field -->
-        <div class="form-item">
-          <label for="improvementDescription" class="form-label">¿Cómo podemos mejorar su mensaje? (Opcional)</label>
-          <textarea id="improvementDescription" formControlName="improvementDescription" class="form-textarea"
-                    placeholder="por ejemplo, hacerlo más formal, añadir un poco de humor, revisar errores gramaticales..."
-                    [ngClass]="{'input-error': improvementDescription?.invalid && (improvementDescription?.dirty || improvementDescription?.touched)}"></textarea>
-          <p class="form-description">Describe cómo te gustaría que la IA afinara tu mensaje anterior.</p>
-          <div *ngIf="improvementDescription?.invalid && (improvementDescription?.dirty || improvementDescription?.touched)" class="form-message-error">
-            <div *ngIf="improvementDescription?.errors?.['maxlength']">La descripción debe tener un máximo de 500 caracteres.</div>
+          <div class="mb-3">
+            <label for="subject" class="form-label">Asunto</label>
+            <input id="subject" type="text" formControlName="asunto" placeholder="Asunto del mensaje"
+              class="form-control"
+              [class.is-invalid]="asunto?.invalid && (asunto?.dirty || asunto?.touched)"
+              [class.is-valid]="asunto?.valid && (asunto?.dirty || asunto?.touched)">
+
+            @if (asunto?.invalid && (asunto?.dirty || asunto?.touched)) {
+              <div class="invalid-feedback">
+                @if (asunto?.errors?.['required']) {
+                  <div>El asunto es requerido.</div>
+                }
+                @if (asunto?.errors?.['maxlength']) {
+                  <div>Máximo 150 caracteres.</div>
+                }
+              </div>
+            }
+
+            @if (asunto?.valid && (asunto?.dirty || asunto?.touched)) {
+              <div class="valid-feedback">¡Correcto!</div>
+            }
           </div>
-        </div>
 
-        <button type="button" (click)="handleImproveMessage()" class="button button-outline full-width"
-                [disabled]="isImproving || !improvementDescription?.value || !message?.value">
-          <span *ngIf="isImproving" class="spinner"></span>
-          <span *ngIf="!isImproving">✨</span>
-          Mejorar Mensaje con IA
-        </button>
+          <div class="mb-3">
+            <label for="message" class="form-label">Mensaje</label>
+            <textarea id="message" formControlName="mensaje" rows="4"
+              placeholder="Escribe tu mensaje aquí..."
+              class="form-control"
+              [class.is-invalid]="mensaje?.invalid && (mensaje?.dirty || mensaje?.touched)"
+              [class.is-valid]="mensaje?.valid && (mensaje?.dirty || mensaje?.touched)">
+            </textarea>
 
-        <!-- CAPTCHA Placeholder -->
-        <div class="form-item checkbox-item">
-          <input id="isNotRobot" type="checkbox" formControlName="isNotRobot" class="form-checkbox">
-          <label for="isNotRobot" class="form-label-checkbox">
-            Yo no soy un robot
-            <span class="form-description">Ayúdanos a prevenir el spam.</span>
-          </label>
-           <div *ngIf="isNotRobot?.invalid && (isNotRobot?.dirty || isNotRobot?.touched)" class="form-message-error">
-            <div *ngIf="isNotRobot?.errors?.['required']">Por favor, confirme que no es un robot.</div>
+            @if (mensaje?.invalid && (mensaje?.dirty || mensaje?.touched)) {
+              <div class="invalid-feedback">
+                @if (mensaje?.errors?.['required']) {
+                  <div>Se requiere un mensaje.</div>
+                }
+                @if (mensaje?.errors?.['minlength']) {
+                  <div>Debe tener al menos 10 caracteres.</div>
+                }
+                @if (mensaje?.errors?.['maxlength']) {
+                  <div>Máximo 1000 caracteres.</div>
+                }
+              </div>
+            }
+
+            @if (mensaje?.valid && (mensaje?.dirty || mensaje?.touched)) {
+              <div class="valid-feedback">¡Correcto!</div>
+            }
           </div>
-        </div>
-        
-        <!-- Submit Button -->
-        <button type="submit" class="button button-primary full-width large-button" [disabled]="isLoading || isImproving || contactForm.invalid">
-          <span *ngIf="isLoading" class="spinner"></span>
-          <span *ngIf="!isLoading">✉️</span>
-          Enviar Mensaje
-        </button>
 
-        <!-- Submission Messages -->
-        <div *ngIf="submissionMessage" class="submission-success-message">
-          {{ submissionMessage }}
-        </div>
-        <div *ngIf="submissionError" class="submission-error-message">
-          {{ submissionError }}
-        </div>
-      </form>
+          @if (submissionMessage) {
+            <div class="alert alert-success mt-3" role="alert">{{ submissionMessage }}</div>
+          }
+          @if (submissionError) {
+            <div class="alert alert-danger mt-3" role="alert">{{ submissionError }}</div>
+          }
+
+          <button type="submit" class="btn btn-submit" class="btn btn-primary mt-3" [disabled]="isLoading || contactForm.invalid">
+            @if (isLoading) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            }
+            Enviar Mensaje
+          </button>
+
+        </form>
+      </div>
     </div>
   </div>
-</div>
-
-    </div>
 </main>

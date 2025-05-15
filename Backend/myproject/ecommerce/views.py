@@ -278,11 +278,16 @@ class PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['get'], url_path='usuario/(?P<usuario_id>[^/.]+)')
-    def pedidos_por_usuario(self, request, usuario_id=None):
-        pedidos = Pedido.objects.filter(usuario__id=usuario_id)
+    def listar_por_usuario(self, request, usuario_id=None):
+        if usuario_id is None:
+            return Response({"error": "ID de usuario no proporcionado."}, status=status.HTTP_400_BAD_REQUEST)
+
+        pedidos = Pedido.objects.filter(usuario_id=usuario_id)
+        if not pedidos.exists():
+            return Response({"error": "No se encontraron pedidos para este usuario."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = self.get_serializer(pedidos, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ReseñaViewSet(viewsets.ModelViewSet):
     queryset = Reseña.objects.all()

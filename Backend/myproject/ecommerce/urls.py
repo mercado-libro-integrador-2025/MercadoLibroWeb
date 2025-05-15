@@ -10,11 +10,11 @@ router.register(r'categorias', CategoriaViewSet)
 router.register(r'autores', AutorViewSet)
 router.register(r'libros', LibroViewSet)
 router.register(r'carrito', ItemCarritoViewSet)
-router.register(r'pedidos', PedidoViewSet)
 router.register(r'direcciones', DireccionViewSet, basename='direccion')
 router.register(r'metodopagos', MetodoPagoViewSet)
 router.register(r'resenas', ReseñaViewSet)
 router.register(r'contacto', ContactoViewSet)
+router.register(r'pedidos', PedidoViewSet, basename='pedido')
 
 
 urlpatterns = [
@@ -27,4 +27,5 @@ urlpatterns = [
     path('pago/success', views.pago_success, name='pago_success'),
     path('pago/pending', views.pago_pending, name='pago_pending'),
     path('pago/failure', views.pago_failure, name='pago_failure'),
+    path('pedidos/usuario/<int:usuario_id>/', PedidoViewSet.as_view({'get': 'listar_por_usuario'}), name='pedidos-usuario'),
 ]
