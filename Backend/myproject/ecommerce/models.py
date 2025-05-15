@@ -116,6 +116,9 @@ class ProductoPedido(models.Model):
 class Pedido(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
+    direccion = models.ForeignKey(Direccion, on_delete=models.SET_NULL, null=True, blank=True)
+    metodo_pago = models.ForeignKey(MetodoPago, on_delete=models.SET_NULL, null=True, blank=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     estado = models.CharField(max_length=50)
 
     class Meta:

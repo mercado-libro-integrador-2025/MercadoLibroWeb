@@ -17,30 +17,28 @@ export class DeliveryStatus implements OnInit {
   constructor(private loginService: LoginService, private http: HttpClient) {}
 
   ngOnInit(): void {
-    const cliente = this.loginService.obtenerClienteLogueado();
-    if (cliente) {
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${cliente.access}`
-      });
+  const cliente = this.loginService.obtenerClienteLogueado();
+  if (cliente) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${cliente.access}`
+    });
 
-      const url = `https://mercadolibroweb.onrender.com/api/pedidos/usuario/${cliente.user.id}`;
+    const url = `https://mercadolibroweb.onrender.com/api/pedidos/usuario/${cliente.user.id}/`;
 
-      this.http.get<any[]>(url, { headers }).subscribe({
-        next: (response) => {
-          if (response.length > 0) {
-            // Suponemos que los pedidos están ordenados o tomamos el más reciente:
-            const ultimoPedido = response[response.length - 1];
-            this.order = {
-              orderId: ultimoPedido.id,
-              fecha: ultimoPedido.fecha_pedido,
-              status: ultimoPedido.estado
-            };
-          }
-        },
-        error: (err) => {
-          console.error('Error al obtener estado del pedido:', err);
+    this.http.get<any[]>(url, { headers }).subscribe({
+      next: (response) => {
+        if (response.length > 0) {
+          const ultimoPedido = response[response.length - 1];
+          this.order = {
+            id: ultimoPedido.id,
+            fecha_pedido: ultimoPedido.fecha_pedido,
+            estado: ultimoPedido.estado
+          };
         }
-      });
-    }
+      },
+      error: (err) => {
+        console.error('Error al obtener estado del pedido:', err);
+      }
+    });
   }
-}
+}}
