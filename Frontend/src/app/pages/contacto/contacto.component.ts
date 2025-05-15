@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule, NgIf } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Contacto, ApiResponse } from '../../services/models/contacto.models';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Contacto } from '../../services/models/contacto.models';
 import { ContactoService } from '../../services/contacto.service';
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-contacto',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    NgIf
-  ],
+  imports: [ CommonModule, ReactiveFormsModule, NgIf ],
   templateUrl: './contacto.component.html',
   styleUrls: ['./contacto.component.css']
 })
@@ -22,15 +17,6 @@ export class ContactoComponent implements OnInit {
   isLoading = false;
   submissionMessage: string | null = null;
   submissionError: string | null = null;
-
-  datosContacto = [
-    { tipo: 'telefono', telefono: '+54 9 351 XXXXXX' },
-    { tipo: 'ubicacion', ubicacion: 'Calle Falsa 123, Córdoba, Argentina' },
-    { tipo: 'facebook', facebook: 'https://www.facebook.com/MercadoLibro' },
-    { tipo: 'instagram', instagram: 'https://www.instagram.com/MercadoLibro' },
-    { tipo: 'twitter', twitter: 'https://twitter.com/MercadoLibro' },
-    { tipo: 'linkedin', linkedin: 'https://www.linkedin.com/company/MercadoLibro' }
-  ];
 
   constructor(
     private fb: FormBuilder,
@@ -51,23 +37,12 @@ export class ContactoComponent implements OnInit {
     });
   }
 
-  get nombre() {
-    return this.contactForm.get('nombre');
-  }
+  get nombre() { return this.contactForm.get('nombre'); }
+  get email() { return this.contactForm.get('email'); }
+  get asunto() { return this.contactForm.get('asunto'); }
+  get mensaje() { return this.contactForm.get('mensaje'); }
 
-  get email() {
-    return this.contactForm.get('email');
-  }
-
-  get asunto() {
-    return this.contactForm.get('asunto');
-  }
-
-  get mensaje() {
-    return this.contactForm.get('mensaje');
-  }
-
-  onSubmit() {
+  onSubmit(): void {
     this.contactForm.markAllAsTouched();
 
     if (this.contactForm.valid) {
@@ -78,21 +53,17 @@ export class ContactoComponent implements OnInit {
       const data: Contacto = this.contactForm.value;
 
       this.contactoService.enviarContacto(data).subscribe({
-        next: (response: ApiResponse) => {
+        next: (_) => {
           this.isLoading = false;
-          if (response.success) {
-            this.submissionMessage = response.message || '¡Gracias por tu mensaje! Lo hemos recibido correctamente.';
-            this.contactForm.reset();
-            this.contactForm.markAsUntouched();
-            this.contactForm.markAsPristine();
-          } else {
-            this.submissionError = response.message || 'Hubo un problema al enviar tu mensaje.';
-          }
+          alert('¡Gracias por tu mensaje!  hemos recibido correctamente tu mensaje :).');
+          this.contactForm.reset();
+          this.contactForm.markAsUntouched();
+          this.contactForm.markAsPristine();
         },
-        error: error => {
+        error: (error) => {
           this.isLoading = false;
-          this.submissionError = 'Hubo un error al enviar tu mensaje. Inténtalo de nuevo.';
-          console.error('Error al enviar mensaje:', error);
+          alert('Hubo un error al enviar tu mensaje. Inténtalo nuevamente.');
+          console.error('Error al enviar contacto:', error);
         }
       });
     }
