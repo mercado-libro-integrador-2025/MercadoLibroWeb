@@ -49,7 +49,6 @@ class Libro(models.Model):
     class Meta:
         db_table = 'libro'
 
-
 class Direccion(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     calle = models.CharField(max_length=100)
@@ -98,25 +97,13 @@ class MetodoPago(models.Model):
     def __str__(self):
         return f'Método de pago de {self.usuario} ({self.get_tipo_tarjeta_display()})'  
 
-class ProductoPedido(models.Model):
-    pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE, related_name='productos')
-    libro = models.ForeignKey('Libro', on_delete=models.CASCADE)
-    cantidad = models.PositiveIntegerField()
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-
-    class Meta:
-        db_table = 'producto_pedido'
-        indexes = [
-            models.Index(fields=['pedido', 'libro'])
-        ]
-
-    def __str__(self):
-        return f'{self.cantidad}x {self.libro.titulo} en Pedido {self.pedido.id_pedido}'
-
 
 class Pedido(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
+    direccion = models.ForeignKey(Direccion, on_delete=models.SET_NULL, null=True, blank=True)
+    metodo_pago = models.ForeignKey(MetodoPago, on_delete=models.SET_NULL, null=True, blank=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     estado = models.CharField(max_length=50)
 
     class Meta:
