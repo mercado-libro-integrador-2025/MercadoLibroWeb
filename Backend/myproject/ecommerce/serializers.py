@@ -146,7 +146,7 @@ class PedidoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pedido
-        fields = ['id_pedido', 'usuario', 'direccion', 'metodo_pago', 'estado', 'fecha_pedido', 'total', 'productos']
+        fields = ['id', 'usuario', 'direccion', 'metodo_pago', 'estado', 'fecha_pedido', 'total']
 
 class ReseñaSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)

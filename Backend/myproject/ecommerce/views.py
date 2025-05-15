@@ -234,6 +234,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(pedidos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class ReseñaViewSet(viewsets.ModelViewSet):
     queryset = Reseña.objects.all()
     serializer_class = ReseñaSerializer
