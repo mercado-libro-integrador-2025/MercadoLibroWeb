@@ -43,21 +43,4 @@ export class CarritoService {
     this._cantidadProductos.next(cantidad);
   }
 
-  getFormaEnvio(): Observable<string[]> {
-    return this.http.get<any[]>(this.formaEnvioUrl).pipe(
-      map(response => response.map(item => item.forma_envio))
-    );
-  }
-
-  getFormaPago(): Observable<string[]> {
-    return this.http.get<any[]>(this.formaPagoUrl).pipe(
-      map(response => response.map(item => item.forma_pago))
-    );
-  }
-
-  getDireccionEnvio(): Observable<string[]> {
-    return this.http.get<any[]>(this.direccionUrl).pipe(
-      map(response => response.map(item => item.calle + ', ' + item.ciudad + ', ' + item.provincia))
-    );
-  }
 }
