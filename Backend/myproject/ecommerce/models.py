@@ -115,26 +115,15 @@ class ProductoPedido(models.Model):
 
 
 class Pedido(models.Model):
-    ESTADO_OPCIONES = [
-        ('en_proceso', 'En Proceso'),
-        ('en_camino', 'En Camino'),
-        ('entregado', 'Entregado'),
-        ('cancelado', 'Cancelado')
-    ]
-    
-    id_pedido = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    direccion = models.ForeignKey(Direccion, on_delete=models.CASCADE)
-    metodo_pago = models.CharField(max_length=7, choices=MetodoPago.TARJETA_OPCIONES)  
-    estado = models.CharField(max_length=20, choices=ESTADO_OPCIONES, default='en_proceso')
     fecha_pedido = models.DateTimeField(auto_now_add=True)
-    total = models.DecimalField(max_digits=10, decimal_places=2)
+    estado = models.CharField(max_length=50)
 
     class Meta:
         db_table = 'pedido'
 
     def __str__(self):
-        return f'Pedido {self.id_pedido} de {self.usuario}, {self.get_estado_display()}'
+        return f'Pedido #{self.id} - {self.usuario}'
 
 class Reseña(models.Model):
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
