@@ -257,11 +257,6 @@ class ReseñaViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='usuario/(?P<usuario_id>[^/.]+)')
     def reseñas_por_usuario(self, request, usuario_id=None):
-        """
-        Retorna las reseñas de un usuario específico por su ID.
-        Endpoint: /api/resenas/usuario/{usuario_id}/
-        (Considera si es apropiado exponer todas las reseñas de un usuario por ID)
-        """
         if usuario_id is None:
             return Response({"detail": "ID de usuario no proporcionado."}, status=status.HTTP_400_BAD_REQUEST)
         try:
