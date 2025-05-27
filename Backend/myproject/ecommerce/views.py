@@ -41,6 +41,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from decimal import Decimal
 from django.shortcuts import redirect
+from django.db import transaction
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -186,6 +187,7 @@ class MetodoPagoViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return MetodoPago.objects.filter(usuario=self.request.user) 
 
+
 class ItemCarritoViewSet(viewsets.ModelViewSet):
     queryset = ItemCarrito.objects.all()
     serializer_class = ItemCarritoSerializer
@@ -194,29 +196,49 @@ class ItemCarritoViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return ItemCarrito.objects.filter(usuario=self.request.user)
 
-    def perform_create(self, serializer):
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         libro = serializer.validated_data['libro']
-        cantidad = serializer.validated_data['cantidad']
+        cantidad_a_agregar = serializer.validated_data['cantidad']
         usuario = self.request.user
+        libro_actual = Libro.objects.select_for_update().get(pk=libro.id_libro)
 
-        # Verificar si el item ya existe en el carrito
-        item, created = ItemCarrito.objects.get_or_create(
-            usuario=usuario,
-            libro=libro,
-            defaults={'cantidad': cantidad}
-        )
+        item_existente = ItemCarrito.objects.filter(usuario=usuario, libro=libro).first()
 
-        if not created:
-            # Si ya existe, actualizar la cantidad
-            item.cantidad += cantidad
-            item.save()
+        if item_existente:
+            cantidad_final = item_existente.cantidad + cantidad_a_agregar
+            if libro_actual.stock < cantidad_a_agregar: 
+                return Response({"detail": f"No hay suficiente stock para agregar {cantidad_a_agregar} unidades adicionales de este libro."}, status=status.HTTP_400_BAD_REQUEST)
+
+            item_existente.cantidad = cantidad_final
+            item_existente.save()
+            libro_actual.stock -= cantidad_a_agregar 
+            libro_actual.save()
+            headers = self.get_success_headers(serializer.data)
+            return Response(self.get_serializer(item_existente).data, status=status.HTTP_200_OK, headers=headers)
         else:
-            # Si no existe, decrementar el stock y guardar el nuevo item
-            if libro.stock < cantidad:
-                raise serializers.ValidationError("No hay suficiente stock disponible.")
-            libro.stock -= cantidad
-            libro.save()
-            serializer.save(usuario=usuario)
+            if libro_actual.stock < cantidad_a_agregar:
+                return Response({"detail": f"No hay suficiente stock para agregar {cantidad_a_agregar} unidades de este libro."}, status=status.HTTP_400_BAD_REQUEST)
+
+            item_nuevo = ItemCarrito.objects.create(
+                usuario=usuario,
+                libro=libro_actual,
+                cantidad=cantidad_a_agregar
+            )
+            libro_actual.stock -= cantidad_a_agregar 
+            libro_actual.save()
+            headers = self.get_success_headers(serializer.data)
+            return Response(self.get_serializer(item_nuevo).data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_destroy(self, instance):
+        libro = instance.libro
+        cantidad = instance.cantidad
+        libro.stock += cantidad
+        libro.save()
+        instance.delete()
 
 class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all()

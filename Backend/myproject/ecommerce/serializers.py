@@ -111,35 +111,38 @@ class ItemCarritoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItemCarrito
-        fields = ['id', 'libro', 'usuario', 'email_usuario', 'titulo_libro', 'cantidad', 'precio_unitario', 'total']  # Incluye el campo 'id' aquí
+        fields = ['id', 'libro', 'usuario', 'email_usuario', 'titulo_libro', 'cantidad', 'precio_unitario', 'total']
 
     def validate_cantidad(self, value):
         if value < 1:
             raise serializers.ValidationError("La cantidad debe ser al menos 1.")
         return value
 
-    def create(self, validated_data):
-        libro = validated_data.get('libro')
-        usuario = validated_data.get('usuario')
-        cantidad_solicitada = validated_data['cantidad']
-
-        if libro.stock < cantidad_solicitada:
-            raise serializers.ValidationError("La cantidad solicitada supera el stock disponible.")
-
-        item, created = ItemCarrito.objects.get_or_create(
-            usuario=usuario,
-            libro=libro,
-            defaults={'cantidad': cantidad_solicitada}
-        )
-
-        if not created:
-            item.cantidad += cantidad_solicitada
-            item.save()
-
-        return item
-
     def get_total(self, obj):
         return obj.total
+
+    # AGREGAR EL MÉTODO 'update' AL SERIALIZER para manejar PATCH/PUT
+    def update(self, instance, validated_data):
+        cantidad_nueva = validated_data.get('cantidad', instance.cantidad)
+        libro = instance.libro
+
+        # Calcular la diferencia de stock
+        cantidad_actual = instance.cantidad
+        diferencia_cantidad = cantidad_nueva - cantidad_actual
+
+        # Validar stock antes de actualizar
+        if diferencia_cantidad > 0 and libro.stock < diferencia_cantidad:
+            raise serializers.ValidationError(f"No hay suficiente stock para aumentar la cantidad a {cantidad_nueva}. Stock disponible: {libro.stock + cantidad_actual}.")
+        elif cantidad_nueva < 1:
+            raise serializers.ValidationError("La cantidad no puede ser menor a 1.")
+
+        # Actualizar stock
+        libro.stock -= diferencia_cantidad
+        libro.save()
+
+        instance.cantidad = cantidad_nueva
+        instance.save()
+        return instance
 
 class PedidoSerializer(serializers.ModelSerializer):
     direccion = DireccionSerializer(read_only=True)
