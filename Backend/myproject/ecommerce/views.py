@@ -204,21 +204,24 @@ class ItemCarritoViewSet(viewsets.ModelViewSet):
         libro = serializer.validated_data['libro']
         cantidad_a_agregar = serializer.validated_data['cantidad']
         usuario = self.request.user
+
         libro_actual = Libro.objects.select_for_update().get(pk=libro.id_libro)
 
         item_existente = ItemCarrito.objects.filter(usuario=usuario, libro=libro).first()
 
         if item_existente:
             cantidad_final = item_existente.cantidad + cantidad_a_agregar
-            if libro_actual.stock < cantidad_a_agregar: 
+            if libro_actual.stock < cantidad_a_agregar:
                 return Response({"detail": f"No hay suficiente stock para agregar {cantidad_a_agregar} unidades adicionales de este libro."}, status=status.HTTP_400_BAD_REQUEST)
 
             item_existente.cantidad = cantidad_final
             item_existente.save()
-            libro_actual.stock -= cantidad_a_agregar 
+            libro_actual.stock -= cantidad_a_agregar
             libro_actual.save()
-            headers = self.get_success_headers(serializer.data)
-            return Response(self.get_serializer(item_existente).data, status=status.HTTP_200_OK, headers=headers)
+
+            response_serializer = self.get_serializer(item_existente)
+            headers = self.get_success_headers(response_serializer.data) # <-- Aquí está el cambio
+            return Response(response_serializer.data, status=status.HTTP_200_OK, headers=headers)
         else:
             if libro_actual.stock < cantidad_a_agregar:
                 return Response({"detail": f"No hay suficiente stock para agregar {cantidad_a_agregar} unidades de este libro."}, status=status.HTTP_400_BAD_REQUEST)
@@ -228,10 +231,15 @@ class ItemCarritoViewSet(viewsets.ModelViewSet):
                 libro=libro_actual,
                 cantidad=cantidad_a_agregar
             )
-            libro_actual.stock -= cantidad_a_agregar 
+            libro_actual.stock -= cantidad_a_agregar
             libro_actual.save()
-            headers = self.get_success_headers(serializer.data)
-            return Response(self.get_serializer(item_nuevo).data, status=status.HTTP_201_CREATED, headers=headers)
+
+            response_serializer = self.get_serializer(item_nuevo)
+            headers = self.get_success_headers(response_serializer.data) # <-- Aquí está el cambio
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
 
     def perform_destroy(self, instance):
         libro = instance.libro
