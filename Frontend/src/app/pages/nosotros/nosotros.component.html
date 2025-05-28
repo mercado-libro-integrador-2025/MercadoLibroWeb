@@ -15,3 +15,27 @@
     <p class="historia-texto">{{ historiaTexto }}</p>
   </div>
 </section>
+
+<!-- Sección de Mision/Vision -->
+<section class="mision-vision-section">
+  <div class="contenedor-cajas">
+    <div class="caja mision">
+      <img src="assets/images/icono_mision.png" alt="Icono de misión" class="icono">
+      <h3 class="titulo-caja">{{ misionTitulo }}</h3>
+      <p class="texto-caja">{{ misionTexto }}</p>
+    </div>
+    <div class="caja vision">
+      <img src="assets/images/icono_vision.png" alt="Icono de visión" class="icono">
+      <h3 class="titulo-caja">{{ visionTitulo }}</h3>
+      <p class="texto-caja">{{ visionTexto }}</p>
+    </div>
+  </div>
+
+<!-- Sección de Nuestros Valores -->
+  <section class="valores-container">
+  <h2 class="titulo_valores">Nuestros Valores</h2>
+  <div *ngFor="let valor of valores" class="valor-card">
+    <h3 class="subtitulo_valores">{{ valor.icono }} {{ valor.titulo }}</h3>
+    <p class="descripcion_valores">{{ valor.descripcion }}</p>
+  </div>
+</section>
