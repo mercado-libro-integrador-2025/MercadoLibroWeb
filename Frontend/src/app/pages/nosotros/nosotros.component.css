@@ -78,7 +78,92 @@
   object-fit: cover;
 }
 
+.mision-vision-section {
+  padding: 2rem 1rem;
+  background-color: #ffffff;
+}
+
+.contenedor-cajas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.caja {
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 2rem;
+}
+
+.icono {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 1rem;
+}
+
+.titulo-caja {
+  font-size: 24px;
+  font-weight: bold;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.texto-caja {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.8;
+  font-size: 18px;
+}
+
+.valores-container {
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.titulo_valores {
+  font-size: 24px;
+  font-weight: bold;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #000;
+  text-align: center;
+}
+
+.valor-card {
+  margin-top: 20px;
+}
+
+.subtitulo_valores {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.descripcion_valores {
+  font-size: 19px;
+  color: #333;
+  margin-top: 6px;
+  line-height: 2;
+}
+
 @media (max-width: 480px) {
+
   .banner-container {
     height: 30vh;
     min-height: 300px;
@@ -87,5 +172,54 @@
   .text-container {
     top: 40%; 
     transform: translate(-50%, -40%); 
+  }
+
+  .mision {
+    border: 2px solid #000000;
+  }
+
+  .vision {
+    border: 2px solid transparent;
+  }
+
+  .historia-contenido {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .historia-texto {
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .historia-img {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .contenedor-cajas {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .caja {
+    max-width: 90%;
+  }
+    .historia-contenido {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .historia-texto {
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .historia-img {
+    width: 100%;
+    max-width: 100%;
   }
 }
