@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 import mercadopago
 from django.conf import settings
-=======
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from django.contrib.auth import authenticate, login, logout
@@ -21,10 +18,6 @@ from .models import (
     Libro,
     ItemCarrito,
     Pedido,
-<<<<<<< HEAD
-    ProductoPedido,
-=======
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
     Direccion,
     MetodoPago,
     Reseña,
@@ -42,7 +35,6 @@ from .serializers import (
     ReseñaSerializer,
     ContactoSerializer
 )
-<<<<<<< HEAD
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -102,63 +94,6 @@ def pago_pending(request):
 def pago_failure(request):
     return redirect("http://localhost:4200/dashboard/profile-dashboard")
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def confirmar_pedido(request):
-    usuario = request.user
-
-    # Obtener productos en el carrito del usuario
-    items_carrito = ItemCarrito.objects.filter(usuario=usuario)
-    if not items_carrito:
-        return Response({"error": "El carrito está vacío."}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Validar dirección de envío
-    direccion = get_object_or_404(Direccion, usuario=usuario)
-    if not direccion:
-        return Response({"error": "No tienes una dirección registrada."}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Validar método de pago
-    metodo_pago = get_object_or_404(MetodoPago, usuario=usuario)
-    if not metodo_pago:
-        return Response({"error": "No tienes un método de pago registrado."}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Calcular el total del pedido
-    total_pedido = Decimal(0)
-    for item in items_carrito:
-        total_pedido += item.total
-
-    # Crear el pedido
-    pedido = Pedido.objects.create(
-        usuario=usuario,
-        direccion=direccion,
-        metodo_pago=metodo_pago.tipo_tarjeta,
-        total=total_pedido
-    )
-
-    # Crear los productos del pedido
-    for item in items_carrito:
-        ProductoPedido.objects.create(
-            pedido=pedido,
-            libro=item.libro,
-            cantidad=item.cantidad,
-            precio_unitario=item.libro.precio
-        )
-
-        # Actualizar el stock del libro
-        item.libro.stock -= item.cantidad
-        item.libro.save()
-
-        # Eliminar el item del carrito
-        item.delete()
-
-    return Response({
-        "message": "Pedido confirmado exitosamente.",
-        "pedido_id": pedido.id_pedido,
-        "total": total_pedido
-    }, status=status.HTTP_201_CREATED)
-=======
-
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -181,12 +116,9 @@ class LoginView(APIView):
         user = authenticate(email=email, password=password)
 
         if user:
-<<<<<<< HEAD
             if not user.is_active:
                 return Response({'error': 'Tu cuenta ha sido desactivada. Contacta al soporte.'}, status=status.HTTP_403_FORBIDDEN)
             
-=======
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
             login(request, user)
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -194,11 +126,7 @@ class LoginView(APIView):
                 'access': str(refresh.access_token),
                 'user': UserSerializer(user).data
             }, status=status.HTTP_200_OK)
-<<<<<<< HEAD
         return Response({'error': 'Credenciales inválidas'}, status=status.HTTP_404_NOT_FOUND)
-=======
-        return Response({'error': 'Invalid Credentials'}, status=status.HTTP_404_NOT_FOUND)
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 
 
 class LogoutView(APIView):
@@ -211,7 +139,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
-<<<<<<< HEAD
     def destroy(self, request, *args, **kwargs):
         user = self.get_object()
         if user == request.user or request.user.is_staff: 
@@ -220,22 +147,6 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Cuenta desactivada exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'error': 'No tienes permiso para eliminar esta cuenta'}, status=status.HTTP_403_FORBIDDEN)
-=======
-    # Método personalizado para eliminar un usuario
-    def destroy(self, request, *args, **kwargs):
-        user = self.get_object()
-        if user == request.user or request.user.is_staff: 
-            user.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response({'error': 'No tienes permiso para eliminar esta cuenta'}, status=status.HTTP_403_FORBIDDEN)
-    
-    # Acción personalizada para obtener el usuario autenticado
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
-    def me(self, request):
-        serializer = self.get_serializer(request.user)
-        return Response(serializer.data)
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 
 
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -250,15 +161,6 @@ class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
     filter_backends = [DjangoFilterBackend]
-<<<<<<< HEAD
-=======
-    filterset_fields = {
-        'titulo': ['icontains'],
-        'categoria__nombre_categoria': ['exact'],
-        'precio': ['lte', 'gte'],
-        'stock': ['lte', 'gte'],
-    }
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
     
 class DireccionViewSet(viewsets.ModelViewSet):
     queryset = Direccion.objects.all()
@@ -266,7 +168,15 @@ class DireccionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Direccion.objects.filter(usuario=self.request.user)  
+        return Direccion.objects.filter(usuario=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        direccion = self.get_object()
+        if direccion.usuario == request.user:
+            direccion.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error": "No tienes permiso para eliminar esta dirección."}, status=status.HTTP_403_FORBIDDEN)
 
 class MetodoPagoViewSet(viewsets.ModelViewSet):
     queryset = MetodoPago.objects.all()
@@ -309,33 +219,21 @@ class ItemCarritoViewSet(viewsets.ModelViewSet):
             serializer.save(usuario=usuario)
 
 class PedidoViewSet(viewsets.ModelViewSet):
-<<<<<<< HEAD
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['get'], url_path='usuario/(?P<usuario_id>[^/.]+)')
-    def pedidos_por_usuario(self, request, usuario_id=None):
-        pedidos = Pedido.objects.filter(usuario__id=usuario_id)
+    def listar_por_usuario(self, request, usuario_id=None):
+        if usuario_id is None:
+            return Response({"error": "ID de usuario no proporcionado."}, status=status.HTTP_400_BAD_REQUEST)
+
+        pedidos = Pedido.objects.filter(usuario_id=usuario_id)
+        if not pedidos.exists():
+            return Response({"error": "No se encontraron pedidos para este usuario."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = self.get_serializer(pedidos, many=True)
-        return Response(serializer.data)
-=======
-    serializer_class = PedidoSerializer
-    queryset = Pedido.objects.all()
-    permission_classes = [IsAuthenticated]
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def get_queryset(self):
-        return Pedido.objects.filter(usuario=self.request.user)  
-
-    def perform_create(self, serializer):
-        carrito_items = ItemCarrito.objects.filter(usuario=self.request.user)
-        if carrito_items.exists():
-            total = sum(item.libro.precio * item.cantidad for item in carrito_items)
-            pedido = serializer.save(usuario=self.request.user, total=total)
-            carrito_items.delete()  
-            return pedido
-        raise serializers.ValidationError("El carrito está vacío.")
->>>>>>> e76d6427f9ee176a7ae747983d0cee56ed908870
 
 class ReseñaViewSet(viewsets.ModelViewSet):
     queryset = Reseña.objects.all()

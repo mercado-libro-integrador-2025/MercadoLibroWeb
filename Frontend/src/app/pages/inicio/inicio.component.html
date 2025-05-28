@@ -33,8 +33,7 @@
     </form>
   </div>
 
-  <!-- Modal de Registro -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #registroModal>
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-dark">
@@ -42,12 +41,10 @@
           <button type="button" class="btn-close text-white bg-white nav-link" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        <!-- reg exitoso-->
         <div *ngIf="registroExitoso" class="alert alert-success" role="alert">
           ¡Registro realizado exitosamente!
         </div>
 
-        <!-- Mensaje de usuario ya registrado -->
         <div *ngIf="usuarioRegistrado" class="alert alert-danger" role="alert">
           El usuario ya está registrado.
         </div>
@@ -111,7 +108,7 @@
                 <p *ngIf="registroFormulario.get('repetirPassword')?.hasError('minlength')" class="text-danger">
                   La contraseña debe contener al menos 8 caracteres.
                 </p>
-                <p *ngIf="registroFormulario.get('repetirPassword')?.value !== registroFormulario.get('password')?.value" class="text-danger">
+                 <p *ngIf="registroFormulario.get('repetirPassword')?.hasError('notMatching')" class="text-danger">
                   Las contraseñas deben coincidir.
                 </p>
               </div>

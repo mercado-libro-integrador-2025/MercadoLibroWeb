@@ -35,7 +35,7 @@
   
   .card-body {
     padding: 0.5rem;
-    color: crimson;
+    color: #cc6a00;
     text-align: center;
   }
   
@@ -50,12 +50,12 @@
   }
   
   span {
-    color: crimson;
+    color: #cc6a00;
     text-align: left;
     font-weight: bold;
     
   }
   
   .tm {
-    color: crimson;
+    color: #cc6a00;
   }

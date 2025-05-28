@@ -1,57 +1,71 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Contacto } from '../../services/models/contacto.models';
 import { ContactoService } from '../../services/contacto.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-contacto',
   standalone: true,
-  imports: [ ReactiveFormsModule],
+  imports: [ CommonModule, ReactiveFormsModule, NgIf ],
   templateUrl: './contacto.component.html',
   styleUrls: ['./contacto.component.css']
 })
+export class ContactoComponent implements OnInit {
 
-export class ContactoComponent {
+  contactForm!: FormGroup;
+  isLoading = false;
+  submissionMessage: string | null = null;
+  submissionError: string | null = null;
 
-  datosContacto: any;
-  form!: FormGroup;
+  constructor(
+    private fb: FormBuilder,
+    private contactoService: ContactoService
+  ) {}
 
-  textoContacto: string = `
-Estamos acá para vos. Si tenés alguna pregunta, comentario o simplemente
-deseás hablar sobre tu libro favorito, no dudes en ponerte en contacto con nosotros.
+  ngOnInit(): void {
+    this.contactForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      email: ['', [Validators.required, Validators.email]],
+      asunto: ['', [Validators.required, Validators.maxLength(150)]],
+      mensaje: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
+    });
 
-Estamos emocionados por compartir este viaje literario con vos.
-
-Gracias por elegir a MercadoLibro como tu destino literario.
-Juntos, exploraremos las páginas de historias inolvidables y crearemos recuerdos literarios que
-perdurarán para siempre.
-  `;
-  constructor(private formBuilder: FormBuilder, private ContactoService: ContactoService) {
-
-    this.datosContacto = ContactoService.getDatosContacto();
-
-    this.form = this.formBuilder.group(
-      {
-        nombre: ['', [Validators.required], []],
-        email: ['', [Validators.required, Validators.email], []],
-        mensaje: ['', [Validators.required, Validators.maxLength(400)], []]
-      }
-    )
+    this.contactForm.valueChanges.subscribe(() => {
+      this.submissionMessage = null;
+      this.submissionError = null;
+    });
   }
 
-  get Nombre() {
-    return this.form.get('nombre');
-  }
+  get nombre() { return this.contactForm.get('nombre'); }
+  get email() { return this.contactForm.get('email'); }
+  get asunto() { return this.contactForm.get('asunto'); }
+  get mensaje() { return this.contactForm.get('mensaje'); }
 
-  get Mail() {
-    return this.form.get('email');
-  }
+  onSubmit(): void {
+    this.contactForm.markAllAsTouched();
 
-  get Mensaje() {
-    return this.form.get('mensaje');
-  }
+    if (this.contactForm.valid) {
+      this.isLoading = true;
+      this.submissionMessage = null;
+      this.submissionError = null;
 
-  onEnviar(event: Event) {
-    console.log(this.form.value)
+      const data: Contacto = this.contactForm.value;
+
+      this.contactoService.enviarContacto(data).subscribe({
+        next: (_) => {
+          this.isLoading = false;
+          alert('¡Gracias por tu mensaje!  hemos recibido correctamente tu mensaje :).');
+          this.contactForm.reset();
+          this.contactForm.markAsUntouched();
+          this.contactForm.markAsPristine();
+        },
+        error: (error) => {
+          this.isLoading = false;
+          alert('Hubo un error al enviar tu mensaje. Inténtalo nuevamente.');
+          console.error('Error al enviar contacto:', error);
+        }
+      });
+    }
   }
 }

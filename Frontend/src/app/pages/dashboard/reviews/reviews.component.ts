@@ -91,7 +91,7 @@ export class ReviewsComponent implements OnInit {
   }
 
   loadBooks(): void {
-    this.productoService.searchLibros('', '').subscribe({
+    this.productoService.searchLibros('').subscribe({
       next: (libros: Libro[]) => {
         this.books = libros;
       },

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Libro } from "../../../services/models/producto"; 
 import { ProductoService } from "../../../services/producto.service";
 import { RouterLink } from "@angular/router";
-import { CategoriaComponent } from "../categoria/categoria.component";
+import { SearchComponent } from "../search/search.component";
 import { CheckoutService, CarritoItem } from "../../../services/checkout.service";
 import { HttpErrorResponse } from "@angular/common/http"; 
 import { ReviewsService, Resena } from "../../../services/reviews.service"; 
@@ -13,7 +13,7 @@ import { ReviewsService, Resena } from "../../../services/reviews.service";
     standalone: true,
     templateUrl: './producto.component.html',
     styleUrls: ['./producto.component.css'],
-    imports: [RouterLink, CategoriaComponent, CommonModule] // <-- Eliminado DescripcionComponent
+    imports: [RouterLink, SearchComponent, CommonModule] 
 })
 export class ProductoComponent implements OnInit {
 
@@ -39,7 +39,7 @@ export class ProductoComponent implements OnInit {
     }
 
     loadAllBooks(): void {
-        this.productoService.searchLibros('', '').subscribe({
+        this.productoService.searchLibros('').subscribe({
             next: (libros: Libro[]) => {
                 this.libros = libros;
                 console.log('Libros cargados al iniciar:', this.libros); 
@@ -67,8 +67,25 @@ export class ProductoComponent implements OnInit {
         }
     }
 
-    buscarLibros(params: { termino: string, categoria: string }): void {
-        this.productoService.searchLibros(params.termino, params.categoria).subscribe({
+    // buscarLibros(params: { termino: string, categoria: string }): void {
+    //     this.productoService.searchLibros(params.termino, params.categoria).subscribe({
+    //         next: (libros: Libro[]) => {
+    //             this.libros = libros;
+    //             console.log('Libros encontrados en la búsqueda:', this.libros);
+    //             if (this.libros.length > 0) {
+    //                 console.log('Valor de portada del primer libro encontrado:', this.libros[0].portada);
+    //             } else {
+    //                 console.log('No se encontraron libros.');
+    //             }
+    //         },
+    //         error: (error: HttpErrorResponse) => {
+    //             console.error('Error en la búsqueda de libros:', error);
+    //         }
+    //     });
+    // }
+
+        buscarLibros(params: { termino: string }): void {
+        this.productoService.searchLibros(params.termino).subscribe({
             next: (libros: Libro[]) => {
                 this.libros = libros;
                 console.log('Libros encontrados en la búsqueda:', this.libros);

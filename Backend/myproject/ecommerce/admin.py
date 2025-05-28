@@ -17,7 +17,7 @@ class LibroAdmin(admin.ModelAdmin):
     list_display = ('titulo', 'portada', 'id_categoria', 'id_autor', 'descripcion', 'precio', 'stock')
 
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('id_pedido', 'usuario', 'direccion', 'metodo_pago', 'fecha_pedido', 'total', 'estado')
+    list_display = ('id', 'usuario', 'direccion', 'metodo_pago', 'fecha_pedido', 'total', 'estado')
     search_fields = ('usuario__email',)
     list_filter = ('estado', 'fecha_pedido')
 
