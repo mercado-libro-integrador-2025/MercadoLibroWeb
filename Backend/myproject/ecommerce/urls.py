@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .views import LoginView, LogoutView, SignupView, UserViewSet, CategoriaViewSet, AutorViewSet, LibroViewSet, \
-ItemCarritoViewSet, PedidoViewSet, DireccionViewSet, MetodoPagoViewSet, ReseñaViewSet, ContactoViewSet, crear_preferencia
+ItemCarritoViewSet, PedidoViewSet, DireccionViewSet, MetodoPagoViewSet, ReseñaViewSet, ContactoViewSet, crear_preferencia, NovedadesListView
 from . import views
 
 router = routers.DefaultRouter()
@@ -19,6 +19,7 @@ router.register(r'pedidos', PedidoViewSet, basename='pedido')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('novedades/', NovedadesListView.as_view(), name='novedades_list'),
     path('auth/login/', LoginView.as_view(), name='auth_login'),
     path('auth/logout/', LogoutView.as_view(), name='auth_logout'),
     path('auth/signup/', SignupView.as_view(), name='auth_signup'),

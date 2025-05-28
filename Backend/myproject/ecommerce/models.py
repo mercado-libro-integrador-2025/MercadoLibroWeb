@@ -46,6 +46,9 @@ class Libro(models.Model):
     portada = CloudinaryField('image', null=True, blank=True)
     autor = models.ForeignKey(Autor, to_field='id_autor', on_delete=models.CASCADE)
 
+    es_novedad = models.BooleanField(default=False)
+    fecha_novedad = models.DateField(null=True, blank=True)
+
     class Meta:
         db_table = 'libro'
 

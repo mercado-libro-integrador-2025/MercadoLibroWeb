@@ -51,6 +51,24 @@ class LibroCreateSerializer(serializers.ModelSerializer):
         model = Libro
         fields = '__all__' 
 
+class NovedadLibroSerializer(serializers.ModelSerializer):
+    id_libro = serializers.IntegerField(source='pk') # Renombrar 'pk' a 'id_libro'
+    autor = AutorSerializer()
+    categoria = CategoriaSerializer()
+
+    class Meta:
+        model = Libro
+        fields = [
+            'id_libro',
+            'titulo',
+            'precio',
+            'stock',
+            'descripcion',
+            'portada',
+            'autor',
+            'categoria'
+        ]
+
 class DireccionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Direccion

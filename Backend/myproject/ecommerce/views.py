@@ -33,7 +33,8 @@ from .serializers import (
     DireccionSerializer,
     MetodoPagoSerializer,
     ReseñaSerializer,
-    ContactoSerializer
+    ContactoSerializer,
+    NovedadLibroSerializer
 )
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
@@ -162,6 +163,12 @@ class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
     filter_backends = [DjangoFilterBackend]
+
+class NovedadesListView(APIView):
+    def get(self, request, *args, **kwargs):
+        novedades = Libro.objects.filter(es_novedad=True)
+        serializer = NovedadLibroSerializer(novedades, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 class DireccionViewSet(viewsets.ModelViewSet):
     queryset = Direccion.objects.all()
