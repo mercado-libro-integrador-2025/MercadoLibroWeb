@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LandingComponent } from './pages/landing/landing.component';
-import { QuienesComponent } from './pages/quienes/quienes.component';
+import { QuienesComponent } from './pages/nosotros/nosotros.component';
 
 import { NuestraseleccionComponent } from './pages/nuestraseleccion/nuestraseleccion.component';
 import { DescripcionComponent } from './pages/nuestraseleccion/descripcion/descripcion.component';
@@ -21,7 +21,7 @@ import { AuthGuard } from './guard/auth.guard';
 export const routes: Routes = [
     { path: 'landing', title: 'Home', component: LandingComponent },
     { path: '', redirectTo: 'landing', pathMatch: 'full' },
-    { path: 'quienes', title: 'Quienes Somos', component: QuienesComponent },
+    { path: 'nosotros', title: 'Quienes Somos', component: QuienesComponent },
     { path: 'nuestraseleccion', title: 'Nuestra Selección', component: NuestraseleccionComponent },
     { path: 'descripcion/:id', title: 'Tu próximo libro', component: DescripcionComponent },
     { path: 'contacto', title: 'Contacto', component: ContactoComponent },
