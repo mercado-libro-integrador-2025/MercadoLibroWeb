@@ -82,29 +82,14 @@ class ItemCarrito(models.Model):
     def total(self):
         return self.cantidad * self.libro.precio
 
-class MetodoPago(models.Model):
-    TARJETA_OPCIONES = [
-        ('debito', 'Tarjeta Débito'),
-        ('credito', 'Tarjeta Crédito'),
-    ]
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    numero_tarjeta = models.CharField(max_length=16)  
-    cvv = models.CharField(max_length=3)  
-    vencimiento = models.CharField(max_length=5)
-    tipo_tarjeta = models.CharField(max_length=7, choices=TARJETA_OPCIONES)
-
-    class Meta:
-        db_table = 'metodo_pago'
-
-    def __str__(self):
-        return f'Método de pago de {self.usuario} ({self.get_tipo_tarjeta_display()})'  
-
 
 class Pedido(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
     direccion = models.ForeignKey(Direccion, on_delete=models.SET_NULL, null=True, blank=True)
-    metodo_pago = models.ForeignKey(MetodoPago, on_delete=models.SET_NULL, null=True, blank=True)
+    id_transaccion_mp = models.CharField(max_length=255, null=True, blank=True) 
+    
+
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     estado = models.CharField(max_length=50)
 

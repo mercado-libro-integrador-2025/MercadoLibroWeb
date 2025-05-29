@@ -8,7 +8,6 @@ from .models import (
     Pedido,
     ItemCarrito,
     Direccion,
-    MetodoPago,
     Reseña, 
     Contacto
 )
@@ -68,50 +67,6 @@ class DireccionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Direccion.objects.create(usuario=self.context['request'].user, **validated_data)
 
-class MetodoPagoSerializer(serializers.ModelSerializer):
-    TARJETA_OPCIONES = [
-        ('debito', 'Tarjeta Débito'),
-        ('credito', 'Tarjeta Crédito'),
-    ]
-
-    tipo_tarjeta = serializers.ChoiceField(choices=TARJETA_OPCIONES)  
-
-    class Meta:
-        model = MetodoPago
-        fields = ['id', 'usuario', 'numero_tarjeta', 'cvv', 'vencimiento', 'tipo_tarjeta']  
-        
-    def validate_numero_tarjeta(self, value):
-        if len(value) != 16 or not value.isdigit():
-            raise serializers.ValidationError("El número de tarjeta debe tener 16 dígitos.")
-        return value
-
-    def validate_cvv(self, value):
-        if len(value) != 3 or not value.isdigit():
-            raise serializers.ValidationError("El CVV debe tener 3 dígitos.")
-        return value
-
-    def validate_vencimiento(self, value):
-        if len(value) != 5 or value[2] != '/':
-            raise serializers.ValidationError("El formato de vencimiento debe ser MM/AA.")
-        
-        mes = value[:2]
-        if not (1 <= int(mes) <= 12):
-            raise serializers.ValidationError("El mes debe estar entre 01 y 12.")
-        return value
-
-    def create(self, validated_data):
-        usuario = self.context['request'].user 
-        validated_data.pop('usuario', None)
-        return MetodoPago.objects.create(usuario=usuario, **validated_data)
-
-    def update(self, instance, validated_data):
-        instance.numero_tarjeta = validated_data.get('numero_tarjeta', instance.numero_tarjeta)
-        instance.cvv = validated_data.get('cvv', instance.cvv)
-        instance.vencimiento = validated_data.get('vencimiento', instance.vencimiento)
-        instance.tipo_tarjeta = validated_data.get('tipo_tarjeta', instance.tipo_tarjeta)
-        instance.save()
-        return instance
-
 class ItemCarritoSerializer(serializers.ModelSerializer):
     email_usuario = serializers.EmailField(source='usuario.email', read_only=True)
     titulo_libro = serializers.CharField(source='libro.titulo', read_only=True)
@@ -130,22 +85,18 @@ class ItemCarritoSerializer(serializers.ModelSerializer):
     def get_total(self, obj):
         return obj.total
 
-    # AGREGAR EL MÉTODO 'update' AL SERIALIZER para manejar PATCH/PUT
     def update(self, instance, validated_data):
         cantidad_nueva = validated_data.get('cantidad', instance.cantidad)
         libro = instance.libro
 
-        # Calcular la diferencia de stock
         cantidad_actual = instance.cantidad
         diferencia_cantidad = cantidad_nueva - cantidad_actual
 
-        # Validar stock antes de actualizar
         if diferencia_cantidad > 0 and libro.stock < diferencia_cantidad:
             raise serializers.ValidationError(f"No hay suficiente stock para aumentar la cantidad a {cantidad_nueva}. Stock disponible: {libro.stock + cantidad_actual}.")
         elif cantidad_nueva < 1:
             raise serializers.ValidationError("La cantidad no puede ser menor a 1.")
 
-        # Actualizar stock
         libro.stock -= diferencia_cantidad
         libro.save()
 
@@ -158,7 +109,8 @@ class PedidoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pedido
-        fields = ['id', 'usuario', 'direccion', 'metodo_pago', 'estado', 'fecha_pedido', 'total']
+        fields = ['id', 'usuario', 'direccion', 'id_transaccion_mp', 'estado', 'fecha_pedido', 'total']
+
 
 class ReseñaSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)

@@ -6,11 +6,17 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework import status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsSelfOrAdmin
+from rest_framework.decorators import api_view, permission_classes
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.http import HttpResponse
+from decimal import Decimal
+from django.shortcuts import redirect
+from django.db import transaction
 from .models import (
     CustomUser,
     Categoria,
@@ -19,7 +25,6 @@ from .models import (
     ItemCarrito,
     Pedido,
     Direccion,
-    MetodoPago,
     Reseña,
     Contacto
 )
@@ -31,71 +36,166 @@ from .serializers import (
     ItemCarritoSerializer, 
     PedidoSerializer,
     DireccionSerializer,
-    MetodoPagoSerializer,
     ReseñaSerializer,
     ContactoSerializer,
     NovedadLibroSerializer
 )
-from rest_framework.decorators import api_view, permission_classes
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render
-from django.http import HttpResponse
-from decimal import Decimal
-from django.shortcuts import redirect
-from django.db import transaction
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def crear_preferencia(request):
     usuario = request.user
-    productos = request.data.get('productos', [])
+    productos_data = request.data.get('productos', []) 
+    direccion_id = request.data.get('direccion_id') 
 
-    if not productos:
-        return Response({'error': 'No hay productos en el carrito.'}, status=400)
+    if not productos_data:
+        return Response({'error': 'No hay productos en el carrito.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Configurar MercadoPago con el Access Token
-    sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
-
-    # Construir los items para la preferencia
-    items = []
-    for producto in productos:
-        items.append({
-            "title": producto.get('titulo'),
-            "quantity": int(producto.get('cantidad')),
-            "unit_price": float(producto.get('precio')),
-            "currency_id": "ARS"
-        })
-
-    # Crear la preferencia
-    preference_data = {
-        "items": items,
-        "payer": {
-            "email": usuario.email
-        },
-        "back_urls": {
-            "success": "https://mercadolibroweb.onrender.com/api/pago/success",
-            "failure": "https://mercadolibroweb.onrender.com/api/pago/failure",
-            "pending": "https://mercadolibroweb.onrender.com/api/pago/pending"
-        },
-        "auto_return": "approved"
-    }
+    if not direccion_id:
+        return Response({'error': 'Debe seleccionar una dirección de envío.'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        preference_response = sdk.preference().create(preference_data)
-        preference_id = preference_response["response"]["id"]
-        return Response({"id": preference_id})
-    except Exception as e:
-        return Response({'error': f'Error al crear la preferencia: {str(e)}'}, status=500)
+        direccion = Direccion.objects.get(id=direccion_id, usuario=usuario)
+    except Direccion.DoesNotExist:
+        return Response({'error': 'La dirección proporcionada no es válida o no pertenece al usuario.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
+
+    items = []
+    total_pedido = Decimal('0.00')
+    libros_en_pedido = []
+
+    for producto_data in productos_data:
+        try:
+            libro = Libro.objects.get(id_libro=producto_data.get('id_libro'))
+            cantidad = int(producto_data.get('cantidad'))
+            
+            if cantidad <= 0:
+                raise ValueError("La cantidad debe ser mayor a 0.")
+            if libro.stock < cantidad:
+                raise ValueError(f"Stock insuficiente para el libro {libro.titulo}. Solo quedan {libro.stock}.")
+
+            items.append({
+                "title": libro.titulo,
+                "quantity": cantidad,
+                "unit_price": float(libro.precio),
+                "currency_id": "ARS"
+            })
+            total_pedido += libro.precio * cantidad
+            libros_en_pedido.append({'libro': libro, 'cantidad': cantidad})
+
+        except Libro.DoesNotExist:
+            return Response({'error': f"El libro con ID {producto_data.get('id_libro')} no existe."}, status=status.HTTP_404_NOT_FOUND)
+        except ValueError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': f"Error procesando producto: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    with transaction.atomic():
+        try:
+            for item_info in libros_en_pedido:
+                libro = item_info['libro']
+                cantidad = item_info['cantidad']
+                libro.stock -= cantidad
+                libro.save()
+            
+            pedido = Pedido.objects.create(
+                usuario=usuario,
+                direccion=direccion,
+                total=total_pedido,
+                estado='pendiente'
+            )
+
+            back_url_base = "https://mercadolibroweb.onrender.com/api/pago/" if not settings.DEBUG else "http://localhost:4200/api/pago/" # CAMBIO: Ajustar para producción
+            
+            preference_data = {
+                "items": items,
+                "payer": {
+                    "email": usuario.email
+                },
+                "back_urls": {
+                    "success": f"{back_url_base}success?external_reference={pedido.id}",
+                    "failure": f"{back_url_base}failure?external_reference={pedido.id}",
+                    "pending": f"{back_url_base}pending?external_reference={pedido.id}"
+                },
+                "auto_return": "approved",
+                "external_reference": str(pedido.id) 
+            }
+
+            preference_response = sdk.preference().create(preference_data)
+            preference_id = preference_response["response"]["id"]
+            
+            pedido.id_transaccion_mp = preference_id 
+            pedido.save()
+
+            ItemCarrito.objects.filter(usuario=usuario).delete()
+
+            return Response({"id": preference_id, "init_point": preference_response["response"]["init_point"]})
+        
+        except Exception as e:
+            return Response({'error': f'Error al crear la preferencia o el pedido: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def pago_success(request):
-    return redirect("http://localhost:4200/dashboard/profile-dashboard")  
+    payment_id = request.GET.get('payment_id')
+    status_mp = request.GET.get('status')
+    external_reference = request.GET.get('external_reference')
+
+    if external_reference:
+        try:
+            pedido = Pedido.objects.get(id=external_reference)
+            if status_mp == 'approved':
+                pedido.estado = 'pagado'
+                pedido.id_transaccion_mp = payment_id 
+            else:
+                pedido.estado = 'fallido' 
+            pedido.save()
+        except Pedido.DoesNotExist:
+            print(f"Pedido con external_reference {external_reference} no encontrado.")
+        except Exception as e:
+            print(f"Error al actualizar pedido en success: {e}")
+
+    return redirect("http://localhost:4200/checkout-success") 
 
 def pago_pending(request):
-    return redirect("http://localhost:4200/dashboard/profile-dashboard")
+    payment_id = request.GET.get('payment_id')
+    status_mp = request.GET.get('status')
+    external_reference = request.GET.get('external_reference')
+
+    if external_reference:
+        try:
+            pedido = Pedido.objects.get(id=external_reference)
+            pedido.estado = 'pendiente_mp' 
+            if payment_id:
+                pedido.id_transaccion_mp = payment_id
+            pedido.save()
+        except Pedido.DoesNotExist:
+            print(f"Pedido con external_reference {external_reference} no encontrado.")
+        except Exception as e:
+            print(f"Error al actualizar pedido en pending: {e}")
+
+    return redirect("http://localhost:4200/checkout-pending")
 
 def pago_failure(request):
-    return redirect("http://localhost:4200/dashboard/profile-dashboard")
+    payment_id = request.GET.get('payment_id')
+    status_mp = request.GET.get('status')
+    external_reference = request.GET.get('external_reference')
 
+    if external_reference:
+        with transaction.atomic(): 
+            try:
+                pedido = Pedido.objects.select_for_update().get(id=external_reference)
+                pedido.estado = 'fallido'
+                if payment_id:
+                    pedido.id_transaccion_mp = payment_id
+                pedido.save()
+
+            except Pedido.DoesNotExist:
+                print(f"Pedido con external_reference {external_reference} no encontrado.")
+            except Exception as e:
+                print(f"Error al actualizar pedido y revertir stock en failure: {e}")
+
+    return redirect("http://localhost:4200/checkout-failure")
 
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -105,7 +205,7 @@ class SignupView(generics.CreateAPIView):
         user = CustomUser.objects.get(email=request.data['email'])
         refresh = RefreshToken.for_user(user)
         return Response({
-            'user_id': user.id,  # Agrega el user_id aquí
+            'user_id': user.id,  
             'refresh': str(refresh),
             'access': str(refresh.access_token),
             'user': UserSerializer(user).data
@@ -186,15 +286,6 @@ class DireccionViewSet(viewsets.ModelViewSet):
         else:
             return Response({"error": "No tienes permiso para eliminar esta dirección."}, status=status.HTTP_403_FORBIDDEN)
 
-class MetodoPagoViewSet(viewsets.ModelViewSet):
-    queryset = MetodoPago.objects.all()
-    serializer_class = MetodoPagoSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return MetodoPago.objects.filter(usuario=self.request.user) 
-
-
 class ItemCarritoViewSet(viewsets.ModelViewSet):
     queryset = ItemCarrito.objects.all()
     serializer_class = ItemCarritoSerializer
@@ -260,9 +351,16 @@ class PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return Pedido.objects.filter(usuario=self.request.user)
+
+    @action(detail=False, methods=['get'], url_path='por-usuario/(?P<usuario_id>[^/.]+)')
     def listar_por_usuario(self, request, usuario_id=None):
         if usuario_id is None:
             return Response({"error": "ID de usuario no proporcionado."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not (str(request.user.id) == usuario_id or request.user.is_staff):
+            return Response({"error": "No tienes permiso para ver los pedidos de este usuario."}, status=status.HTTP_403_FORBIDDEN)
 
         pedidos = Pedido.objects.filter(usuario_id=usuario_id)
         if not pedidos.exists():
@@ -270,7 +368,6 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(pedidos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class ReseñaViewSet(viewsets.ModelViewSet):
     queryset = Reseña.objects.all()
