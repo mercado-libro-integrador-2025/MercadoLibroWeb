@@ -1,22 +1,23 @@
 import mercadopago
-from django.conf import settings
-from django_filters.rest_framework import DjangoFilterBackend
+import logging
 from rest_framework import viewsets
-from django.contrib.auth import authenticate, login, logout
 from rest_framework import status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsSelfOrAdmin
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.http import HttpResponse
-from decimal import Decimal
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.db import transaction
+from django.conf import settings
+from django_filters.rest_framework import DjangoFilterBackend
+from .permissions import IsSelfOrAdmin
+from decimal import Decimal
 from .models import (
     CustomUser,
     Categoria,
@@ -40,6 +41,8 @@ from .serializers import (
     ContactoSerializer,
     NovedadLibroSerializer
 )
+
+logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -124,6 +127,8 @@ def crear_preferencia(request):
             }
 
             preference_response = sdk.preference().create(preference_data)
+            logger.info(f"Respuesta completa de Mercado Pago: {preference_response}") 
+
             preference_id = preference_response["response"]["id"]
             
             pedido.id_transaccion_mp = preference_id 
