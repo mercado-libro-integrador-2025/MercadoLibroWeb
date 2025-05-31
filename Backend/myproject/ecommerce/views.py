@@ -1,22 +1,23 @@
 import mercadopago
-from django.conf import settings
-from django_filters.rest_framework import DjangoFilterBackend
+import traceback
 from rest_framework import viewsets
-from django.contrib.auth import authenticate, login, logout
 from rest_framework import status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsSelfOrAdmin
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.http import HttpResponse
-from decimal import Decimal
-from django.shortcuts import redirect
+from django.shortcuts import redirect 
 from django.db import transaction
+from django.conf import settings
+from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth import authenticate, login, logout
+from .permissions import IsSelfOrAdmin
+from decimal import Decimal
 from .models import (
     CustomUser,
     Categoria,
@@ -33,7 +34,7 @@ from .serializers import (
     CategoriaSerializer,
     AutorSerializer,
     LibroSerializer,
-    ItemCarritoSerializer, 
+    ItemCarritoSerializer,
     PedidoSerializer,
     DireccionSerializer,
     ReseñaSerializer,
@@ -41,13 +42,22 @@ from .serializers import (
     NovedadLibroSerializer
 )
 
+
+FRONTEND_WEB_URL_PROD = "https://localhost:4200/checkout-success"
+
+MOBILE_DEEPLINK_BASE = "mercadolibromobile://checkout"
+
+BACKEND_IPN_URL_BASE = "https://mercadolibroweb.onrender.com/api/pago/" if not settings.DEBUG else "http://localhost:8000/api/pago/"
+
+# === FUNCIÓN PARA CREAR PREFERENCIA DE MERCADO PAGO ===
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def crear_preferencia(request):
     usuario = request.user
-    productos_data = request.data.get('productos', []) 
-    direccion_id = request.data.get('direccion_id') 
-
+    productos_data = request.data.get('productos', [])
+    direccion_id = request.data.get('direccion_id')
+    is_mobile_app = request.data.get('is_mobile_app', False) 
     if not productos_data:
         return Response({'error': 'No hay productos en el carrito.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -59,7 +69,6 @@ def crear_preferencia(request):
     except Direccion.DoesNotExist:
         return Response({'error': 'La dirección proporcionada no es válida o no pertenece al usuario.'}, status=status.HTTP_400_BAD_REQUEST)
 
-
     sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
 
     items = []
@@ -70,7 +79,7 @@ def crear_preferencia(request):
         try:
             libro = Libro.objects.get(id_libro=producto_data.get('id_libro'))
             cantidad = int(producto_data.get('cantidad'))
-            
+
             if cantidad <= 0:
                 raise ValueError("La cantidad debe ser mayor a 0.")
             if libro.stock < cantidad:
@@ -89,8 +98,10 @@ def crear_preferencia(request):
             return Response({'error': f"El libro con ID {producto_data.get('id_libro')} no existe."}, status=status.HTTP_404_NOT_FOUND)
         except ValueError as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({'error': f"Error procesando producto: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e: 
+            print(f"Error detallado en crear_preferencia (dentro del bucle): {str(e)}")
+            traceback.print_exc()
+            return Response({'error': f'Error interno al procesar productos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     with transaction.atomic():
         try:
@@ -99,7 +110,7 @@ def crear_preferencia(request):
                 cantidad = item_info['cantidad']
                 libro.stock -= cantidad
                 libro.save()
-            
+
             pedido = Pedido.objects.create(
                 usuario=usuario,
                 direccion=direccion,
@@ -107,34 +118,45 @@ def crear_preferencia(request):
                 estado='pendiente'
             )
 
-            back_url_base = "https://mercadolibroweb.onrender.com/api/pago/" if not settings.DEBUG else "http://localhost:4200/api/pago/" # CAMBIO: Ajustar para producción
-            
             preference_data = {
                 "items": items,
                 "payer": {
                     "email": usuario.email
                 },
-                "back_urls": {
-                    "success": f"{back_url_base}success?external_reference={pedido.id}",
-                    "failure": f"{back_url_base}failure?external_reference={pedido.id}",
-                    "pending": f"{back_url_base}pending?external_reference={pedido.id}"
-                },
                 "auto_return": "approved",
-                "external_reference": str(pedido.id) 
+                "external_reference": str(pedido.id),
+                "notification_url": f"{BACKEND_IPN_URL_BASE}success?external_reference={pedido.id}"
             }
+
+            if is_mobile_app:
+                preference_data["back_urls"] = {
+                    "success": f"{MOBILE_DEEPLINK_BASE}/success?external_reference={pedido.id}",
+                    "failure": f"{MOBILE_DEEPLINK_BASE}/failure?external_reference={pedido.id}",
+                    "pending": f"{MOBILE_DEEPLINK_BASE}/pending?external_reference={pedido.id}"
+                }
+            else:
+                preference_data["back_urls"] = {
+                    "success": f"{FRONTEND_WEB_URL_PROD}/checkout-success?external_reference={pedido.id}",
+                    "failure": f"{FRONTEND_WEB_URL_PROD}/checkout-failure?external_reference={pedido.id}",
+                    "pending": f"{FRONTEND_WEB_URL_PROD}/checkout-pending?external_reference={pedido.id}"
+                }
 
             preference_response = sdk.preference().create(preference_data)
             preference_id = preference_response["response"]["id"]
-            
-            pedido.id_transaccion_mp = preference_id 
+
+            pedido.id_transaccion_mp = preference_id
             pedido.save()
 
             ItemCarrito.objects.filter(usuario=usuario).delete()
 
             return Response({"id": preference_id, "init_point": preference_response["response"]["init_point"]})
-        
+
         except Exception as e:
+            print(f"Error detallado en crear_preferencia (fuera del bucle/transacción): {str(e)}")
+            traceback.print_exc()
             return Response({'error': f'Error al crear la preferencia o el pedido: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# === FUNCIONES DE PROCESAMIENTO DE PAGOS (IPN y/o BACK_URLS) ===
 
 def pago_success(request):
     payment_id = request.GET.get('payment_id')
@@ -146,16 +168,17 @@ def pago_success(request):
             pedido = Pedido.objects.get(id=external_reference)
             if status_mp == 'approved':
                 pedido.estado = 'pagado'
-                pedido.id_transaccion_mp = payment_id 
-            else:
+                pedido.id_transaccion_mp = payment_id
+            else: 
                 pedido.estado = 'fallido' 
             pedido.save()
         except Pedido.DoesNotExist:
-            print(f"Pedido con external_reference {external_reference} no encontrado.")
+            print(f"Pedido con external_reference {external_reference} no encontrado en pago_success.")
         except Exception as e:
-            print(f"Error al actualizar pedido en success: {e}")
+            print(f"Error al actualizar pedido en pago_success: {e}")
+            traceback.print_exc() 
 
-    return redirect("http://localhost:4200/checkout-success") 
+    return HttpResponse(status=200) 
 
 def pago_pending(request):
     payment_id = request.GET.get('payment_id')
@@ -165,16 +188,17 @@ def pago_pending(request):
     if external_reference:
         try:
             pedido = Pedido.objects.get(id=external_reference)
-            pedido.estado = 'pendiente_mp' 
+            pedido.estado = 'pendiente_mp'
             if payment_id:
                 pedido.id_transaccion_mp = payment_id
             pedido.save()
         except Pedido.DoesNotExist:
-            print(f"Pedido con external_reference {external_reference} no encontrado.")
+            print(f"Pedido con external_reference {external_reference} no encontrado en pago_pending.")
         except Exception as e:
-            print(f"Error al actualizar pedido en pending: {e}")
+            print(f"Error al actualizar pedido en pago_pending: {e}")
+            traceback.print_exc()
 
-    return redirect("http://localhost:4200/checkout-pending")
+    return HttpResponse(status=200) 
 
 def pago_failure(request):
     payment_id = request.GET.get('payment_id')
@@ -182,7 +206,7 @@ def pago_failure(request):
     external_reference = request.GET.get('external_reference')
 
     if external_reference:
-        with transaction.atomic(): 
+        with transaction.atomic():
             try:
                 pedido = Pedido.objects.select_for_update().get(id=external_reference)
                 pedido.estado = 'fallido'
@@ -191,11 +215,12 @@ def pago_failure(request):
                 pedido.save()
 
             except Pedido.DoesNotExist:
-                print(f"Pedido con external_reference {external_reference} no encontrado.")
+                print(f"Pedido con external_reference {external_reference} no encontrado en pago_failure.")
             except Exception as e:
-                print(f"Error al actualizar pedido y revertir stock en failure: {e}")
+                print(f"Error al actualizar pedido y/o revertir stock en pago_failure: {e}")
+                traceback.print_exc() 
 
-    return redirect("http://localhost:4200/checkout-failure")
+    return HttpResponse(status=200) 
 
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
