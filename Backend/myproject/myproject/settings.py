@@ -151,3 +151,45 @@ STATIC_ROOT = '/opt/render/project/src/staticfiles'  # O la ruta que prefieras
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MERCADOPAGO_ACCESS_TOKEN = os.getenv('MERCADOPAGO_ACCESS_TOKEN', 'TEST-8172258200747869-051120-3beb4a6a51e00538722eefca692fc36e-128356048')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING', 
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO', 
+            'propagate': False,
+        },
+        'ecommerce': { 
+            'handlers': ['console'],
+            'level': 'INFO', 
+            'propagate': False,
+        },
+        '': { 
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'), # Para que en producción muestre INFO
+            'propagate': False,
+        }
+    },
+}
