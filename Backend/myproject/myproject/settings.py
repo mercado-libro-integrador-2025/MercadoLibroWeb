@@ -5,20 +5,16 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-u2cy_*yur-^)a-069jr*k^ap0lz!07%iqlm_sc*+3mcwf8-)iw'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['192.168.0.244', 'localhost', '127.0.0.1', '.onrender.com']
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -94,7 +90,6 @@ CLOUDINARY_STORAGE  = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# JWT Configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -102,14 +97,11 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Duración del token
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,  
     'BLACKLIST_AFTER_ROTATION': True, 
 }
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -126,10 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -138,15 +126,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = 'static/'
-STATIC_ROOT = '/opt/render/project/src/staticfiles'  # O la ruta que prefieras
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+STATIC_ROOT = '/opt/render/project/src/staticfiles'  
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -188,7 +169,7 @@ LOGGING = {
         },
         '': { 
             'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'), # Para que en producción muestre INFO
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'), 
             'propagate': False,
         }
     },
