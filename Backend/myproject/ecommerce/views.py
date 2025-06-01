@@ -154,6 +154,7 @@ def crear_preferencia(request):
             logger.info(f"Respuesta completa de Mercado Pago: {preference_response}") 
 
             preference_id = preference_response["response"]["id"]
+            init_point = preference_response["response"]["init_point"]
 
             pedido.id_transaccion_mp = preference_id
             pedido.save()
