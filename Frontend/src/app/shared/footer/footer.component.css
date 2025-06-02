@@ -1,62 +1,45 @@
-/* html, body {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-} */
-
-main {
-    flex: 1; /* Se expande para empujar el footer hacia abajo */
-    margin-top: 75px; /* Ajuste según el header */
-    margin-bottom: 75px;
-}
-
-.fixed-footer {
-    bottom: 0;
-        color: white;
-        text-align: center;
-    font-size: 14px;
-    height: 75px;
+.app-footer { 
+    color: white;
+    padding: 20px 0; 
     width: 100%;
-    background-color: #212529; /* Fondo oscuro */
 }
 
-footer div {
-    background-color: #212529; /* Fondo oscuro */
-}
-p {
-margin-bottom: 0px;
-}
-
-.img {
-  height:75px;
+.app-footer h3 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.25rem; 
+    margin-bottom: 15px; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
 }
 
-footer div {
-    /* background-color: #212529; Fondo oscuro */
+.app-footer h3 i {
+    margin-right: 10px;
+    font-size: 1.5rem; 
 }
 
-p {
-    /* margin-bottom: 0px; */
+.app-footer p {
+    font-size: 0.9rem; 
+    margin-bottom: 10px; 
+    display: flex;
+    align-items: center;
+    justify-content: center; 
 }
 
-.img {
-    /* height: 75px; */
+.app-footer p i {
+    margin-right: 8px;
 }
 
-/* Aplicamos position: absolute solo en versiones de escritorio */
-@media (min-width: 769px) {
-  .fixed-footer {
-    /* position: absolute; */
-  }
+.app-footer .ML {
+    font-size: 0.85rem; 
+    color: white;
+    text-align: center;
 }
 
-/* Ajustes para pantallas pequeñas */
-@media (max-width: 768px) {
-  .fixed-footer {
-    position: relative; /* Evita solapamiento */
-    margin-top: 52px;
-    width: 528px;
-    font-size: 14px;
-    height: 75px;
-}
+/* Ajustes para pantallas medianas/grandes */
+@media (min-width: 768px) {
+    .app-footer h3,
+    .app-footer p {
+        justify-content: flex-start; 
+    }
 }
