@@ -1,8 +1,9 @@
 <div class="form-group">
-  <label>Dirección de Envío</label>
-  <select [(ngModel)]="direccionSeleccionada" (change)="actualizarDireccion()">
-    <option *ngFor="let direccion of direcciones" [value]="direccion">
-      {{ direccion }}
+  <label for="direccionEnvio">Dirección de Envío</label>
+  <select id="direccionEnvio" [(ngModel)]="direccionSeleccionada" (change)="actualizarDireccion()" class="form-control">
+    <option [value]="null" disabled selected>Selecciona una dirección</option>
+    <option *ngFor="let direccion of direcciones" [value]="direccion.id">
+      {{ direccion.calle }}, {{ direccion.numero }}, {{ direccion.ciudad }} - {{ direccion.provincia }}
     </option>
   </select>
 </div>
