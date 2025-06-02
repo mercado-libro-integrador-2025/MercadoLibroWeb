@@ -1,5 +1,5 @@
 <main>
-  <div class="div__login">
+  <div class="div__login bg-dark">
     <h1>Bienvenido</h1>
     <form class="needs-validation" id="login" [formGroup]="loginFormulario" (ngSubmit)="onEnviar($event)">
       <div class="div__login-input">
@@ -52,14 +52,14 @@
         <form class="needs-validation" id="registro" [formGroup]="registroFormulario" (ngSubmit)="enviarDatosRegistro($event)">
           <div class="modal-body">
             <div class="col">
-              <label class="form-label">Username</label>
+              <label class="form-label">Nombre</label>
               <input class="form-control" id="usernameRegistro" formControlName="username" required>
               <div *ngIf="registroFormulario.get('username')?.errors && registroFormulario.get('username')?.touched">
                 <p *ngIf="registroFormulario.get('username')?.hasError('required')" class="text-danger">
-                  El usuario es requerido.
+                  El nombre es requerido.
                 </p>
                 <p *ngIf="registroFormulario.get('username')?.hasError('minlength')" class="text-danger">
-                  El usuario debe contener al menos 3 caracteres.
+                  El nombre debe contener al menos 3 caracteres.
                 </p>
                 <p *ngIf="registroFormulario.get('username')?.hasError('pattern')" class="text-danger">
                   NO se permiten numeros, caracteres especiales y espacios.

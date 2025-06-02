@@ -2,8 +2,8 @@
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 10px;
-  max-width: 800px;
-  margin: 20px auto;
+  max-width: 900px;
+  margin: 5px auto;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
@@ -25,7 +25,7 @@
 
 .categoria-busqueda {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 
