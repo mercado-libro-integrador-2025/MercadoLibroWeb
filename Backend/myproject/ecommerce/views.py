@@ -153,20 +153,28 @@ def crear_preferencia(request):
             preference_response = sdk.preference().create(preference_data)
             logger.info(f"Respuesta completa de Mercado Pago: {preference_response}") 
 
-            preference_id = preference_response["response"]["id"]
-            init_point = preference_response["response"]["init_point"]
+            mp_response_data = preference_response["response"]
+
+            preference_id = mp_response_data["id"]
+            init_point = mp_response_data["init_point"]
+            sandbox_init_point = mp_response_data["sandbox_init_point"] 
 
             pedido.id_transaccion_mp = preference_id
             pedido.save()
 
             ItemCarrito.objects.filter(usuario=usuario).delete()
 
-            return Response({"id": preference_id, "init_point": preference_response["response"]["init_point"]})
+            return Response({
+                "id": preference_id,
+                "init_point": init_point,
+                "sandbox_init_point": sandbox_init_point 
+            }, status=status.HTTP_201_CREATED)
 
         except Exception as e:
             print(f"Error detallado en crear_preferencia (fuera del bucle/transacción): {str(e)}")
             traceback.print_exc()
             return Response({'error': f'Error al crear la preferencia o el pedido: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 # === FUNCIONES DE PROCESAMIENTO DE PAGOS (IPN y/o BACK_URLS) ===
 
@@ -300,6 +308,12 @@ class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
     filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'titulo': ['icontains'], 
+        'categoria__nombre_categoria': ['exact', 'icontains'], 
+        'es_novedad': ['exact'], 
+        'autor__nombre_autor': ['icontains'], 
+    }
 
 class NovedadesListView(APIView):
     def get(self, request, *args, **kwargs):

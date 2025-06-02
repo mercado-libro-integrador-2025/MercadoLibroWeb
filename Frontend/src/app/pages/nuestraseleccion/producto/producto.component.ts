@@ -35,17 +35,14 @@ export class ProductoComponent implements OnInit {
     ) { }
 
     ngOnInit(): void { 
-        this.loadAllBooks(); // Cargar libros al iniciar
+        this.loadAllBooks(); 
     }
 
     loadAllBooks(): void {
-        this.productoService.searchLibros('').subscribe({
+        this.productoService.searchLibros('', '').subscribe({
             next: (libros: Libro[]) => {
                 this.libros = libros;
-                console.log('Libros cargados al iniciar:', this.libros); 
-                if (this.libros.length > 0) {
-                    console.log('Valor de portada del primer libro:', this.libros[0].portada); 
-                }
+                console.log('Libros cargados al iniciar:', this.libros);
             },
             error: (error: HttpErrorResponse) => {
                 console.error('Error al cargar todos los libros:', error);
@@ -67,25 +64,8 @@ export class ProductoComponent implements OnInit {
         }
     }
 
-    // buscarLibros(params: { termino: string, categoria: string }): void {
-    //     this.productoService.searchLibros(params.termino, params.categoria).subscribe({
-    //         next: (libros: Libro[]) => {
-    //             this.libros = libros;
-    //             console.log('Libros encontrados en la búsqueda:', this.libros);
-    //             if (this.libros.length > 0) {
-    //                 console.log('Valor de portada del primer libro encontrado:', this.libros[0].portada);
-    //             } else {
-    //                 console.log('No se encontraron libros.');
-    //             }
-    //         },
-    //         error: (error: HttpErrorResponse) => {
-    //             console.error('Error en la búsqueda de libros:', error);
-    //         }
-    //     });
-    // }
-
-        buscarLibros(params: { termino: string }): void {
-        this.productoService.searchLibros(params.termino).subscribe({
+     buscarLibros(params: { termino: string, categoria: string }): void {
+        this.productoService.searchLibros(params.termino, params.categoria).subscribe({
             next: (libros: Libro[]) => {
                 this.libros = libros;
                 console.log('Libros encontrados en la búsqueda:', this.libros);
@@ -106,7 +86,7 @@ export class ProductoComponent implements OnInit {
         if (startIndex !== -1) {
             return portada.substring(startIndex);
         }
-        console.warn('Formato de URL de portada inesperado:', portada);
+        console.warn('Formato de URL de portada inesperado o incompleto:', portada);
         return portada;
     }
 
@@ -114,7 +94,7 @@ export class ProductoComponent implements OnInit {
     this.selectedBook = libro;
 
     console.log('Libro seleccionado:', libro);
-    console.log('Libro seleccionado titulo:', this.selectedBook?.titulo); // Ahora sí funciona
+    console.log('Libro seleccionado titulo:', this.selectedBook?.titulo); 
 
     this.descripcionActual = libro.descripcion || 'Este libro no tiene descripción disponible.';
     this.showDescripcionModal = true;
