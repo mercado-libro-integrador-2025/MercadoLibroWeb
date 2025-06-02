@@ -50,9 +50,12 @@ export class ProductoComponent implements OnInit {
         });
     }
 
+
+
     anadirAlCarrito(libro: Libro): void {
         if (libro.stock > 0) {
             const nuevoItem: CarritoItem = {
+                id_libro: libro.id_libro, 
                 titulo: libro.titulo,
                 precio: libro.precio,
                 cantidad: 1
@@ -63,7 +66,6 @@ export class ProductoComponent implements OnInit {
             alert('El libro seleccionado no tiene stock disponible.');
         }
     }
-
      buscarLibros(params: { termino: string, categoria: string }): void {
         this.productoService.searchLibros(params.termino, params.categoria).subscribe({
             next: (libros: Libro[]) => {
