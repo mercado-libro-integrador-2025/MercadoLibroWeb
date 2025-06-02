@@ -1,23 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core'; 
 import { CarritoItem, CheckoutService } from '../../../../services/checkout.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common'; 
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-checkout-resumen',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DecimalPipe], 
   templateUrl: './checkout-resumen.component.html',
   styleUrls: ['./checkout-resumen.component.css']
 })
-export class CheckoutResumenComponent implements OnInit {
+export class CheckoutResumenComponent implements OnInit, OnDestroy { 
   carrito: CarritoItem[] = [];
   total: number = 0;
+  private carritoSubscription: Subscription | undefined; 
 
   constructor(private checkoutService: CheckoutService) {}
 
   ngOnInit() {
-    this.carrito = this.checkoutService.obtenerCarrito();
-    this.calcularTotal();
+    this.carritoSubscription = this.checkoutService.carrito.subscribe(carritoActualizado => {
+      this.carrito = carritoActualizado;
+      this.calcularTotal(); 
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.carritoSubscription) {
+      this.carritoSubscription.unsubscribe();
+    }
   }
 
   calcularTotal() {

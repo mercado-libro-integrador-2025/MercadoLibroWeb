@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginService } from './login.service';
 import { lastValueFrom } from 'rxjs';
 
-// Declarar MercadoPago para que TypeScript no genere errores
 declare const MercadoPago: any;
 
 export interface CarritoItem {
@@ -22,16 +21,13 @@ export class CheckoutService {
   carrito = this._carrito.asObservable();
   cantidadProductos = this._cantidadProductos.asObservable();
 
-  // URL de la API de tu backend (sin usar environment)
   private apiUrl = 'https://mercadolibroweb.onrender.com/api';
   private direccionSeleccionada: string = '';
 
-  // Clave pública de MercadoPago (Sandbox)
   private mercadoPagoPublicKey = 'TEST-826ea554-1909-4e44-8169-70fa973537ba';
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 
-  // Gestión del carrito
   agregarProducto(nuevoItem: CarritoItem): void {
     nuevoItem.precio = parseFloat(nuevoItem.precio.toString());
     const carritoActual = this._carrito.getValue();
@@ -43,8 +39,32 @@ export class CheckoutService {
       carritoActual.push(nuevoItem);
     }
 
-    this._carrito.next(carritoActual);
-    this.actualizarCantidadProductos();
+    this._carrito.next(carritoActual); 
+    this.actualizarCantidadProductos(); 
+  }
+
+  aumentarCantidad(titulo: string): void {
+    const carritoActual = this._carrito.getValue();
+    const item = carritoActual.find(ci => ci.titulo === titulo);
+    if (item) {
+      item.cantidad++;
+      this._carrito.next(carritoActual); 
+      this.actualizarCantidadProductos(); 
+    }
+  }
+
+  disminuirCantidad(titulo: string): void {
+    const carritoActual = this._carrito.getValue();
+    const index = carritoActual.findIndex(ci => ci.titulo === titulo);
+
+    if (index > -1) {
+      carritoActual[index].cantidad--;
+      if (carritoActual[index].cantidad === 0) {
+        carritoActual.splice(index, 1); 
+      }
+      this._carrito.next(carritoActual); 
+      this.actualizarCantidadProductos(); 
+    }
   }
 
   actualizarCantidadProductos(): void {
@@ -58,11 +78,10 @@ export class CheckoutService {
   }
 
   vaciarCarrito(): void {
-    this._carrito.next([]);
+    this._carrito.next([]); 
     this.actualizarCantidadProductos();
   }
 
-  // Gestión de autenticación
   private getAuthHeaders(): HttpHeaders {
     const cliente = this.loginService.obtenerClienteLogueado();
     return new HttpHeaders({
@@ -70,7 +89,6 @@ export class CheckoutService {
     });
   }
 
-  // Gestión de direcciones
   getDireccionesEnvio(): Observable<string[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<any[]>(`${this.apiUrl}/direcciones/`, { headers }).pipe(
@@ -87,50 +105,45 @@ export class CheckoutService {
   }
 
   async confirmarCompra() {
-  try {
-    const headers = this.getAuthHeaders();
-    const productos = this.obtenerCarrito().map(item => ({
-      titulo: item.titulo,
-      cantidad: item.cantidad,
-      precio: item.precio
-    }));
+    try {
+      const headers = this.getAuthHeaders();
+      const productos = this.obtenerCarrito().map(item => ({
+        titulo: item.titulo,
+        cantidad: item.cantidad,
+        precio: item.precio
+      }));
 
-    if (productos.length === 0) {
-      alert('El carrito está vacío.');
-      return;
+      if (productos.length === 0) {
+        alert('El carrito está vacío.');
+        return;
+      }
+
+      const preference = await lastValueFrom(
+        this.http.post<any>(
+          `${this.apiUrl}/checkout/crear-preferencia/`,
+          { productos },
+          { headers }
+        )
+      );
+      const preferenceId = preference.id;
+
+      if (typeof MercadoPago === 'undefined') {
+        throw new Error('El SDK de MercadoPago no está cargado.');
+      }
+
+      const mp = new MercadoPago(this.mercadoPagoPublicKey, {
+        locale: 'es-AR'
+      });
+
+      mp.checkout({
+        preference: {
+          id: preferenceId
+        },
+        autoOpen: true,
+      });
+    } catch (error) {
+      console.error('Error al iniciar el proceso de pago:', error);
+      alert('Hubo un problema al iniciar el pago. Por favor, inténtalo de nuevo.');
     }
-
-    // Paso 1: Solicitar preferencia al backend
-    const preference = await lastValueFrom(
-      this.http.post<any>(
-        `${this.apiUrl}/checkout/crear-preferencia/`,
-        { productos },
-        { headers }
-      )
-    );
-    const preferenceId = preference.id;
-
-    // Paso 2: Verificar que el SDK esté cargado
-    if (typeof MercadoPago === 'undefined') {
-      throw new Error('El SDK de MercadoPago no está cargado.');
-    }
-
-    // Paso 3: Inicializar MercadoPago
-    const mp = new MercadoPago(this.mercadoPagoPublicKey, {
-      locale: 'es-AR'
-    });
-
-    // Paso 4: Redirigir al usuario al Checkout
-    mp.checkout({
-      preference: {
-        id: preferenceId
-      },
-      autoOpen: true,
-    });
-  } catch (error) {
-    console.error('Error al iniciar el proceso de pago:', error);
-    alert('Hubo un problema al iniciar el pago. Por favor, inténtalo de nuevo.');
   }
-}
-
 }
