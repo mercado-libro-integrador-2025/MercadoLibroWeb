@@ -1,74 +1,82 @@
-<app-categoria (buscar)="buscarLibros($event)"></app-categoria>
+<app-search (buscar)="buscarLibros($event)"></app-search>
 
-@for (libro of libros; track libro.id_libro) {
-    <div id="cardContainer">
-        <div class="card text-bg-secondary mb-1" style="max-width: 700px;">
-            <div class="d-flex align-items-center">
-                <div class="col-4">
-                    <img [src]="getCorrectImageUrl(libro.portada)" alt="Portada del libro {{ libro.titulo }}" class="card-img-top">
-                </div>
-                <div class="col-8">
-                    <div class="card-body">
-                        <p id="title"><b>Título:</b> {{ libro.titulo }}</p>
-                        <p><b>Autor:</b> {{ libro.autor.nombre_autor }}</p>
-                        <p><b>Categoría:</b> {{ libro.categoria.nombre_categoria }}</p>
-                        <p><b>Precio:</b> $ {{ libro.precio }} </p>
-                        <p class="stock"><b>Stock:</b> {{ libro.stock }} </p>
-                        <button class="btn btn-buy" (click)="anadirAlCarrito(libro)">COMPRAR</button>
-                        <button class="btn btn-sinopsis" (click)="verDescripcion(libro)">VER SINOPSIS</button>
-                        <button class="btn btn-reseñas" (click)="viewReviews(libro)">VER RESEÑAS</button>
-                    </div>
-                </div>
-            </div>
+<div class="container mt-3">
+  <div class="row">
+    @for (libro of libros; track libro.id_libro) {
+    <div class="col-md-3 mb-4">
+      <div class="card h-100">
+        <img
+          [src]="getCorrectImageUrl(libro.portada)"
+          class="card-img-top img-ajustada"
+          [alt]="libro.titulo"
+        />
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ libro.titulo }}</h5>
+          <p class="card-text fw-bold">$ {{ libro.precio }}</p>
+          <div class="mt-auto d-flex flex-wrap justify-content-center gap-2">
+            <button class="btn btn-comprar btn-sm" (click)="anadirAlCarrito(libro)">
+              COMPRAR
+            </button>
+            <button
+              class="btn btn-sinopsis btn-sm"
+              (click)="verDescripcion(libro)"
+            >
+              VER SINOPSIS
+            </button>
+            <button class="btn btn-reseñas btn-sm" (click)="viewReviews(libro)">
+              VER RESEÑAS
+            </button>
+          </div>
         </div>
+      </div>
     </div>
-} @empty {
-    <div class="card text-bg-secondary mb-3">
-        <div class="card-body text-center">
-            No se encontraron resultados. Prueba otra vez.
-        </div>
+    } @empty {
+    <div class="col-12">
+      <div class="no-results">No se encontraron resultados. Prueba otra vez.</div>
     </div>
-}
+    }
+  </div>
+</div>
 
 @if (showReviewsModal) {
-    <div class="modal-overlay">
-        <div class="modal-content">
-            <h5>Reseñas para "{{ selectedBook?.titulo }}"</h5>
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h5>Reseñas para "{{ selectedBook?.titulo }}"</h5>
 
-            <div class="modal-body">
-                @if (selectedBookReviews && selectedBookReviews.length > 0) {
-                    @for (review of selectedBookReviews; track review.id) {
-                        <div class="review-item-small border-bottom pb-2 mb-2">
-                            <p><b>Usuario:</b> {{ review.email_usuario }}</p>
-                            <p><b>Comentario:</b> {{ review.comentario }}</p>
-                            <p><small>Fecha: {{ review.fecha_creacion | date:'short' }}</small></p>
-                        </div>
-                    }
-                } @else {
-                    <p>Este libro aún no tiene reseñas.</p>
-                }
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" (click)="closeReviewsModal()">Cerrar</button>
-            </div>
-        </div>
+    <div class="modal-body">
+      @if (selectedBookReviews && selectedBookReviews.length > 0) { @for
+      (review of selectedBookReviews; track review.id) {
+      <div class="review-item-small border-bottom pb-2 mb-2">
+        <p><b>Usuario:</b> {{ review.email_usuario }}</p>
+        <p><b>Comentario:</b> {{ review.comentario }}</p>
+        <p><small>Fecha: {{ review.fecha_creacion | date:'short' }}</small></p>
+      </div>
+      } } @else {
+      <p>Este libro aún no tiene reseñas.</p>
+      }
     </div>
-}
 
-@if (showDescripcionModal) {
-    <div class="modal-overlay">
-        <div class="modal-content">
-
-            <h5>Libro: {{ selectedBook?.titulo }}</h5>
-
-            <div class="modal-body">
-                <p>{{ descripcionActual }}</p>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" (click)="cerrarModalDescripcion()">Cerrar</button>
-            </div>
-        </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeReviewsModal()">
+        Cerrar
+      </button>
     </div>
+  </div>
+</div>
+} @if (showDescripcionModal) {
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h5>Libro: {{ selectedBook?.titulo }}</h5>
+
+    <div class="modal-body">
+      <p>{{ descripcionActual }}</p>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cerrarModalDescripcion()">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
 }

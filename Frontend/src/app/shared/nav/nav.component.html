@@ -1,5 +1,5 @@
 <header>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg" style="position: fixed; top: 0; width: 100%; z-index: 1050; padding: 10px;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg" style="position: relative; top: 0; width: 100%; z-index: 1050; padding: 10px;">
     <div class="container-fluid">
       <a class="navbar-brand fw-bold text-white" routerLink="/landing" style="font-family: 'Poppins', sans-serif;">
        <img src="assets/images/logo.svg" alt="Logo" width="300" height="50">
@@ -15,7 +15,7 @@
             <a class="nav-link text-white fw-semibold" routerLink="/landing" routerLinkActive="active">Home</a>
           </li>
           <li class="nav-item mx-3">
-            <a class="nav-link text-white fw-semibold" routerLink="/quienes" routerLinkActive="active">Quiénes Somos</a>
+            <a class="nav-link text-white fw-semibold" routerLink="/nosotros" routerLinkActive="active">Quiénes Somos</a>
           </li>
           <li class="nav-item mx-3">
             <a class="nav-link text-white fw-semibold" routerLink="/nuestraseleccion" routerLinkActive="active">Nuestra Selección</a>
@@ -25,12 +25,18 @@
           </li>
 
           <li class="nav-item mx-3">
-            @if (isAuthenticated$ | async) {
-              <a class="nav-link text-white fw-semibold" (click)="logout()" style="cursor: pointer;" title="Cerrar sesión">Cerrar Sesión</a>
-            } @else {
-              <a class="nav-link text-white fw-semibold" routerLink="/inicio" title="Iniciar sesión" routerLinkActive="active">Iniciar Sesión</a>
+            @if (isAuthenticated$ | async) { <a class="nav-link text-white fw-semibold" (click)="logout()" style="cursor: pointer;" title="Cerrar sesión">Cerrar Sesión</a>
+            } @else { <a class="nav-link text-white fw-semibold" routerLink="/inicio" title="Iniciar sesión" routerLinkActive="active">Iniciar Sesión</a>
             }
           </li>
+
+          <li class="nav-item mx-3">
+            @if (!(isAuthenticated$ | async)) { <a class="nav-link text-white fw-semibold"
+                 routerLink="/inicio"
+                 [state]="{ openRegisterModal: true }" title="Registrarse">Registrarse</a>
+            }
+          </li>
+
 
           @if (isAuthenticated$ | async) {
             <li class="nav-item d-flex align-items-center position-relative mx-3">
@@ -44,7 +50,7 @@
           }
 
           <li class="nav-item d-flex align-items-center position-relative mx-3">
-            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">{{ cantidadProductosCarrito }}</span>
+            <span class="badge bg-danger position-absolute top-0 start-90 translate-middle">{{ cantidadProductosCarrito }}</span>
             <a class="nav-link text-white" title="Mi compra" routerLink="/dashboard/checkout" routerLinkActive="active">
               <svg xmlns="http://www.w3.org/2000/svg" title="Compra iniciada" width="24" height="24"
                 fill="rgba(232, 227, 245, 0.74)" class="bi bi-cart4 fs-4" viewBox="0 0 16 16" (click)="toggleCarrito()">

@@ -8,7 +8,6 @@ from .models import (
     Pedido,
     ItemCarrito,
     Direccion,
-    MetodoPago,
     Reseña, 
     Contacto
 )
@@ -39,64 +38,37 @@ class AutorSerializer(serializers.ModelSerializer):
         fields = ('id_autor', 'nombre_autor')  
 
 class LibroSerializer(serializers.ModelSerializer):
-    autor = AutorSerializer(read_only=True)  
-    categoria = CategoriaSerializer(read_only=True)  
+    autor = AutorSerializer(read_only=True)
+    categoria = CategoriaSerializer(read_only=True)
+    portada = serializers.URLField(source='portada.url', read_only=True) 
 
     class Meta:
         model = Libro
-        fields = ('id_libro', 'titulo', 'precio', 'stock', 'descripcion', 'portada', 'autor', 'categoria') 
+        fields = '__all__'
+
+class LibroCreateSerializer(serializers.ModelSerializer):
+    categoria = CategoriaSerializer() 
+    autor = AutorSerializer() 
+    class Meta:
+        model = Libro
+        fields = '__all__' 
+
+class NovedadLibroSerializer(serializers.ModelSerializer):
+    id_libro = serializers.IntegerField(source='pk')
+    autor = AutorSerializer()
+    categoria = CategoriaSerializer()
+
+    class Meta:
+        model = Libro
+        fields = '__all__' 
 
 class DireccionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Direccion
-        fields = ['calle', 'numero', 'ciudad', 'provincia']
+        fields = ['id', 'calle', 'numero', 'ciudad', 'provincia']
 
     def create(self, validated_data):
         return Direccion.objects.create(usuario=self.context['request'].user, **validated_data)
-
-class MetodoPagoSerializer(serializers.ModelSerializer):
-    TARJETA_OPCIONES = [
-        ('debito', 'Tarjeta Débito'),
-        ('credito', 'Tarjeta Crédito'),
-    ]
-
-    tipo_tarjeta = serializers.ChoiceField(choices=TARJETA_OPCIONES)  
-
-    class Meta:
-        model = MetodoPago
-        fields = ['id', 'usuario', 'numero_tarjeta', 'cvv', 'vencimiento', 'tipo_tarjeta']  
-        
-    def validate_numero_tarjeta(self, value):
-        if len(value) != 16 or not value.isdigit():
-            raise serializers.ValidationError("El número de tarjeta debe tener 16 dígitos.")
-        return value
-
-    def validate_cvv(self, value):
-        if len(value) != 3 or not value.isdigit():
-            raise serializers.ValidationError("El CVV debe tener 3 dígitos.")
-        return value
-
-    def validate_vencimiento(self, value):
-        if len(value) != 5 or value[2] != '/':
-            raise serializers.ValidationError("El formato de vencimiento debe ser MM/AA.")
-        
-        mes = value[:2]
-        if not (1 <= int(mes) <= 12):
-            raise serializers.ValidationError("El mes debe estar entre 01 y 12.")
-        return value
-
-    def create(self, validated_data):
-        usuario = self.context['request'].user 
-        validated_data.pop('usuario', None)
-        return MetodoPago.objects.create(usuario=usuario, **validated_data)
-
-    def update(self, instance, validated_data):
-        instance.numero_tarjeta = validated_data.get('numero_tarjeta', instance.numero_tarjeta)
-        instance.cvv = validated_data.get('cvv', instance.cvv)
-        instance.vencimiento = validated_data.get('vencimiento', instance.vencimiento)
-        instance.tipo_tarjeta = validated_data.get('tipo_tarjeta', instance.tipo_tarjeta)
-        instance.save()
-        return instance
 
 class ItemCarritoSerializer(serializers.ModelSerializer):
     email_usuario = serializers.EmailField(source='usuario.email', read_only=True)
@@ -106,48 +78,42 @@ class ItemCarritoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItemCarrito
-        fields = ['id', 'libro', 'usuario', 'email_usuario', 'titulo_libro', 'cantidad', 'precio_unitario', 'total']  # Incluye el campo 'id' aquí
+        fields = ['id', 'libro', 'usuario', 'email_usuario', 'titulo_libro', 'cantidad', 'precio_unitario', 'total']
 
     def validate_cantidad(self, value):
         if value < 1:
             raise serializers.ValidationError("La cantidad debe ser al menos 1.")
         return value
 
-    def create(self, validated_data):
-        libro = validated_data.get('libro')
-        usuario = validated_data.get('usuario')
-        cantidad_solicitada = validated_data['cantidad']
-
-        if libro.stock < cantidad_solicitada:
-            raise serializers.ValidationError("La cantidad solicitada supera el stock disponible.")
-
-        item, created = ItemCarrito.objects.get_or_create(
-            usuario=usuario,
-            libro=libro,
-            defaults={'cantidad': cantidad_solicitada}
-        )
-
-        if not created:
-            item.cantidad += cantidad_solicitada
-            item.save()
-
-        return item
-
     def get_total(self, obj):
         return obj.total
 
+    def update(self, instance, validated_data):
+        cantidad_nueva = validated_data.get('cantidad', instance.cantidad)
+        libro = instance.libro
+
+        cantidad_actual = instance.cantidad
+        diferencia_cantidad = cantidad_nueva - cantidad_actual
+
+        if diferencia_cantidad > 0 and libro.stock < diferencia_cantidad:
+            raise serializers.ValidationError(f"No hay suficiente stock para aumentar la cantidad a {cantidad_nueva}. Stock disponible: {libro.stock + cantidad_actual}.")
+        elif cantidad_nueva < 1:
+            raise serializers.ValidationError("La cantidad no puede ser menor a 1.")
+
+        libro.stock -= diferencia_cantidad
+        libro.save()
+
+        instance.cantidad = cantidad_nueva
+        instance.save()
+        return instance
+
 class PedidoSerializer(serializers.ModelSerializer):
-    direccion = DireccionSerializer()
+    direccion = DireccionSerializer(read_only=True)
 
     class Meta:
         model = Pedido
-        fields = ['id_pedido', 'usuario', 'direccion', 'metodo_pago', 'estado', 'fecha_pedido', 'total']
+        fields = ['id', 'usuario', 'direccion', 'id_transaccion_mp', 'estado', 'fecha_pedido', 'total']
 
-    def create(self, validated_data):
-        direccion_data = validated_data.pop('direccion')
-        direccion = DireccionSerializer.create(DireccionSerializer(), validated_data=direccion_data)
-        pedido = Pedido.objects.create(direccion=direccion, **validated_data)
-        return pedido
 
 class ReseñaSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -162,3 +128,12 @@ class ContactoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contacto
         fields = ['nombre', 'email', 'asunto', 'mensaje']
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        return Contacto.objects.create(
+            nombre=user.first_name,
+            email=user.email,
+            asunto=validated_data['asunto'],
+            mensaje=validated_data['mensaje'],
+        )

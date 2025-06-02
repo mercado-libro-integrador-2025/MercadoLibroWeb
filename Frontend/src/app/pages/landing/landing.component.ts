@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FraseComponent } from './frase/frase.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { HeroSliderComponent } from './hero-slider/hero-slider.component';
 import { NovedadesComponent } from "./novedades/novedades.component";

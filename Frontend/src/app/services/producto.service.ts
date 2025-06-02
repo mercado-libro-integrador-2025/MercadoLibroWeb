@@ -17,7 +17,7 @@ export class ProductoService {
     return this.http.get<Libro>(url);
   }
 
-  searchLibros(termino: string, categoria: string): Observable<Libro[]> {
+  searchLibros(termino: string, categoria: string = ''): Observable<Libro[]> {
     let params = new HttpParams();
 
     if (termino) {
@@ -25,9 +25,10 @@ export class ProductoService {
     }
 
     if (categoria) {
-      params = params.set('nombre_categoria', categoria);
+      params = params.set('categoria__nombre_categoria', categoria); 
     }
 
+    console.log('Realizando petición a:', this.apiUrl, 'con parámetros:', params.toString());
     return this.http.get<Libro[]>(this.apiUrl, { params });
   }
 
