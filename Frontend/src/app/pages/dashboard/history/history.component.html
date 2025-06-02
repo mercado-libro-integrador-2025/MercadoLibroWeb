@@ -1,32 +1,34 @@
 <div class="dashboard-card">
     <h3>Historial de Compras</h3>
-    <div *ngIf="detallesPedidos.length > 0; else emptyHistory">
-        <table class="purchase-history-table">
-            <thead>
-                <tr>
-                    <th>Dirección de Envío</th>
-                    <th>Estado</th>
-                    <th>Fecha del Pedido</th>
-                    <th>Título del Libro</th>
-                    <th>Cantidad</th>
-                    <th>Precio Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let detalle of detallesPedidos">
-                    <td>{{ detalle.direccion_envio }}</td>
-                    <td>{{ detalle.estado_pedido }}</td>
-                    <td>{{ detalle.fecha_pedido }}</td>
-                    <td>{{ detalle.titulo_libro }}</td>
-                    <td>{{ detalle.cantidad }}</td>
-                    <td>${{ detalle.precio_total }}</td>
-                </tr>
-            </tbody>
-        </table>
+
+    <div *ngIf="isLoading" class="text-center p-3">Cargando historial de pedidos...</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="!isLoading && !error">
+        <div *ngIf="detallesPedidos.length > 0; else emptyHistory">
+            <div class="table-responsive-container">
+                <table class="purchase-history-table">
+                    <thead>
+                        <tr>
+                            <th>ID del Pedido</th>
+                            <th>Fecha del Pedido</th>
+                            <th>Dirección de Envío</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let pedido of detallesPedidos">
+                            <td>{{ pedido.id }}</td>
+                            <td>{{ pedido.fecha_pedido | date:'shortDate' }}</td>
+                            <td>{{ pedido.direccion_envio }}</td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <ng-template #emptyHistory>
+            <p style="text-align: center; color: #555;">No hay compras registradas.</p>
+        </ng-template>
     </div>
-    <ng-template #emptyHistory>
-        <p style="text-align: center; color: #555;">No hay compras registradas.</p>
-    </ng-template>
 
     <hr>
     <div class="arrepentimiento-compra">

@@ -1,37 +1,83 @@
 .nav-color {
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 1rem 0;
-  border-radius: 8px;
-  min-width: 250px;
-  height: fit-content;
+    background-color: #fff;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    padding: 1rem; 
+    border-radius: 10px; 
+    width: 100%; 
+    box-sizing: border-box;
+    height: auto; 
+    margin-bottom: 1.5rem; 
 }
 
 nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem; 
 }
 
 nav li {
-  margin: 0.5rem 0;
+    margin: 0; 
 }
 
 nav a {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  text-decoration: none;
-  color: #333;
-  border-radius: 6px;
-  transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 0.8rem; 
+    text-decoration: none;
+    color: #555; 
+    border-radius: 8px; 
+    font-size: 0.9rem; 
+    white-space: nowrap; 
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 nav a:hover {
-  background-color: #e0e0f8;
+    background-color: #e6e6fa;
+    color: #333;
 }
 
 nav svg {
-  margin-right: 0.75rem;
-  fill: #333;
+    margin-right: 0.5rem; 
+    fill: #666;
+    width: 1.2rem; 
+    height: 1.2rem;
+    transition: fill 0.2s ease;
+}
+
+nav a:hover svg {
+    fill: #333;
+}
+
+@media (min-width: 768px) {
+    .nav-color {
+        min-width: 280px;
+        max-width: 300px; 
+        height: fit-content; 
+        margin-bottom: 0; 
+    }
+
+    nav ul {
+        flex-direction: column; 
+        justify-content: flex-start; 
+        gap: 0; 
+    }
+
+    nav li {
+        margin: 0.5rem 0; 
+    }
+
+    nav a {
+        padding: 0.75rem 1.2rem; 
+        font-size: 1rem; 
+    }
+
+    nav svg {
+        margin-right: 0.75rem; 
+        width: 1.5rem; 
+        height: 1.5rem;
+    }
 }

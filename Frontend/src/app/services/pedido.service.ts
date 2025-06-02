@@ -1,4 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+// src/app/services/pedido.service.ts
+
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // Importa HttpHeaders
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -6,11 +8,21 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PedidoService {
-  private baseUrl = 'https://mercadolibroweb.onrender.com/api/pedidos/'; 
+  private baseUrl = 'https://mercadolibroweb.onrender.com/api/pedidos/';
 
   constructor(private http: HttpClient) {}
 
-   getPedidosByUsuario(usuarioId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/usuario/${usuarioId}`);
+  getPedidos(token: string): Observable<any[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any[]>(this.baseUrl, { headers });
+  }
+
+  getPedidoById(pedidoId: number, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any>(`${this.baseUrl}${pedidoId}/`, { headers });
   }
 }

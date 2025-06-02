@@ -17,8 +17,6 @@ export class CarritoService {
   carrito = this._carrito.asObservable();
   cantidadProductos = this._cantidadProductos.asObservable();
 
-  private formaEnvioUrl = 'https://mercadolibroweb.onrender.com/api/formasenvio/';
-  private formaPagoUrl = 'https://mercadolibroweb.onrender.com/api/formaspago/';
   private direccionUrl = 'https://mercadolibroweb.onrender.com/api/direcciones/';
 
   constructor(private http: HttpClient) { }
