@@ -38,14 +38,17 @@ class AutorSerializer(serializers.ModelSerializer):
         fields = ('id_autor', 'nombre_autor')  
 
 class LibroSerializer(serializers.ModelSerializer):
-    autor = AutorSerializer(read_only=True)  
-    categoria = CategoriaSerializer(read_only=True)  
+    autor = AutorSerializer(read_only=True)
+    categoria = CategoriaSerializer(read_only=True)
+    portada = serializers.URLField(source='portada.url', read_only=True) 
 
     class Meta:
         model = Libro
-        fields = '__all__' 
+        fields = '__all__'
 
 class LibroCreateSerializer(serializers.ModelSerializer):
+    categoria = CategoriaSerializer() 
+    autor = AutorSerializer() 
     class Meta:
         model = Libro
         fields = '__all__' 

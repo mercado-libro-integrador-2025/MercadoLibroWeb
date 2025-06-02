@@ -11,30 +11,34 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  // categorias: string[] = [];
-  // opcionSeleccionada: string = '';
+  categorias: string[] = [];
+  opcionSeleccionada: string = ''; 
+
   terminoBusqueda: string = '';
 
-  @Output() buscar = new EventEmitter<{ termino: string }>();
+  @Output() buscar = new EventEmitter<{ termino: string, categoria: string }>();
 
   constructor(private productoService: ProductoService) { }
 
   ngOnInit(): void {
-    // this.getCategorias();
+    this.getCategorias();
   }
 
-  // getCategorias(): void {
-  //   this.productoService.getCategorias().subscribe(
-  //     categorias => {
-  //       this.categorias = categorias;
-  //     },
-  //     error => {
-  //       console.error('Error al obtener las categorías', error);
-  //     }
-  //   );
-  // }
+  getCategorias(): void {
+    this.productoService.getCategorias().subscribe(
+      categorias => {
+        this.categorias = categorias;
+      },
+      error => {
+        console.error('Error al obtener las categorías', error);
+      }
+    );
+  }
 
   buscarLibros(): void {
-    this.buscar.emit({ termino: this.terminoBusqueda });
+    this.buscar.emit({
+      termino: this.terminoBusqueda,
+      categoria: this.opcionSeleccionada
+    });
   }
 }
