@@ -26,3 +26,4 @@ export interface Libro {
     precio: number;
     stock: number;
 }
+
