@@ -308,6 +308,12 @@ class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
     filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'titulo': ['icontains'], 
+        'categoria__nombre_categoria': ['exact', 'icontains'], 
+        'es_novedad': ['exact'], 
+        'autor__nombre_autor': ['icontains'], 
+    }
 
 class NovedadesListView(APIView):
     def get(self, request, *args, **kwargs):

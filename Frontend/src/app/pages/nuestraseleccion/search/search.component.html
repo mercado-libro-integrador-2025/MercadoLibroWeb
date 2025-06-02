@@ -1,14 +1,13 @@
 <div class="buscador-seccion">
   <h2>Encuentra tu próximo libro</h2>
   <div class="buscador">
-    <!-- <div class="categoria-busqueda">
+    <div class="categoria-busqueda">
       <label for="categoriaSelector">Categoría:</label>
       <select id="categoriaSelector" [(ngModel)]="opcionSeleccionada" (change)="buscarLibros()" name="categoria">
         <option value="">-- Todas las categorías --</option>
         <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
       </select>
-    </div> -->
-
+    </div>
     <form class="termino-busqueda" (submit)="buscarLibros(); $event.preventDefault();">
       <input type="text" placeholder="Buscar por título, autor, etc." [(ngModel)]="terminoBusqueda" name="terminoBusqueda">
       <button type="submit" class="btn btn-buscar">🔍 Buscar</button>
