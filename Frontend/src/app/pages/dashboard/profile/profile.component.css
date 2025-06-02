@@ -1,198 +1,269 @@
 .dashboard-card {
-  max-width: 900px;
-  min-height: 400px; 
-  margin: 2rem auto;
-  background: #f9f9f9;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+    width: 100%; 
+    min-height: auto; 
+    margin: 1rem auto; 
+    background: #f9f9f9;
+    padding: 1.5rem; 
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07); 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    box-sizing: border-box; 
 }
 
 .dashboard-card h3 {
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.3rem; 
+    font-weight: 600;
+    margin-bottom: 1rem;
 }
 
-h2 {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(90deg, #333, #555);
-  color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
-  margin-bottom: 0.5rem;
+h2 { 
+    text-align: center;
+    font-size: 1.8rem; 
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(90deg, #333, #555);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    margin-bottom: 0.8rem;
 }
 
 .subtitle {
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #555;
-  font-family: 'Poppins', sans-serif;
-  margin-bottom: 1rem;
+    text-align: center;
+    font-size: 1rem; 
+    font-weight: 500;
+    color: #555;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 1.5rem; 
 }
 
+.table-responsive-container { 
+    width: 100%;
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; 
+    margin-bottom: 1.5rem; 
+}
 
 .table-container,
 .purchase-history-table {
-  width: 100%;
-  flex-grow: 1;
+    width: 100%; 
+    min-width: 600px; 
+    border-collapse: collapse; 
+}
+
+.table-container th, .table-container td,
+.purchase-history-table th, .purchase-history-table td {
+    padding: 0.8rem;
+    border: 1px solid #eee;
+    text-align: left;
+    white-space: nowrap; 
+}
+
+.table-container th,
+.purchase-history-table th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+    color: #333;
 }
 
 .table-footer {
-  background-color: #555;
-  color: white;
-  font-weight: bold;
-  text-align: right;
-  padding: 1rem;
+    background-color: #555;
+    color: white;
+    font-weight: bold;
+    text-align: right;
+    padding: 1rem;
+    border-radius: 0 0 8px 8px; 
 }
 
-
+/* Lista de direcciones */
 .direcciones-list {
-  list-style-type: none;
-  padding: 0;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .direcciones-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 0.5rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-start; 
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.8rem 0; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); 
 }
 
 .direccion-text {
-  font-size: 0.9rem;
-  color: #555;
+    font-size: 1rem; 
+    color: #555;
+    margin-bottom: 0.8rem; 
+    width: 100%; 
 }
 
 .button-group {
-  display: flex;
-  gap: 0.5rem;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 0.6rem; 
+    width: 100%; 
+    justify-content: flex-end; 
 }
 
 button {
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+    padding: 0.7rem 1.4rem; 
+    font-size: 1rem; 
+    border: none;
+    border-radius: 6px; 
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    flex-grow: 1; 
+    min-width: 100px;
 }
 
 .edit-btn {
-  background-color: #333;
-  color: white;
+    background-color: #143115; 
+    color: white;
 }
-
 .edit-btn:hover {
-  background-color: #333;
+    background-color: #45a049;
+    transform: translateY(-1px);
 }
 
 .delete-btn {
-  background-color: #dc3545;
-  color: white;
+    background-color: #f44336; 
+    color: white;
 }
-
 .delete-btn:hover {
-  background-color: #c82333;
+    background-color: #da190b;
+    transform: translateY(-1px);
 }
 
-.direccion-form .form-group {
-  margin-bottom: 1rem;
+/* Formularios de dirección y datos personales */
+.direccion-form .form-group,
+.datos-personales-form .form-group {
+    margin-bottom: 1.2rem; 
 }
 
-.direccion-form input {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
+.direccion-form input,
+.datos-personales-form input {
+    width: 100%;
+    padding: 0.9rem; 
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1.05rem; 
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.direccion-form input:focus {
-  border-color: #333;
-  outline: none;
+.direccion-form input:focus,
+.datos-personales-form input:focus {
+    border-color: #363738; 
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
 }
 
 .form-buttons {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-around; 
+    flex-wrap: wrap; 
+    gap: 1rem; 
+    margin-top: 1.5rem;
 }
 
 .submit-btn {
-  background-color: #555;
-  color: white;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
+    background-color: #363738; 
+    color: white;
+    padding: 0.9rem 1.8rem; 
+    font-size: 1.05rem;
 }
-
 .submit-btn:hover {
-  background-color: #555;
+    background-color: #5b5b5c;
 }
 
 .cancel-btn {
-  background-color: #ffc107;
-  color: white;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
+    background-color: #6c757d;
+    color: white;
+    padding: 0.9rem 1.8rem;
+    font-size: 1.05rem;
 }
-
 .cancel-btn:hover {
-  background-color: #e0a800;
+    background-color: #5a6268;
 }
 
 .delete-account-section {
-  text-align: center;
-  margin-top: 1.5rem;
+    text-align: center;
+    margin-top: 2rem; 
+    padding-top: 1.5rem; 
+    border-top: 1px solid #eee; 
 }
 
 .delete-account-btn {
-  background-color: #dc3545;
-  color: white;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    background-color: #dc3545;
+    color: white;
+    padding: 0.9rem 1.8rem;
+    font-size: 1.05rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
-
 .delete-account-btn:hover {
-  background-color: #c82333;
+    background-color: #c82333;
 }
 
-.datos-personales-form {
-  margin-bottom: 2rem;
-}
+@media (min-width: 768px) {
+    .dashboard-card {
+        max-width: 800px; 
+        min-height: 500px; 
+        padding: 2.5rem; 
+    }
 
-.datos-personales-form .form-group {
-  margin-bottom: 1rem;
-}
+    .dashboard-card h3 {
+        font-size: 1.6rem;
+        margin-bottom: 2rem;
+    }
 
-.datos-personales-form input {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
-}
+    h2 {
+        font-size: 2.5rem; 
+        margin-bottom: 1rem;
+    }
 
-.datos-personales-form input:focus {
-  border-color: #333;
-  outline: none;
-}
+    .subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+    }
 
-.form-buttons {
-  display: flex;
-  justify-content: flex-end;
+    .table-responsive-container {
+        overflow-x: hidden; 
+    }
+
+    .direcciones-list li {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between; 
+    }
+
+    .direccion-text {
+        margin-bottom: 0; 
+        width: auto; 
+        flex-grow: 1; 
+        margin-right: 1rem; 
+    }
+
+    .button-group {
+        flex-wrap: nowrap; 
+        gap: 0.8rem; 
+        width: auto; 
+    }
+
+    button {
+        flex-grow: 0; 
+        min-width: auto;
+    }
+
+    .form-buttons {
+        justify-content: flex-end; 
+        gap: 1.5rem;
+    }
 }
