@@ -8,8 +8,9 @@
         <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
       </select>
     </div>
-    <form class="termino-busqueda" (submit)="buscarLibros(); $event.preventDefault();">
-      <input type="text" placeholder="Buscar por título, autor, etc." [(ngModel)]="terminoBusqueda" name="terminoBusqueda">
+    <form class="termino-busqueda ng-pristine ng-valid ng-touched" (submit)="buscarLibros(); $event.preventDefault();">
+      <label for="terminoBusqueda" class="sr-only">Buscar libros</label>
+      <input type="text" placeholder="Buscar por título, autor, etc." [(ngModel)]="terminoBusqueda" name="terminoBusqueda" class="ng-pristine ng-valid ng-touched">
       <button type="submit" class="btn btn-buscar">🔍 Buscar</button>
     </form>
   </div>
