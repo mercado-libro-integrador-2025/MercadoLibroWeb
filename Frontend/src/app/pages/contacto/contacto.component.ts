@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Contacto } from '../../services/models/contacto.models';
 import { ContactoService } from '../../services/contacto.service';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-contacto',
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule, NgIf ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './contacto.component.html',
   styleUrls: ['./contacto.component.css']
 })
@@ -17,16 +17,15 @@ export class ContactoComponent implements OnInit {
   isLoading = false;
   submissionMessage: string | null = null;
   submissionError: string | null = null;
-
   constructor(
     private fb: FormBuilder,
     private contactoService: ContactoService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.contactForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
       asunto: ['', [Validators.required, Validators.maxLength(150)]],
       mensaje: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
     });
